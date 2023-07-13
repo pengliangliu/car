@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-// 定义LED引脚�?
+// 瀹氫箟LED寮曡剼锟�?
 #define LED0_Pin GPIO_PIN_7
 #define LED0_GPIO_Port GPIOC
 #define LED1_Pin GPIO_PIN_7
@@ -50,6 +50,11 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+void Mpu6050_Init(void);
+void car_wait(void);
+void getVoltage(void);
+uint32_t getEncoderSpeed(void);
+void setServoPosition(uint16_t angle);
 
 /* USER CODE END ET */
 
