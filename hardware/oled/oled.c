@@ -2,6 +2,7 @@
 #include "font.h"    
 #include "i2c.h"
 
+
 uint8_t CMD_Data[]={
 0xAE, 0x00, 0x10, 0x40, 0xB0, 0x81, 0xFF, 0xA1, 0xA6, 0xA8, 0x3F,
 					
@@ -202,3 +203,65 @@ void OLED_ShowCHinese(uint8_t x,uint8_t y,uint8_t no)
       }					
 }
 
+/*
+	@brief			显示图片
+	@param			x0：起始列地址
+					y0：起始页地址
+					x1：终止列地址
+					y1：终止页地址
+					BMP[]：存放图片代码的数组
+	@retval			无
+ */
+void OLED_DrawBMP(unsigned char x0, unsigned char y0,unsigned char x1, unsigned char y1)
+{ 	
+ 	unsigned int j=0; //定义变量
+ 	unsigned char x,y; //定义变量
+  
+ 	if(y1%8==0) y=y1/8;   //判断终止页是否为8的整数倍
+ 	 else y=y1/8+1;
+
+		for(y=y0;y<y1;y++) //从起始页开始，画到终止页
+		{
+			OLED_Set_Pos(x0,y); //在页的起始列开始画
+   			for(x=x0;x<x1;x++) //画x1 - x0 列
+	    		{
+	    			OLED_WR_DATA(BMP[j++]);	//画图片的点    	
+	    		}
+		}
+} 
+
+/*
+	@brief			显示动图
+	@param			x0：起始列地址
+				y0：起始页地址
+				x1：终止列地址
+				y1：终止页地址
+				k: 帧个数
+				m: 单帧数组大小
+				BMP[][m]：存放动图代码的数组
+	@retval			无
+ */
+void OLED_DrawGIF(unsigned char x0, unsigned char y0,unsigned char x1, unsigned char y1, unsigned char k, int m)
+{
+	unsigned int j=0; //定义变量
+ 	unsigned char x,y,i; //定义变量
+  
+ 	if(y1%8==0) y=y1/8;   //判断终止页是否为8的整数倍
+ 	 else y=y1/8+1;
+	for (i=0;i<k;i++) //从第一帧开始画
+	{
+		j = 0;
+		for(y=y0;y<y1;y++) //从起始页开始，画到终止页
+		{
+			OLED_Set_Pos(x0,y); //在页的起始列开始画
+   			
+			for(x=x0;x<x1;x++) //画x1 - x0 列
+	    		{
+						
+	    			OLED_WR_DATA(GIF[i][j++]);	//画图片的点    	
+	    		}
+		}
+		//delay_ms(80);//人为制造卡顿？？？
+
+	}
+}

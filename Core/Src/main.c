@@ -35,6 +35,7 @@
 #include "pid.h"
 #include "car.h"
 #include "oled.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -187,13 +188,8 @@ int main(void)
   while (1)
 	{
       
-OLED_ShowString(0,0,"Hello",8);
-		OLED_ShowCHinese(0,2,0);  //物
-		OLED_ShowCHinese(16,2,1);	//联
-		OLED_ShowCHinese(32,2,2);	//网
-		OLED_ShowCHinese(48,2,3);	//小
-		OLED_ShowCHinese(64,2,4);	//白
-		OLED_ShowString(80,2,"Jayce",16);
+//    OLED_ShowString(0,0,"gjkbhk",8);		
+		OLED_DrawBMP(40,2,88,8);
       // track(readLEDsState(ledStates));	//巡线
       
             //CarStraight();//寻直线  
