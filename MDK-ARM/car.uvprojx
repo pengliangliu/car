@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;./car;../hardware/MPU6050;../hardware/MPU6050/eMPL;../hardware/PID;../hardware/Car</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;./car;../hardware/MPU6050;../hardware/MPU6050/eMPL;../hardware/PID;../hardware/Car;..\hardware\oled</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -943,6 +943,11 @@
               <FileName>pid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\hardware\PID\pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\hardware\oled\oled.c</FilePath>
             </File>
           </Files>
         </Group>

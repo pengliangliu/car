@@ -36,6 +36,7 @@
 "car\inv_mpu_dmp_motion_driver.o"
 "car\car.o"
 "car\pid.o"
+"car\oled.o"
 --strict --scatter "car\car.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
