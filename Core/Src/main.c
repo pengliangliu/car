@@ -38,17 +38,17 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-// 定义全局变量
-// 定义全局变量
-uint32_t encoderCount = 0;  // 累计圈数
-uint32_t encoderSpeed = 0;  // 速度
-uint32_t enc1_prev = 0;     // 前一次的计数器�?? 
+// 瀹氫箟鍏ㄥ眬鍙橀噺
+// 瀹氫箟鍏ㄥ眬鍙橀噺
+uint32_t encoderCount = 0;  // 绱鍦堟暟
+uint32_t encoderSpeed = 0;  // 閫熷害
+uint32_t enc1_prev = 0;     // 鍓嶄竴娆＄殑璁℃暟鍣拷?? 
 GPIO_PinState ledStates[7];
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-void Mpu6050_Init(void);
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -66,8 +66,8 @@ void Mpu6050_Init(void);
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* USER CODE BEGIN PV */
-uint16_t ADC_value; //AD转换�?
-float Real_value; //实际电压�?
+uint16_t ADC_value; //AD杞崲鍊?
+float Real_value; //瀹為檯鐢靛帇鍊?
 /* USER CODE END PV */
 
 /* USER CODE END PFP */
@@ -75,42 +75,49 @@ float Real_value; //实际电压�?
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-//舵机
+
 void setServoPosition(uint16_t angle)
 {
-    // 将角度转换为对应的脉冲宽�?????
-    uint16_t pulse = (uint16_t)((angle * 999) / 180);  // 假设舵机角度范围�?????0-180�?????
+    // 灏嗚搴﹁浆鎹负瀵瑰簲鐨勮剦鍐插锟?????
+    uint16_t pulse = (uint16_t)((angle * 999) / 180);  
 
-    // 设置PWM脉冲宽度
+    // 璁剧疆PWM鑴夊啿瀹藉害
     TIM2->CCR2 = pulse;
 	printf("%d\n",TIM2->CCR2);
 }
-//编码�??
+
 uint32_t getEncoderSpeed(void)
 {
     uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim1));
     uint32_t pulseChange = enc1 - enc1_prev;
-    uint32_t speed = pulseChange * 10;  // 假设每秒钟测量一次鿟�??
+    uint32_t speed = pulseChange * 10;  
     enc1_prev = enc1;
     return speed;
 }
 uint32_t ADC_Value;
 void getVoltage(void)
 {
-    HAL_ADC_Start(&hadc1);     //启动ADC转换
-     HAL_ADC_PollForConversion(&hadc1, 50);   //等待转换完成�?50为最大等待时间，单位为ms
+    HAL_ADC_Start(&hadc1);     
+     HAL_ADC_PollForConversion(&hadc1, 50);   
 
      if(HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc1), HAL_ADC_STATE_REG_EOC))
     {
-      ADC_Value = HAL_ADC_GetValue(&hadc1);   //获取AD�?
+      ADC_Value = HAL_ADC_GetValue(&hadc1);  
 
-      printf("ADC1 Reading : %d \r\n",ADC_Value);//采样的�??
+      printf("ADC1 Reading : %d \r\n",ADC_Value);
       printf("PA4 True Voltage value : %.4f \r\n",ADC_Value*3.3f/4096);
-          //转化后的电压�?
+          
       }
           HAL_Delay(1000);
   }
 
+void car_wait(void){
+
+      car_stop();
+      delay_ms(1000);
+      motor_forward();
+
+}
 /* USER CODE END 0 */
 
 /**
@@ -167,7 +174,8 @@ int main(void)
 	HAL_TIM_Base_Start(&htim4);	
 	Mpu6050_Init();
 	
-		//中断方式启动ADC转换
+	// HAL_Delay(2000);
+		
 		//HAL_ADC_Start_IT(&hadc1);  
   /* USER CODE END 2 */
 
@@ -175,10 +183,19 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
 	{
- 
-		
-//        readLEDsState(ledStates);	
-			CarStraight();
+      
+
+      track(readLEDsState(ledStates));	
+      // while (!CarRight90());
+      // car_wait();
+      // while (!CarLeft90());
+      // car_wait();
+      // while (1)
+      // {
+      //   /* code */
+      //寻直线
+//        CarStraight();
+      // }
 		
     /* USER CODE END WHILE */
 
@@ -238,7 +255,7 @@ void Mpu6050_Init(void)
 {
 	printf("%s\r\n", "MPU Init...");
   while (MPU_Init())
-    ; // 初始化MPU6050
+    ; // 鍒濆鍖朚PU6050
     while (mpu_dmp_init())
   {
     

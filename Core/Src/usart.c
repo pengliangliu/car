@@ -23,9 +23,9 @@
 /* USER CODE BEGIN 0 */
 #define USE_PRINT
 #ifdef USE_PRINT
-// 编译器不使用MicroLib�?
+// 编译器不使用MicroLib�?
 #pragma import(__use_no_semihosting)
-// 定义 _sys_exit() 避免使用半主�?
+// 定义 _sys_exit() 避免使用半主�?
 void _sys_exit(int x)
 {
   x = x;

@@ -31,7 +31,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-// 瀹氫箟LED寮曡剼锟�?
+// 鐎规矮绠烲ED瀵洝鍓奸敓锟�?
 #define LED0_Pin GPIO_PIN_7
 #define LED0_GPIO_Port GPIOC
 #define LED1_Pin GPIO_PIN_7

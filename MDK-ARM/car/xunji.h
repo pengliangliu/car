@@ -6,9 +6,9 @@ extern "C" {
 #endif
 #include  "main.h"
 
-void readLEDsState(GPIO_PinState *ledStates);
+int readLEDsState(GPIO_PinState *ledStates);
 int processLEDStates(GPIO_PinState *ledStates);
-
+void track(int flag);
 
 #ifdef __cplusplus
 }
