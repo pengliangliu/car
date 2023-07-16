@@ -20,16 +20,15 @@ int readLEDsState(GPIO_PinState *ledStates)
 
 int  processLEDStates(GPIO_PinState *ledStates)
 {
-	if (ledStates[0] == GPIO_PIN_SET && ledStates[1] == GPIO_PIN_SET && ledStates[2] == GPIO_PIN_SET &&
-        ledStates[3] == GPIO_PIN_SET && ledStates[4] == GPIO_PIN_SET && ledStates[5] == GPIO_PIN_SET &&
-        ledStates[6] == GPIO_PIN_SET)
-    {
-        // car_wait();
-        // CarRight90();
-        // car_wait();
-        return 0;
-					
+	int i;
+for (i = 0; i < 7; i++) {
+    if (ledStates[i] != GPIO_PIN_SET) {
+        break;
     }
+}
+if (i == 7) {
+    return 7;
+}
     
 		
     //  判断ledStates[3]的值 _细线加上它,粗线注释掉
@@ -67,11 +66,11 @@ int  processLEDStates(GPIO_PinState *ledStates)
            return 5;
 					 
        }
-	
+	return 0;
 }
 
 void track(int flag){
-int left_pwm=750;
+	int left_pwm=750;
 	int right_pwm=750;
    if (flag)
    {

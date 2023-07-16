@@ -47,7 +47,7 @@ int CarRight90(void)
     right_pwm = 490 + control;
     car_left(left_pwm, right_pwm);
 		
-		printf("%s\r\n","lefting");
+		printf("%s\r\n","righting");
 		printf("%d,%d\r\n",left_pwm,right_pwm);
 		
     if (fabs(error) < 1.5)
@@ -100,14 +100,14 @@ int CarLeft90(void)
     return 0;
 }
 
-void CarStraight(void)
+void CarStraight(float target_angle)
 {
 
     float current_yaw = 0.0;
     uint16_t left_pwm = 500;
     uint16_t right_pwm = 500;
 
-    float target_angle = 0.0;
+//    float target_angle = 0.0;
     float Kp = 5.0;
     float Ki = 0;
     float Kd = 0.01;
@@ -148,18 +148,18 @@ void CarStraight(void)
     if (flag==1)
 	car_stright(left_pwm, right_pwm);
 	 else if(flag==2){
-	 car_stright(left_pwm-200, right_pwm);
+	 car_stright(left_pwm*0.6, right_pwm);
 	 }
 	 else if(flag==3){
-	 car_stright(left_pwm, right_pwm-200);
+	 car_stright(left_pwm, right_pwm*0.6);
 	 }
    }	 
-	 else {
-        car_wait();
-    while (!CarRight90());
-    car_stop();
-   
-    }
+//	 else {
+//        car_wait();
+//    while (!CarRight90());
+//    car_stop();
+//   
+//    }
 	
 	 
 	 

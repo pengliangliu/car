@@ -11,7 +11,7 @@
 
 extern int CarLeft90(void);
 extern int CarRight90(void);
-extern void CarStraight(void);
+extern void CarStraight(float target_angle);
 extern void CarBack(void);
 
 #endif
