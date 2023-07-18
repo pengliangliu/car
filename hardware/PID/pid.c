@@ -5,245 +5,237 @@
 #include <stdio.h>
 #include "main.h"
 #include "xunji.h"
-/** 示例代码
-    car_left_flag = CarLeft90();
-    if (car_left_flag == 1)
-    break;
-*/
-float left_previous_error = 0.0;
-float straight_previous_error = 0.0;
-GPIO_PinState ledstates[7];
-int CarRight90(void)
-{
 
+// Define PID Controller structure
+typedef struct {
+    float target;
+    float Kp;
+    float Ki;
+    float Kd;
+    float integral;
+    float prev_error;
+} PID_Controller;
+
+// Define PID Controllers for left turn and straight movement
+PID_Controller left_turn_pid;
+PID_Controller straight_pid;
+
+GPIO_PinState ledstates[7];
+
+void pid_init(PID_Controller* pid, float target, float Kp, float Ki, float Kd) {
+    pid->target = target;
+    pid->Kp = Kp;
+    pid->Ki = Ki;
+    pid->Kd = Kd;
+    pid->integral = 0.0;
+    pid->prev_error = 0.0;
+}
+
+float pid_control(PID_Controller* pid, float current_value) {
+    float error = pid->target - current_value;
+    pid->integral += error;
+    float derivative = error - pid->prev_error;
+    pid->prev_error = error;
+    return pid->Kp * error + pid->Ki * pid->integral + pid->Kd * derivative;
+}
+
+int CarRight90(void) {
     float current_yaw = 0.0;
+    float target_angle = -75.0; // Target angle for the right turn
     int left_pwm = 500;
     int right_pwm = 500;
 
-    float target_angle = -75.00; // 假设目标方向为90度
-    float Kp =1.0;
-    float Ki = 0;
-    float Kd = 0.01;
-    float integral = 0.0;
-    float error = 0;
-    float proportional, derivative, control;
+    // Initialize PID Controller for the right turn
+    pid_init(&left_turn_pid, target_angle, 1.0, 0, 0.01);
     motor_turn_left();
     current_yaw = get_yaw();
-    // printf("current_yaw=  %.2f\r\n", current_yaw);
-    error = target_angle - current_yaw;
-    // printf("error=  %.2f\r\n", error);
-
-    // 计算比例项、积分项、微分项
-    proportional = Kp * error;
-    integral += Ki * error;
-    derivative = Kd * (error - left_previous_error);
-
-    // 计算控制量
-    control = proportional + integral + derivative;
-    printf("control=  %.2f\r\n", control);
-//    control = control /;
-    left_previous_error = error;
+    float control = pid_control(&left_turn_pid, current_yaw);
     left_pwm = 490 + control;
     right_pwm = 490 + control;
     car_left(left_pwm, right_pwm);
-		
-		printf("%s\r\n","righting");
-		printf("%d,%d\r\n",left_pwm,right_pwm);
-		
-    if (fabs(error) < 1.5)
-    {
-        // 停止控制循环，小车已到达目标方向
+
+    if (fabs(current_yaw - target_angle) < 1.5) {
+        // Stop control loop, the car has reached the target angle
         return 1;
     }
+
     return 0;
 }
 
-int CarLeft90(void)
-{
-
+int CarLeft90(void) {
     float current_yaw = 0.0;
+    float target_angle = -10.0; // Target angle for the left turn
     int left_pwm = 500;
     int right_pwm = 500;
 
-    float target_angle = -10; // 假设目标方向为90度
-    float Kp = 1.0;
-    float Ki = 0;
-    float Kd = 0.01;
-    float integral = 0.0;
-    float error = 0;
-    float proportional, derivative, control;
+    // Initialize PID Controller for the left turn
+    pid_init(&left_turn_pid, target_angle, 1.0, 0, 0.01);
 
     motor_turn_right();
     current_yaw = get_yaw();
-    printf("current_yaw=  %.2f\r\n", current_yaw);
-    error = target_angle - current_yaw;
-    printf("error=  %.2f\r\n", error);
-
-    // 计算比例项、积分项、微分项
-    proportional = Kp * error;
-    integral += Ki * error;
-    derivative = Kd * (error - left_previous_error);
-
-    // 计算控制量
-    control = proportional + integral + derivative;
-    printf("control=  %.2f\r\n", control);
-    left_previous_error = error;
-    // control = control / 3;
+    float control = pid_control(&left_turn_pid, current_yaw);
     left_pwm = 490 - control;
     right_pwm = 490 - control;
     car_right(left_pwm, right_pwm);
-    if (fabs(error) < 1.5)
-    {
-        // 停止控制循环，小车已到达目标方向
+
+    if (fabs(current_yaw - target_angle) < 1.5) {
+        // Stop control loop, the car has reached the target angle
         return 1;
     }
+
     return 0;
 }
 
-void CarStraight(float target_angle)
-{
-
+void CarStraight(float target_angle) {
     float current_yaw = 0.0;
     uint16_t left_pwm = 500;
     uint16_t right_pwm = 500;
 
-//    float target_angle = 0.0;
-    float Kp = 5.0;
-    float Ki = 0;
-    float Kd = 0.01;
-    float integral = 0.0;
-    float error = 0;
-    float proportional, derivative, control;
+    // Initialize PID Controller for straight movement
+    pid_init(&straight_pid, target_angle, 5.0, 0, 0.01);
 
     current_yaw = get_yaw();
-    printf("current_yaw=  %.2f\r\n", current_yaw);
-    error = target_angle - current_yaw;
-    printf("error=  %.2f\r\n", error);
+    float control = pid_control(&straight_pid, current_yaw);
+    left_pwm = 500 - control;
+    right_pwm = 500 + control;
 
-    // 计算比例项、积分项、微分项
-    proportional = Kp * error;
-    integral += Ki * error;
-    derivative = Kd * (error - straight_previous_error);
+    int flag = readLEDsState(ledstates);
+    if (flag) {
+        motor_forward();
+        if (flag == 1)
+            car_stright(left_pwm, right_pwm);
+        else if (flag == 2) {
+            car_stright(left_pwm * 0.6, right_pwm);
+        } else if (flag == 3) {
+            car_stright(left_pwm, right_pwm * 0.6);
+        }
+    }
 
-    // 计算控制量
-    control = proportional + integral + derivative;
-     printf("control=  %.2f\r\n", control);
-    straight_previous_error = error;
-    // 右偏error < 0  
-        left_pwm =  500 - control;
-        right_pwm =  500 + control;    
-//    if (left_pwm < 350)
-//        left_pwm = 350;
-//    if (right_pwm < 350)
-//        right_pwm = 350;
-//		if (left_pwm > 650)
-//        left_pwm = 650;
-//    if (right_pwm > 650)
-//        right_pwm = 650;
+    if (fabs(current_yaw - target_angle) < 1.5) {
+        // Stop control loop, the car has reached the target angle
+        return;
+    }
+}
 
-   int flag= readLEDsState(ledstates);
-   if (flag)
-   {
-		 motor_forward();
-    if (flag==1)
-	car_stright(left_pwm, right_pwm);
-	 else if(flag==2){
-	 car_stright(left_pwm*0.6, right_pwm);
-	 }
-	 else if(flag==3){
-	 car_stright(left_pwm, right_pwm*0.6);
-	 }
-   }	 
-//	 else {
-//        car_wait();
-//    while (!CarRight90());
-//    car_stop();
-//   
+
+
+//#include "pid.h"
+//#include "mpu6050.h"
+//#include <math.h>
+//#include "car.h"
+//#include <stdio.h>
+//#include "main.h"
+//#include "xunji.h"
+
+//// Define PID Controller structure
+//typedef struct {
+//    float target;
+//    float Kp;
+//    float Ki;
+//    float Kd;
+//    float integral;
+//    float prev_error;
+//} PID_Controller;
+
+//// Define PID Controllers for left turn and straight movement
+//PID_Controller left_turn_pid;
+//PID_Controller straight_pid;
+
+//GPIO_PinState ledstates[7];
+
+//void pid_init(PID_Controller* pid, float target, float Kp, float Ki, float Kd) {
+//    pid->target = target;
+//    pid->Kp = Kp;
+//    pid->Ki = Ki;
+//    pid->Kd = Kd;
+//    pid->integral = 0.0;
+//    pid->prev_error = 0.0;
+//}
+
+//float pid_control(PID_Controller* pid, float current_value) {
+//    float error = pid->target - current_value;
+//    pid->integral += error;
+//    float derivative = error - pid->prev_error;
+//    pid->prev_error = error;
+//    return pid->Kp * error + pid->Ki * pid->integral + pid->Kd * derivative;
+//}
+
+//int CarRight90(void) {
+//    float current_yaw = 0.0;
+//    float target_angle = -75.0; // Target angle for the right turn
+//    int left_pwm = 500;
+//    int right_pwm = 500;
+
+//    // Initialize PID Controller for the right turn
+//    pid_init(&left_turn_pid, target_angle, 1.0, 0, 0.01);
+
+//    motor_turn_left();
+//    current_yaw = get_yaw();
+//    float control = pid_control(&left_turn_pid, current_yaw);
+//    left_pwm = 490 + control;
+//    right_pwm = 490 + control;
+//    car_left(left_pwm, right_pwm);
+
+//    if (fabs(current_yaw - target_angle) < 1.5) {
+//        // Stop control loop, the car has reached the target angle
+//        return 1;
 //    }
-	
-	 
-	 
-    
-    // return flag_camera;
-}
-void CarBack(void)
-{
-    float current_yaw = 0.0;
-    int left_pwm = 500;
-    int right_pwm = 500;
 
-    float target_angle = 90.0;
-    float Kp = 1.0;
-    float Ki = 0;
-    float Kd = 0.01;
-    float integral = 0.0;
-    float error = 0;
-    float proportional, derivative, control;
+//    return 0;
+//}
 
-    current_yaw = get_yaw();
-    printf("current_yaw=  %.2f\r\n", current_yaw);
-    error = target_angle - current_yaw;
-    printf("error=  %.2f\r\n", error);
+//int CarLeft90(void) {
+//    float current_yaw = 0.0;
+//    float target_angle = -10.0; // Target angle for the left turn
+//    int left_pwm = 500;
+//    int right_pwm = 500;
 
-    // 计算比例项、积分项、微分项
-    proportional = Kp * error;
-    integral += Ki * error;
-    derivative = Kd * (error - straight_previous_error);
+//    // Initialize PID Controller for the left turn
+//    pid_init(&left_turn_pid, target_angle, 1.0, 0, 0.01);
 
-    // 计算控制量
-    control = proportional + integral + derivative;
-    control = control / 3;
-    // printf("control=  %.2f\r\n", control);
-    straight_previous_error = error;
-    // 左偏error < 0
-    if (fabs(error) > -1.5){
-    left_pwm = 500 - control;      
-		right_pwm = 500 + control;
-    
-    }
+//    motor_turn_right();
+//    current_yaw = get_yaw();
+//    float control = pid_control(&left_turn_pid, current_yaw);
+//    left_pwm = 490 - control;
+//    right_pwm = 490 - control;
+//    car_right(left_pwm, right_pwm);
 
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET); // LED0对应引脚PB5拉低，亮，等同于LED0(0)
+//    if (fabs(current_yaw - target_angle) < 1.5) {
+//        // Stop control loop, the car has reached the target angle
+//        return 1;
+//    }
 
-    car_stright(left_pwm, right_pwm);
-}
+//    return 0;
+//}
 
-void CarBack2(void)
-{
-    float current_yaw = 0.0;
-    int left_pwm = 500;
-    int right_pwm = 500;
+//void CarStraight(float target_angle) {
+//    float current_yaw = 0.0;
+//    uint16_t left_pwm = 500;
+//    uint16_t right_pwm = 500;
 
-    float target_angle = 90.0;
-    float Kp = 1.0;
-    float Ki = 0;
-    float Kd = 0.01;
-    float integral = 0.0;
-    float error = 0;
-    float proportional, derivative, control;
+//    // Initialize PID Controller for straight movement
+//    pid_init(&straight_pid, target_angle, 5.0, 0, 0.01);
 
-    current_yaw = get_yaw();
-    printf("current_yaw=  %.2f\r\n", current_yaw);
-    error = target_angle - current_yaw;
-    printf("error=  %.2f\r\n", error);
+//    current_yaw = get_yaw();
+//    float control = pid_control(&straight_pid, current_yaw); 
+//    left_pwm = 500 - control;
+//    right_pwm = 500 + control;
 
-    // 计算比例项、积分项、微分项
-    proportional = Kp * error;
-    integral += Ki * error;
-    derivative = Kd * (error - straight_previous_error);
+//    int flag = readLEDsState(ledstates);
+//    if (flag) {
+//        motor_forward();
+//        if (flag == 1)
+//            car_stright(left_pwm, right_pwm);
+//        else if (flag == 2) {
+//            car_stright(left_pwm * 0.6, right_pwm);
+//        } else if (flag == 3) {
+//            car_stright(left_pwm, right_pwm * 0.6);
+//        }
+//    }
 
-    // 计算控制量
-    control = proportional + integral + derivative;
-    control = control / 3;
-    // printf("control=  %.2f\r\n", control);
-    straight_previous_error = error;
-    // 左偏error < 0
-    if (fabs(error) > -1.5){
-    left_pwm = 500 - control;      
-		right_pwm = 500 + control;
-    
-    }
-
-    HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET); // LED0对应引脚PB5拉低，亮，等同于LED0(0)
-
-    car_stright(left_pwm, right_pwm);
-}
+//    if (fabs(current_yaw - target_angle) < 1.5) {
+//        // Stop control loop, the car has reached the target angle
+//        return;
+//    }
+//}
+  

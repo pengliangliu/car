@@ -4,12 +4,12 @@
 #include "main.h"
 
 //根据I2C所在引脚进行宏定义，方便后续操作
-#define   GPIOx_OLED_PORT               GPIOB
-#define   OLED_SCK_PIN                  GPIO_PIN_6
+#define   GPIOx_OLED_PORT               GPIOF
+#define   OLED_SCK_PIN                  GPIO_PIN_1
 #define   OLED_SCK_ON()                 HAL_GPIO_WritePin(GPIOx_OLED_PORT, OLED_SCK_PIN, GPIO_PIN_SET)
 #define   OLED_SCK_OFF()                HAL_GPIO_WritePin(GPIOx_OLED_PORT, OLED_SCK_PIN, GPIO_PIN_RESET)
 #define   OLED_SCK_TOGGLE()             HAL_GPIO_TogglePin(GPIOx_OLED_PORT, OLED_SCK_PIN)
-#define   OLED_SDA_PIN                  GPIO_PIN_7
+#define   OLED_SDA_PIN                  GPIO_PIN_0
 #define   OLED_SDA_ON()                 HAL_GPIO_WritePin(GPIOx_OLED_PORT, OLED_SDA_PIN, GPIO_PIN_SET)
 #define   OLED_SDA_OFF()                HAL_GPIO_WritePin(GPIOx_OLED_PORT, OLED_SDA_PIN, GPIO_PIN_RESET)
 #define   OLED_SDA_TOGGLE()             HAL_GPIO_TogglePin(GPIOx_OLED_PORT, OLED_SDA_PIN)

@@ -40,11 +40,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-// 瀹氫箟鍏ㄥ眬鍙橀噺
-// 瀹氫箟鍏ㄥ眬鍙橀噺
-uint32_t encoderCount = 0;  // 绱鍦堟暟
-uint32_t encoderSpeed = 0;  // 閫熷害
-uint32_t enc1_prev = 0;     // 鍓嶄竴娆＄殑璁℃暟鍣拷??
+// 编码器有关变量
+uint32_t encoderCount = 0;  // 计数器
+uint32_t encoderSpeed = 0;  // 速度
+uint32_t enc1_prev = 0;     // 上次计数器的值
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -67,8 +66,8 @@ uint32_t enc1_prev = 0;     // 鍓嶄竴娆＄殑璁℃暟鍣拷??
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* USER CODE BEGIN PV */
-uint16_t ADC_value; //AD杞崲鍊?
-float Real_value; //瀹為檯鐢靛帇鍊?
+uint16_t ADC_value; //AD值
+float Real_value; //真实值
 
 /* USER CODE END PV */
 
@@ -79,14 +78,14 @@ float Real_value; //瀹為檯鐢靛帇鍊?
 
 
 void setServoPosition(uint16_t angle) {
-	// 灏嗚搴﹁浆鎹负瀵瑰簲鐨勮剦鍐插锟?????
+	// 舵机
 	uint16_t pulse = (uint16_t)((angle * 999) / 180);
 
-	// 璁剧疆PWM鑴夊啿瀹藉害
-	TIM2->CCR2 = pulse;
+	// 定时器3，需要改配置
+	TIM3->CCR2 = pulse;
 	printf("%d\n", TIM2->CCR2);
 }
-
+//获取编码器信息
 uint32_t getEncoderSpeed(void) {
 	uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim1));
 	uint32_t pulseChange = enc1 - enc1_prev;
@@ -94,6 +93,7 @@ uint32_t getEncoderSpeed(void) {
 	enc1_prev = enc1;
 	return speed;
 }
+//AD数模转换
 uint32_t ADC_Value;
 void getVoltage(void) {
 	HAL_ADC_Start(&hadc1);
@@ -108,13 +108,12 @@ void getVoltage(void) {
 	}
 	HAL_Delay(1000);
 }
-
+//调试用
 void car_wait(void) {
 
 	car_stop();
 	delay_ms(50);
 	motor_forward();
-
 }
 /* USER CODE END 0 */
 
@@ -169,10 +168,10 @@ int main(void) {
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
-	 Mpu6050_Init();
+//	Mpu6050_Init();
 	 
-//	OLED_Init();
-//	OLED_Clear();
+	OLED_Init();
+	OLED_Clear();
 
 	// HAL_Delay(2000);
 
@@ -185,21 +184,21 @@ int main(void) {
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
-    flag=readLEDsState(ledStates);
+//    flag=readLEDsState(ledStates);
 		//    OLED_ShowString(0,0,"gjkbhk",8);
-		//		OLED_DrawBMP(40, 2, 88, 8);
+				OLED_DrawBMP(40, 2, 88, 8);
 //		 track(readLEDsState(ledStates));	//巡线
-		 CarStraight(target_angle);
-		if(flag==7){
-			delay_ms(50);   
-    while(!CarRight90()) 
-			;		
-		car_wait();
-		target_angle=get_yaw();
+//		 CarStraight(target_angle);
+//		if(flag==7){
+//			delay_ms(50);   
+//    while(!CarRight90()) 
+//			;		
+//		car_wait();
+//		target_angle=get_yaw();
 //		while(1){
 //		  CarStraight(target_angle);
 //		}
-	}
+//	}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

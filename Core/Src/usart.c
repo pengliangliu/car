@@ -23,9 +23,9 @@
 /* USER CODE BEGIN 0 */
 #define USE_PRINT
 #ifdef USE_PRINT
-// 编译器不使用MicroLib�?
+// 缂栬瘧鍣ㄤ笉浣跨敤MicroLib锟�?
 #pragma import(__use_no_semihosting)
-// 定义 _sys_exit() 避免使用半主�?
+// 瀹氫箟 _sys_exit() 閬垮厤浣跨敤鍗婁富锟�?
 void _sys_exit(int x)
 {
   x = x;
@@ -35,16 +35,18 @@ struct __FILE
   int handle;
 };
 struct __FILE __stdout;
-// 重映射fputc
+// 閲嶆槧灏刦putc
 int fputc(int ch, struct __FILE *stream)
 {
-  // 判断串口是否发鿁完房
-  while (((USART1->SR & USART_SR_TXE) == 0) || ((USART2->SR & USART_SR_TXE) == 0))
+  // 鍒ゆ柇涓插彛鏄惁鍙戦縼瀹屾埧
+  // while (((USART1->SR & USART_SR_TXE) == 0) || ((USART2->SR & USART_SR_TXE) == 0))
+  //   ;
+  while ((USART1->SR & USART_SR_TXE) == 0) 
     ;
-  // 如果串口已经发鿁完成，发鿁下丿个字笿
+  // 濡傛灉涓插彛宸茬粡鍙戦縼瀹屾垚锛屽彂榭佷笅涓夸釜瀛楃
   USART1->DR = (uint8_t)ch;
-  // 如果串口已经发鿁完成，发鿁下丿个字笿
-  USART2->DR = (uint8_t)ch;
+  // 濡傛灉涓插彛宸茬粡鍙戦縼瀹屾垚锛屽彂榭佷笅涓夸釜瀛楃
+  // USART2->DR = (uint8_t)ch;
   return ch;
 }
 #endif
