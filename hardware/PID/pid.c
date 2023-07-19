@@ -39,9 +39,9 @@ float pid_control(PID_Controller* pid, float current_value) {
     return pid->Kp * error + pid->Ki * pid->integral + pid->Kd * derivative;
 }
 
-int CarRight90(void) {
+int CarRight90(float target_angle) {
     float current_yaw = 0.0;
-    float target_angle = -75.0; // Target angle for the right turn
+//    float target_angle = -75.0; // Target angle for the right turn
     int left_pwm = 500;
     int right_pwm = 500;
 
@@ -62,9 +62,9 @@ int CarRight90(void) {
     return 0;
 }
 
-int CarLeft90(void) {
+int CarLeft90(float target_angle) {
     float current_yaw = 0.0;
-    float target_angle = -10.0; // Target angle for the left turn
+//    float target_angle = -10.0; // Target angle for the left turn
     int left_pwm = 500;
     int right_pwm = 500;
 
@@ -238,4 +238,4 @@ void CarStraight(float target_angle) {
 //        return;
 //    }
 //}
-  
+

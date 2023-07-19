@@ -4,6 +4,8 @@
 #include "tim.h"
 #include "pid.h"
 #include "car.h"
+
+
 int readLEDsState(GPIO_PinState *ledStates)
 {
     // 读取每个引脚的电平，并保存到数组中
@@ -52,7 +54,7 @@ if (i == 7) {
        {
            return 2;
        }
-     else if (ledStates[4] == GPIO_PIN_SET && ledStates[2] == GPIO_PIN_RESET)
+      if (ledStates[4] == GPIO_PIN_SET && ledStates[2] == GPIO_PIN_RESET)
        {
            return 3;
 					 
@@ -61,22 +63,21 @@ if (i == 7) {
        {
            return 4;
        }
-    else if (ledStates[5] == GPIO_PIN_SET && ledStates[1] == GPIO_PIN_RESET)
+     if (ledStates[5] == GPIO_PIN_SET && ledStates[1] == GPIO_PIN_RESET)
        {
-           return 5;
-					 
+           return 5;				 
        }
 	return 0;
 }
 
-void track(int flag){
-	int left_pwm=750;
-	int right_pwm=750;
+void track(int flag,int speed){
+	
+	int left_pwm=speed;
+	int right_pwm=speed;
    if (flag)
    {
 		motor_forward();
-     if (flag==1) {
-			 
+     if (flag==1) {		 
 	car_stright(left_pwm, right_pwm);}
 	 else if(flag==2){
     //    motor_turn_right();

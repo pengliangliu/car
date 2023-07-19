@@ -44,6 +44,11 @@
 uint32_t encoderCount = 0;  // 计数器
 uint32_t encoderSpeed = 0;  // 速度
 uint32_t enc1_prev = 0;     // 上次计数器的值
+
+	float target_angle=0.0;
+	int flag=0;
+	GPIO_PinState ledStates[7];
+	float current_yaw;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -168,37 +173,40 @@ int main(void) {
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
-//	Mpu6050_Init();
+	Mpu6050_Init();
+	
 	 
-	OLED_Init();
-	OLED_Clear();
-
-	// HAL_Delay(2000);
+//	OLED_Init();
+//	OLED_Clear();
 
 	//HAL_ADC_Start_IT(&hadc1);
-	float target_angle=0.0;
-	int flag=0;
-	GPIO_PinState ledStates[7];
+	
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
-//    flag=readLEDsState(ledStates);
+    flag=readLEDsState(ledStates);
+		 current_yaw=get_yaw();
+		printf("%f\r\n",current_yaw);
 		//    OLED_ShowString(0,0,"gjkbhk",8);
-				OLED_DrawBMP(40, 2, 88, 8);
-//		 track(readLEDsState(ledStates));	//巡线
-//		 CarStraight(target_angle);
-//		if(flag==7){
-//			delay_ms(50);   
-//    while(!CarRight90()) 
-//			;		
-//		car_wait();
-//		target_angle=get_yaw();
+//				OLED_DrawBMP(40, 2, 88, 8);
+		if(flag!=7)
+//		 track(readLEDsState(ledStates),500);	//巡线
+		 CarStraight(target_angle);
+		else{
+			target_angle-=75.0f;
+			delay_ms(150);
+			car_wait();		   
+    while(!CarRight90(target_angle)) 
+			;		
+		car_wait();
+		flag=0;
+		
 //		while(1){
 //		  CarStraight(target_angle);
 //		}
-//	}
+	}
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

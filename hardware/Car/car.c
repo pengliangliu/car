@@ -30,8 +30,11 @@ void motor_backward(void)
 void car_stright(uint16_t pwm1, uint16_t pwm2)
 {
   // Set PWM duty cycle for TIM2 channel 1 and 3
-  TIM2->CCR2 = pwm1;
-  TIM2->CCR3 = pwm2;
+	 __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_2, pwm1);
+	 __HAL_TIM_SetCompare(&htim2, TIM_CHANNEL_3, pwm2);
+
+//  TIM2->CCR2 = pwm1;
+//  TIM2->CCR3 = pwm2;
 }
 void car_left(uint16_t pwm1, uint16_t pwm2)
 {

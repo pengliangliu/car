@@ -8,7 +8,7 @@ extern "C" {
 
 int readLEDsState(GPIO_PinState *ledStates);
 int processLEDStates(GPIO_PinState *ledStates);
-void track(int flag);
+void track(int flag,int speed);
 
 #ifdef __cplusplus
 }
