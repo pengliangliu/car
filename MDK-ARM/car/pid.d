@@ -8,7 +8,7 @@ car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 car\pid.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 car\pid.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 car\pid.o: ../Drivers/CMSIS/Include/core_cm4.h
-car\pid.o: C:\mdk\ARM\ARMCC\Bin\..\include\stdint.h
+car\pid.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
 car\pid.o: ../Drivers/CMSIS/Include/cmsis_version.h
 car\pid.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 car\pid.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ car\pid.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 car\pid.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-car\pid.o: C:\mdk\ARM\ARMCC\Bin\..\include\stddef.h
+car\pid.o: D:\keil5\ARM\ARMCC\Bin\..\include\stddef.h
 car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
@@ -37,9 +37,9 @@ car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 car\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-car\pid.o: C:\mdk\ARM\ARMCC\Bin\..\include\stdio.h
+car\pid.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 car\pid.o: ../hardware/MPU6050/mpu6050.h
-car\pid.o: C:\mdk\ARM\ARMCC\Bin\..\include\math.h
+car\pid.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
 car\pid.o: ../Core/Inc/usart.h
 car\pid.o: ../hardware/MPU6050/delay.h
 car\pid.o: ../hardware/Car/car.h

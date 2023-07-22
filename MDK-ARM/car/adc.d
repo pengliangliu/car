@@ -8,7 +8,7 @@ car\adc.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 car\adc.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 car\adc.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 car\adc.o: ../Drivers/CMSIS/Include/core_cm4.h
-car\adc.o: C:\mdk\ARM\ARMCC\Bin\..\include\stdint.h
+car\adc.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
 car\adc.o: ../Drivers/CMSIS/Include/cmsis_version.h
 car\adc.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 car\adc.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ car\adc.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 car\adc.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 car\adc.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 car\adc.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-car\adc.o: C:\mdk\ARM\ARMCC\Bin\..\include\stddef.h
+car\adc.o: D:\keil5\ARM\ARMCC\Bin\..\include\stddef.h
 car\adc.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 car\adc.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 car\adc.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
