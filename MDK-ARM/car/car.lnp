@@ -4,6 +4,7 @@
 "car\main.o"
 "car\gpio.o"
 "car\adc.o"
+"car\dma.o"
 "car\i2c.o"
 "car\tim.o"
 "car\usart.o"

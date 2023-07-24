@@ -1,2 +1,3 @@
 Load "car\\car.axf" 
-Erase Done.Programming Done.Verify OK.Flash Load finished at 15:37:20
+Erase Failed!Error: Flash Download failed  -  "Cortex-M4"
+Flash Load finished at 12:14:43
