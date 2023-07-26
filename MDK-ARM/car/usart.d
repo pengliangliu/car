@@ -37,3 +37,7 @@ car\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 car\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 car\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 car\usart.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+car\usart.o: ../hardware/Jy901/my_uart.h
+car\usart.o: ../hardware/Jy901/JY901.h
+car\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+car\usart.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

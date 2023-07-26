@@ -37,6 +37,7 @@ car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 car\main.o: ../Core/Inc/adc.h
+car\main.o: ../Core/Inc/dma.h
 car\main.o: ../Core/Inc/i2c.h
 car\main.o: ../Core/Inc/tim.h
 car\main.o: ../Core/Inc/usart.h
@@ -50,4 +51,7 @@ car\main.o: ../hardware/MPU6050/eMPL/inv_mpu_dmp_motion_driver.h
 car\main.o: ../hardware/PID/pid.h
 car\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
 car\main.o: ../hardware/Car/car.h
-car\main.o: ..\hardware\oled\oled.h
+car\main.o: ../hardware/oled/oled.h
+car\main.o: ../hardware/Jy901/my_uart.h
+car\main.o: ../hardware/Jy901/JY901.h
+car\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\string.h

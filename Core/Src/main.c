@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "i2c.h"
 #include "tim.h"
 #include "usart.h"
@@ -35,15 +36,16 @@
 #include "pid.h"
 #include "car.h"
 #include "oled.h"
+#include "my_uart.h"
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-// 编码器有关变量
-uint32_t encoderCount = 0; // 计数器
+// 编码器有关变�??
+uint32_t encoderCount = 0; // 计数�??
 uint32_t encoderSpeed = 0; // 速度
-uint32_t enc1_prev = 0;	   // 上次计数器的值
+uint32_t enc1_prev = 0;	   // 上次计数器的�??
 
 float target_angle = 0.0;
 int flag = 0;
@@ -71,8 +73,8 @@ float current_yaw;
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* USER CODE BEGIN PV */
-uint16_t ADC_value; // AD值
-float Real_value;	// 真实值
+uint16_t ADC_value; // AD�??
+float Real_value;	// 真实�??
 
 /* USER CODE END PV */
 
@@ -86,11 +88,11 @@ void setServoPosition(uint16_t angle)
 	// 舵机
 	uint16_t pulse = (uint16_t)((angle * 999) / 180);
 
-	// 定时器3，需要改配置
+	// 定时�??3，需要改配置
 	TIM3->CCR2 = pulse;
 	printf("%d\n", TIM2->CCR2);
 }
-// 获取编码器信息
+// 获取编码器信�??
 uint32_t getEncoderSpeed(void)
 {
 	uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim1));
@@ -115,7 +117,7 @@ void getVoltage(void)
 	}
 	HAL_Delay(1000);
 }
-// 调试用
+// 调试�??
 void car_wait(void)
 {
 
@@ -153,6 +155,7 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
+	MX_DMA_Init();
 	MX_TIM1_Init();
 	MX_USART1_UART_Init();
 	MX_TIM2_Init();
@@ -163,6 +166,7 @@ int main(void)
 	MX_I2C2_Init();
 	MX_USART2_UART_Init();
 	MX_USART3_UART_Init();
+	MX_USART6_UART_Init();
 	/* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start(&htim1);
 	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
@@ -177,7 +181,10 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
-	Mpu6050_Init();
+	// Mpu6050_Init();
+	// 开启 jy901
+	User_USART_Init(&JY901_data);
+	printf("test!!\r\n");
 
 	//	OLED_Init();
 	//	OLED_Clear();
@@ -190,28 +197,28 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		flag = readLEDsState(ledStates);
-		current_yaw = get_yaw();
-		printf("%f\r\n", current_yaw);
-		//    OLED_ShowString(0,0,"gjkbhk",8);
-		//				OLED_DrawBMP(40, 2, 88, 8);
-		if (flag != 7)
-			//		 track(readLEDsState(ledStates),500);	//巡线
-			CarStraight(target_angle);
-		else
-		{
-			target_angle -= 75.0f;
-			delay_ms(150);
-			car_wait();
-			while (!CarRight90(target_angle))
-				;
-			car_wait();
-			flag = 0;
+		// flag = readLEDsState(ledStates);
+		// current_yaw = get_yaw();
+		// printf("%f\r\n", current_yaw);
+		// //    OLED_ShowString(0,0,"gjkbhk",8);
+		// //				OLED_DrawBMP(40, 2, 88, 8);
+		// if (flag != 7)
+		// 	//		 track(readLEDsState(ledStates),500);	//巡线
+		// 	CarStraight(target_angle);
+		// else
+		// {
+		// 	target_angle -= 75.0f;
+		// 	delay_ms(150);
+		// 	car_wait();
+		// 	while (!CarRight90(target_angle))
+		// 		;
+		// 	car_wait();
+		// 	flag = 0;
 
-			//		while(1){
-			//		  CarStraight(target_angle);
-			//		}
-		}
+		// 	//		while(1){
+		// 	//		  CarStraight(target_angle);
+		// 	//		}
+		// }
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
