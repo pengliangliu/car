@@ -849,8 +849,9 @@ erwork --depend=car\startup_stm32f407xx.d -ocar\startup_stm32f407xx.o -I.\RTE\_
 ARM Macro Assembler    Page 14 
 
 
-car -ID:\keil5\ARM\PACK\ARM\CMSIS\4.2.0\CMSIS\Include -IDevice\Include --predef
-ine="__UVISION_VERSION SETA 525" --predefine="_RTE_ SETA 1" --list=startup_stm3
+car -ID:\keil5\ARM\PACK\ARM\CMSIS\4.2.0\CMSIS\Include -ID:\keil5\ARM\PACK\Keil\
+STM32F4xx_DFP\1.0.8\Device\Include --predefine="__UVISION_VERSION SETA 525" --p
+redefine="_RTE_ SETA 1" --predefine="STM32F40_41xxx SETA 1" --list=startup_stm3
 2f407xx.lst startup_stm32f407xx.s
 
 
@@ -1955,4 +1956,4 @@ Symbol: __use_two_region_memory
       None
 Comment: __use_two_region_memory unused
 3 symbols
-447 symbols in table
+448 symbols in table

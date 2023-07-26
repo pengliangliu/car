@@ -1,7 +1,7 @@
 #include "my_uart.h"
 
 User_USART JY901_data;
-extern UART_HandleTypeDef huart6;
+extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart1;
 
 struct SAcc stcAcc;
@@ -9,7 +9,6 @@ struct SGyro stcGyro;
 struct SAngle stcAngle;
 
 uint8_t a = 0;
-
 
 // ³õÊ¼»¯º¯Êý
 void User_USART_Init(User_USART *Data)

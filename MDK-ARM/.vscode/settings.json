@@ -2,6 +2,7 @@
     "files.associations": {
         "mpu6050.h": "c",
         "jy901.h": "c",
-        "my_uart.h": "c"
+        "my_uart.h": "c",
+        "main.h": "c"
     }
 }
