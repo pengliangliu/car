@@ -92,9 +92,11 @@ int flag_servo;
 
 void setServoPosition(int angle_x, int angle_y)
 {
-	// 舵机
-	uint16_t pulse_x = ((angle_x * 950) / 180) + 249;
-	uint16_t pulse_y = ((angle_y * 950) / 300) + 249;
+	uint16_t pulse_x = angle_x;
+	uint16_t pulse_y = angle_y;
+	// // 舵机
+	// uint16_t pulse_x = ((angle_x * 950) / 180) + 249;
+	// uint16_t pulse_y = ((angle_y * 950) / 300) + 249;
 
 	// 定时器3
 	TIM3->CCR1 = pulse_y;
@@ -192,7 +194,7 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-	setServoPosition(0, 0);
+	setServoPosition(500, 500);
 	// 使能串口三接收中断
 	HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
 	//	Mpu6050_Init();
@@ -201,7 +203,7 @@ int main(void)
 	//	OLED_Clear();
 
 	// HAL_ADC_Start_IT(&hadc1);
-
+	printf("start\r\n");
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -315,7 +317,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			// 接收完成，解析X坐标和Y坐标
 			receivedX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
 			receivedY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
-			printf("%d  %d,", receivedX, receivedY);
+			// printf("%d  %d\r\n", receivedX, receivedY);
 			// 使用 receivedX 和 receivedY 进行后续处理
 			// 重置缓冲区索引，准备下一次接收
 			flag_servo = 1;

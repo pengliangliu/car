@@ -13,7 +13,7 @@ extern int CarLeft90(float target_angle);
 extern int CarRight90(float target_angle);
 extern void CarStraight(float target_angle);
 extern void CarBack(void);
-void servo_pid(int  x,int  y) ;
+void servo_pid(int x, int y);
 //typedef struct 
 //{
 //	float X_Kp;

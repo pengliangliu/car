@@ -144,23 +144,31 @@ void CarStraight(float target_angle)
     偏移范围 [-120, 120]
     舵机运动角度范围 []
 */
-int angle_x = 0;
-int angle_y = 0;
+int angle_x = 50;
+int angle_y = 50;
 void servo_pid(int x, int y)
 {
     // 初始化PID控制器
-    if (-10 < x < 10 && 10 < y < 10)
-        return;
+
     // 舵机往左转
     if (x > 10)
-        angle_x++;
+        angle_x = angle_x + 5;
     else if (x < -10)
-        angle_x--;
+        angle_x = angle_x - 5;
     if (y > 10)
-        angle_y++;
+        angle_y = angle_y - 5;
     else if (y < -10)
-        angle_y--;
+        angle_y = angle_y + 5;
+    if (angle_y > 300)
+        angle_y = 300;
+    else if (angle_y < 0)
+        angle_y = 0;
+    if (angle_x > 180)
+        angle_x = 180;
+    else if (angle_x < 0)
+        angle_x = 0;
     setServoPosition(angle_x, angle_y);
+    printf("angle :%d  %d\r\n", angle_x, angle_y);
     // 读取当前舵机角度
 }
 
