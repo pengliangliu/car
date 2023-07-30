@@ -8,7 +8,7 @@ car\mpu6050.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 car\mpu6050.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 car\mpu6050.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 car\mpu6050.o: ../Drivers/CMSIS/Include/core_cm4.h
-car\mpu6050.o: C:\mdk\ARM\ARMCC\Bin\..\include\stdint.h
+car\mpu6050.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdint.h
 car\mpu6050.o: ../Drivers/CMSIS/Include/cmsis_version.h
 car\mpu6050.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 car\mpu6050.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ car\mpu6050.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 car\mpu6050.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 car\mpu6050.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 car\mpu6050.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-car\mpu6050.o: C:\mdk\ARM\ARMCC\Bin\..\include\stddef.h
+car\mpu6050.o: D:\keil5\ARM\ARMCC\Bin\..\include\stddef.h
 car\mpu6050.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 car\mpu6050.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 car\mpu6050.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
@@ -41,4 +41,4 @@ car\mpu6050.o: ..\hardware\MPU6050\./delay.h
 car\mpu6050.o: ../hardware/MPU6050/eMPL/inv_mpu.h
 car\mpu6050.o: ../hardware/MPU6050/eMPL/inv_mpu_dmp_motion_driver.h
 car\mpu6050.o: ../Core/Inc/i2c.h
-car\mpu6050.o: C:\mdk\ARM\ARMCC\Bin\..\include\stdio.h
+car\mpu6050.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
