@@ -378,7 +378,7 @@ void USART2_IRQHandler(void)
     HAL_UART_DMAStop(&huart2);               // ĺłé­DMAďźé˛ć­˘ĺ˛çŞ?
     temp = hdma_usart2_rx.Instance->NDTR;    // čˇĺDMAä¸­ćŞäź čžçć°ćŽä¸Şć?
     JY901_data.Rx_len = RXBUFFER_LEN - temp; // čˇĺžä¸?ĺąäź čžçä¸Şć°
-    JY901_Process();                         // ĺ¤çĺ˝ć°
+    // JY901_Process();                         // ĺ¤çĺ˝ć°
   }
   HAL_UART_Receive_DMA(&huart2, JY901_data.RxBuffer, RXBUFFER_LEN); // éć°ĺź?ĺ§ćĽćśDMA
 
