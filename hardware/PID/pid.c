@@ -159,8 +159,8 @@ void servo_pid(int x, int y)
         angle_y = angle_y - 5;
     else if (y < -10)
         angle_y = angle_y + 5;
-    if (angle_y > 300)
-        angle_y = 300;
+    if (angle_y > 90)
+        angle_y = 90;
     else if (angle_y < 0)
         angle_y = 0;
     if (angle_x > 180)

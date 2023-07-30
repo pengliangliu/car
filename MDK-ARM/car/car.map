@@ -2571,14 +2571,14 @@ Image Symbol Table
     i._sys_exit                              0x08003b48   Section        0  usart.o(i._sys_exit)
     i.fputc                                  0x08003b4c   Section        0  usart.o(i.fputc)
     i.main                                   0x08003b60   Section        0  main.o(i.main)
-    i.servo_pid                              0x08003c58   Section        0  pid.o(i.servo_pid)
-    i.setServoPosition                       0x08003cd8   Section        0  main.o(i.setServoPosition)
-    x$fpl$fpinit                             0x08003cec   Section       10  fpinit.o(x$fpl$fpinit)
-    $v0                                      0x08003cec   Number         0  fpinit.o(x$fpl$fpinit)
-    .constdata                               0x08003cf6   Section       16  system_stm32f4xx.o(.constdata)
-    .constdata                               0x08003d06   Section        8  system_stm32f4xx.o(.constdata)
-    .constdata                               0x08003d0e   Section       17  __printf_flags_wp.o(.constdata)
-    maptable                                 0x08003d0e   Data          17  __printf_flags_wp.o(.constdata)
+    i.servo_pid                              0x08003c54   Section        0  pid.o(i.servo_pid)
+    i.setServoPosition                       0x08003cd0   Section        0  main.o(i.setServoPosition)
+    x$fpl$fpinit                             0x08003d00   Section       10  fpinit.o(x$fpl$fpinit)
+    $v0                                      0x08003d00   Number         0  fpinit.o(x$fpl$fpinit)
+    .constdata                               0x08003d0a   Section       16  system_stm32f4xx.o(.constdata)
+    .constdata                               0x08003d1a   Section        8  system_stm32f4xx.o(.constdata)
+    .constdata                               0x08003d22   Section       17  __printf_flags_wp.o(.constdata)
+    maptable                                 0x08003d22   Data          17  __printf_flags_wp.o(.constdata)
     .data                                    0x20000000   Section       24  main.o(.data)
     .data                                    0x20000018   Section        4  usart.o(.data)
     .data                                    0x2000001c   Section       12  stm32f4xx_hal.o(.data)
@@ -2893,16 +2893,16 @@ Image Symbol Table
     _is_digit                                0x08003b3b   Thumb Code    14  __printf_wp.o(i._is_digit)
     _sys_exit                                0x08003b49   Thumb Code     2  usart.o(i._sys_exit)
     fputc                                    0x08003b4d   Thumb Code    14  usart.o(i.fputc)
-    main                                     0x08003b61   Thumb Code   214  main.o(i.main)
-    servo_pid                                0x08003c59   Thumb Code   106  pid.o(i.servo_pid)
-    setServoPosition                         0x08003cd9   Thumb Code    14  main.o(i.setServoPosition)
-    _fp_init                                 0x08003ced   Thumb Code    10  fpinit.o(x$fpl$fpinit)
-    __fplib_config_fpu_vfp                   0x08003cf5   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fplib_config_pureend_doubles           0x08003cf5   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    AHBPrescTable                            0x08003cf6   Data          16  system_stm32f4xx.o(.constdata)
-    APBPrescTable                            0x08003d06   Data           8  system_stm32f4xx.o(.constdata)
-    Region$$Table$$Base                      0x08003d20   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08003d40   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x08003b61   Thumb Code   212  main.o(i.main)
+    servo_pid                                0x08003c55   Thumb Code   102  pid.o(i.servo_pid)
+    setServoPosition                         0x08003cd1   Thumb Code    42  main.o(i.setServoPosition)
+    _fp_init                                 0x08003d01   Thumb Code    10  fpinit.o(x$fpl$fpinit)
+    __fplib_config_fpu_vfp                   0x08003d09   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fplib_config_pureend_doubles           0x08003d09   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    AHBPrescTable                            0x08003d0a   Data          16  system_stm32f4xx.o(.constdata)
+    APBPrescTable                            0x08003d1a   Data           8  system_stm32f4xx.o(.constdata)
+    Region$$Table$$Base                      0x08003d34   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08003d54   Number         0  anon$$obj.o(Region$$Table)
     receivedX                                0x20000000   Data           2  main.o(.data)
     receivedY                                0x20000002   Data           2  main.o(.data)
     enc1_prev                                0x20000004   Data           4  main.o(.data)
@@ -2939,9 +2939,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000189
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00003d7c, Max: 0x00100000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00003d90, Max: 0x00100000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00003d40, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00003d54, Max: 0x00100000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -3158,32 +3158,32 @@ Memory Map of the image
     0x08003b48   0x08003b48   0x00000002   Code   RO          622    i._sys_exit         usart.o
     0x08003b4a   0x08003b4a   0x00000002   PAD
     0x08003b4c   0x08003b4c   0x00000014   Code   RO          623    i.fputc             usart.o
-    0x08003b60   0x08003b60   0x000000f8   Code   RO          199    i.main              main.o
-    0x08003c58   0x08003c58   0x00000080   Code   RO         4815    i.servo_pid         pid.o
-    0x08003cd8   0x08003cd8   0x00000014   Code   RO          200    i.setServoPosition  main.o
-    0x08003cec   0x08003cec   0x0000000a   Code   RO         5358    x$fpl$fpinit        fz_wm.l(fpinit.o)
-    0x08003cf6   0x08003cf6   0x00000010   Data   RO         4048    .constdata          system_stm32f4xx.o
-    0x08003d06   0x08003d06   0x00000008   Data   RO         4049    .constdata          system_stm32f4xx.o
-    0x08003d0e   0x08003d0e   0x00000011   Data   RO         5051    .constdata          c_w.l(__printf_flags_wp.o)
-    0x08003d1f   0x08003d1f   0x00000001   PAD
-    0x08003d20   0x08003d20   0x00000020   Data   RO         5422    Region$$Table       anon$$obj.o
+    0x08003b60   0x08003b60   0x000000f4   Code   RO          199    i.main              main.o
+    0x08003c54   0x08003c54   0x0000007c   Code   RO         4815    i.servo_pid         pid.o
+    0x08003cd0   0x08003cd0   0x00000030   Code   RO          200    i.setServoPosition  main.o
+    0x08003d00   0x08003d00   0x0000000a   Code   RO         5358    x$fpl$fpinit        fz_wm.l(fpinit.o)
+    0x08003d0a   0x08003d0a   0x00000010   Data   RO         4048    .constdata          system_stm32f4xx.o
+    0x08003d1a   0x08003d1a   0x00000008   Data   RO         4049    .constdata          system_stm32f4xx.o
+    0x08003d22   0x08003d22   0x00000011   Data   RO         5051    .constdata          c_w.l(__printf_flags_wp.o)
+    0x08003d33   0x08003d33   0x00000001   PAD
+    0x08003d34   0x08003d34   0x00000020   Data   RO         5422    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM2 (Exec base: 0x10000000, Load base: 0x08003d7c, Size: 0x00000000, Max: 0x00010000, ABSOLUTE)
+    Execution Region RW_IRAM2 (Exec base: 0x10000000, Load base: 0x08003d90, Size: 0x00000000, Max: 0x00010000, ABSOLUTE)
 
     **** No section assigned to this execution region ****
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08003d40, Size: 0x00000978, Max: 0x00020000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08003d54, Size: 0x00000978, Max: 0x00020000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08003d40   0x00000018   Data   RW          203    .data               main.o
-    0x20000018   0x08003d58   0x00000004   Data   RW          625    .data               usart.o
-    0x2000001c   0x08003d5c   0x0000000c   Data   RW         2035    .data               stm32f4xx_hal.o
-    0x20000028   0x08003d68   0x00000004   Data   RW         4050    .data               system_stm32f4xx.o
-    0x2000002c   0x08003d6c   0x0000000f   Data   RW         4819    .data               pid.o
-    0x2000003b   0x08003d7b   0x00000001   PAD
+    0x20000000   0x08003d54   0x00000018   Data   RW          203    .data               main.o
+    0x20000018   0x08003d6c   0x00000004   Data   RW          625    .data               usart.o
+    0x2000001c   0x08003d70   0x0000000c   Data   RW         2035    .data               stm32f4xx_hal.o
+    0x20000028   0x08003d7c   0x00000004   Data   RW         4050    .data               system_stm32f4xx.o
+    0x2000002c   0x08003d80   0x0000000f   Data   RW         4819    .data               pid.o
+    0x2000003b   0x08003d8f   0x00000001   PAD
     0x2000003c        -       0x00000048   Zero   RW          452    .bss                adc.o
     0x20000084        -       0x000000a8   Zero   RW          495    .bss                i2c.o
     0x2000012c        -       0x00000120   Zero   RW          548    .bss                tim.o
@@ -3203,8 +3203,8 @@ Image component sizes
        340         30          0          0         72       1765   adc.o
        308         30          0          0          0       1123   gpio.o
        356         50          0          0        168       2290   i2c.o
-       484         56          0         24          0     654332   main.o
-       128         22          0         15          0       1702   pid.o
+       508         54          0         24          0     654340   main.o
+       124         22          0         15          0       1702   pid.o
         64         26        392          0       1536        832   startup_stm32f407xx.o
        144         24          0         12          0       8665   stm32f4xx_hal.o
       1020         28          0          0          0       5146   stm32f4xx_hal_adc.o
@@ -3225,7 +3225,7 @@ Image component sizes
          0          0          0          0          0     718468   xunji.o
 
     ----------------------------------------------------------------------
-     13874        858        448         60       2268    1503879   Object Totals
+     13894        856        448         60       2268    1503887   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         34          0          0          1          0          0   (incl. Padding)
 
@@ -3288,15 +3288,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     15214        904        466         60       2364    1492243   Grand Totals
-     15214        904        466         60       2364    1492243   ELF Image Totals
-     15214        904        466         60          0          0   ROM Totals
+     15234        902        466         60       2364    1492251   Grand Totals
+     15234        902        466         60       2364    1492251   ELF Image Totals
+     15234        902        466         60          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                15680 (  15.31kB)
+    Total RO  Size (Code + RO Data)                15700 (  15.33kB)
     Total RW  Size (RW Data + ZI Data)              2424 (   2.37kB)
-    Total ROM Size (Code + RO Data + RW Data)      15740 (  15.37kB)
+    Total ROM Size (Code + RO Data + RW Data)      15760 (  15.39kB)
 
 ==============================================================================
 
