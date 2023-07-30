@@ -41,10 +41,10 @@ int fputc(int ch, struct __FILE *stream)
   // 鍒ゆ柇涓插彛鏄惁鍙戦縼瀹屾埧
   // while (((USART1->SR & USART_SR_TXE) == 0) || ((USART2->SR & USART_SR_TXE) == 0))
   //   ;
-  while ((USART2->SR & USART_SR_TXE) == 0) 
+  while ((USART1->SR & USART_SR_TXE) == 0) 
     ;
   // 濡傛灉涓插彛宸茬粡鍙戦縼瀹屾垚锛屽彂榭佷笅涓夸釜瀛楃
-  USART2->DR = (uint8_t)ch;
+  USART1->DR = (uint8_t)ch;
   // 濡傛灉涓插彛宸茬粡鍙戦縼瀹屾垚锛屽彂榭佷笅涓夸釜瀛楃
   // USART2->DR = (uint8_t)ch;
   return ch;
