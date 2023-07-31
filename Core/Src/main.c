@@ -43,10 +43,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 // 编码器有关变�???
-uint32_t encoderCount = 0; // 计数�???
-uint32_t encoderSpeed = 0; // 速度
-uint32_t enc1_prev = 0;	   // 上次计数器的�???
-
+float encoderDis = 0;
 float target_angle = 0.0;
 int flag = 0;
 GPIO_PinState ledStates[7];
@@ -93,13 +90,15 @@ void setServoPosition(uint16_t angle)
 	printf("%d\n", TIM2->CCR2);
 }
 // 获取编码器信�???
-uint32_t getEncoderSpeed(void)
+float getEncoderDistant(void)
 {
-	uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim1));
-	uint32_t pulseChange = enc1 - enc1_prev;
-	uint32_t speed = pulseChange * 10;
-	enc1_prev = enc1;
-	return speed;
+	float encoderDis = 0.0f;
+	float encoderCount = (float)(__HAL_TIM_GET_COUNTER(&htim4));
+	// printf("encoderCount:%d\r\n", encoderCount);
+	__HAL_TIM_SET_COUNTER(&htim4, 0); // 计数器清零
+	encoderDis = (encoderCount / 2288) * 3.14f * 7.2f;
+	printf("encoderCount:%f,encoderDis:%f\r\n", encoderCount, encoderDis);
+	return encoderDis;
 }
 // AD数模转换
 uint32_t ADC_Value;
@@ -180,14 +179,16 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
+	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
+	HAL_TIM_Base_Start_IT(&htim4); // 使能定时器2中断
+
 	// Mpu6050_Init();
 	// �?�? jy901 PC6 - PC7
-//	User_USART_Init(&JY901_data);
-//	printf("test!!\r\n");
+	//	User_USART_Init(&JY901_data);
+	//	printf("test!!\r\n");
 
-	OLED_Init();
-	OLED_Clear();
-
+	// OLED_Init();
+	// OLED_Clear();
 	// HAL_ADC_Start_IT(&hadc1);
 
 	/* USER CODE END 2 */
@@ -196,7 +197,14 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		
+		car_stright(500, 500);
+		delay_ms(1000);
+		encoderDis = getEncoderDistant();
+		while (1)
+		{
+			car_wait();
+		}
+
 		// flag = readLEDsState(ledStates);
 		// current_yaw = get_yaw();
 		// printf("%f\r\n", current_yaw);
