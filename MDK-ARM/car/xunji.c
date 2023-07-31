@@ -76,7 +76,7 @@ void track(int flag,int speed){
 	int right_pwm=speed;
    if (flag)
    {
-		motor_forward();
+//		motor_forward();
      if (flag==1) {		 
 	car_stright(left_pwm, right_pwm);}
 	 else if(flag==2){
@@ -102,6 +102,6 @@ void track(int flag,int speed){
 //     car_stop();
    
 //     }
-
-
 }
+
+

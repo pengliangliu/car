@@ -14,6 +14,21 @@ extern int CarRight90(float target_angle);
 extern void CarStraight(float target_angle);
 extern void CarBack(void);
 void servo_pid(int  x,int  y) ;
+void Cargo(float target_angle);
+// Define PID Controller structure
+typedef struct {
+    float target;
+    float Kp;
+    float Ki;
+    float Kd;
+    float integral;
+    float prev_error;
+} PID_Controller;
+
+void pid_init(PID_Controller* pid, float target, float Kp, float Ki, float Kd);
+float pid_control(PID_Controller* pid, float current_value);
+
+
 //typedef struct 
 //{
 //	float X_Kp;

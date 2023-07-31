@@ -188,10 +188,10 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-	setServoPosition(0,0);
+//	setServoPosition(0,0);
 	// 使能串口三接收中断
-    HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
-//	Mpu6050_Init();
+//    HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+		Mpu6050_Init();
 	
 	 
 //	OLED_Init();
@@ -204,31 +204,26 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
-		if (flag_servo){
-		servo_pid(receivedX,receivedY);
-			flag_servo=0;
-		}
-//		servo_pid(rxBuffer[0],rxBuffer[1]);
-//    flag=readLEDsState(ledStates);
-//		 current_yaw=get_yaw();
-//		printf("%f\r\n",current_yaw);
+//		if (flag_servo){
+//		servo_pid(receivedX,receivedY);
+//			flag_servo=0;
+//		}
+    flag=readLEDsState(ledStates);
+		 current_yaw=get_yaw();
+		printf("%f\r\n",current_yaw);
 //		//    OLED_ShowString(0,0,"gjkbhk",8);
 ////				OLED_DrawBMP(40, 2, 88, 8);
-//		if(flag!=7)
-////		 track(readLEDsState(ledStates),500);	//巡线
-//		 CarStraight(target_angle);
+		if(flag!=7)
+		 track(readLEDsState(ledStates),500);	//巡线
+//		 CarStraight(0.0);
 //		else{
 //			target_angle-=75.0f;
-//			delay_ms(150);
+//			delay_ms(500);
 //			car_wait();		   
 //    while(!CarRight90(target_angle)) 
 //			;		
 //		car_wait();
 //		flag=0;
-//		
-////		while(1){
-////		  CarStraight(target_angle);
-////		}
 //	}
     /* USER CODE END WHILE */
 

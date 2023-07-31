@@ -6,15 +6,7 @@
 #include "main.h"
 #include "xunji.h"
 #include "tim.h"
-// Define PID Controller structure
-typedef struct {
-    float target;
-    float Kp;
-    float Ki;
-    float Kd;
-    float integral;
-    float prev_error;
-} PID_Controller;
+
 
 // Define PID Controllers for left turn and straight movement
 PID_Controller left_turn_pid;
@@ -53,8 +45,8 @@ int CarRight90(float target_angle) {
     motor_turn_left();
     current_yaw = get_yaw();
     float control = pid_control(&left_turn_pid, current_yaw);
-    left_pwm = 490 + control;
-    right_pwm = 490 + control;
+    left_pwm = 500 + control;
+    right_pwm = 500 + control;
     car_left(left_pwm, right_pwm);
 
     if (fabs(current_yaw - target_angle) < 1.5) {
@@ -88,7 +80,24 @@ int CarLeft90(float target_angle) {
 
     return 0;
 }
+void Cargo(float target_angle) {
+    float current_yaw = 0.0;
+    uint16_t left_pwm = 100;
+    uint16_t right_pwm = 100;
 
+    // Initialize PID Controller for straight movement
+    pid_init(&straight_pid, target_angle, 1.0, 0, 0.01);
+
+    current_yaw = get_yaw();
+    float control = pid_control(&straight_pid, current_yaw);
+    left_pwm = 100 - control;
+    right_pwm = 100 + control;   
+     car_stright(left_pwm, right_pwm);      
+    if (fabs(current_yaw - target_angle) < 1.5) {
+        // Stop control loop, the car has reached the target angle
+        return;
+    }
+}
 void CarStraight(float target_angle) {
     float current_yaw = 0.0;
     uint16_t left_pwm = 500;
@@ -104,7 +113,6 @@ void CarStraight(float target_angle) {
 
     int flag = readLEDsState(ledstates);
     if (flag) {
-        motor_forward();
         if (flag == 1)
             car_stright(left_pwm, right_pwm);
         else if (flag == 2) {
