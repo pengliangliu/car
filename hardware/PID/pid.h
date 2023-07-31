@@ -28,7 +28,12 @@ typedef struct {
 void pid_init(PID_Controller* pid, float target, float Kp, float Ki, float Kd);
 float pid_control(PID_Controller* pid, float current_value);
 
-
+// Define PID Controllers for left turn and straight movement
+extern PID_Controller left_turn_pid;
+extern PID_Controller straight_pid;
+// 舵机X和Y轴的PID控制器
+extern PID_Controller pid_x;
+extern PID_Controller pid_y;
 //typedef struct 
 //{
 //	float X_Kp;

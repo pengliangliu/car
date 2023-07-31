@@ -42,9 +42,9 @@
 /* USER CODE BEGIN PTD */
 #define BUFFER_SIZE 4
 // 编码器有关变量
-uint32_t encoderCount = 0;  // 计数器
-uint32_t encoderSpeed = 0;  // 速度
-uint32_t enc1_prev = 0;     // 上次计数器的值
+	uint32_t encoderCount = 0;  // 计数器
+	uint32_t encoderSpeed = 0;  // 速度
+	uint32_t enc1_prev = 0;     // 上次计数器的值
 
 	float target_angle=0.0;
 	int flag=0;
@@ -52,8 +52,9 @@ uint32_t enc1_prev = 0;     // 上次计数器的值
 	float current_yaw;
 	
 	// 缓冲区用于存储接收到的数据
-uint8_t rxBuffer[BUFFER_SIZE];
-uint32_t rxIndex = 0;
+	uint8_t rxBuffer[BUFFER_SIZE];
+	uint32_t rxIndex = 0;
+	uint8_t buffer[3];
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -191,7 +192,9 @@ int main(void)
 //	setServoPosition(0,0);
 	// 使能串口三接收中断
 //    HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
-		Mpu6050_Init();
+// 重新启用串口三接收中断，以继续接收数据
+        HAL_UART_Receive_IT(&huart2, (uint8_t *)buffer, 1);
+//		Mpu6050_Init();
 	
 	 
 //	OLED_Init();
@@ -208,13 +211,13 @@ int main(void)
 //		servo_pid(receivedX,receivedY);
 //			flag_servo=0;
 //		}
-    flag=readLEDsState(ledStates);
-		 current_yaw=get_yaw();
-		printf("%f\r\n",current_yaw);
-//		//    OLED_ShowString(0,0,"gjkbhk",8);
-////				OLED_DrawBMP(40, 2, 88, 8);
-		if(flag!=7)
-		 track(readLEDsState(ledStates),500);	//巡线
+//    flag=readLEDsState(ledStates);
+//		 current_yaw=get_yaw();
+////		printf("%f\r\n",current_yaw);
+////		//    OLED_ShowString(0,0,"gjkbhk",8);
+//////				OLED_DrawBMP(40, 2, 88, 8);
+//		if(flag!=7)
+//		 track(readLEDsState(ledStates),500);	//巡线
 //		 CarStraight(0.0);
 //		else{
 //			target_angle-=75.0f;
@@ -290,6 +293,27 @@ void Mpu6050_Init(void) {
 
 	printf("%s\r\n", "Mpu6050 Init OK!");
 }
+
+// Function to update PID parameters via serial communication
+void update_pid_parameters(uint8_t* buffer,PID_Controller *pid) {    
+    float new_kp=buffer[0], new_ki=buffer[1], new_kd=buffer[2];	
+    // Assuming you have a function to read data from the serial port and store it in 'buffer'
+    // For example, if you are using UART:
+    // read_from_uart(buffer);
+
+    // Parse the received data to extract new parameter values
+    
+//	printf("%f,%f,%f\r\n",new_kp,new_ki,new_kd);
+
+    // Update PID parameters if new values are valid
+    if (new_kp > 0 && new_ki >= 0 && new_kd >= 0) {
+        pid->Kp = new_kp;
+        pid->Ki = new_ki;
+        pid->Kd = new_kd;
+    }
+//		printf("pid:%f,%f,%f\r\n",pid->Kp,pid->Ki,pid->Kd);
+}
+uint8_t buffer_index = 0;
 // 串口三接收中断处理函数
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -310,10 +334,23 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 					  flag_servo=1;
             rxIndex = 0;
         }
-
         // 重新启用串口三接收中断，以继续接收数据
         HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
     }
+		if (huart == &huart2)
+    {
+			buffer[buffer_index] = huart->Instance->DR; // Read received data from UART DR register
+//			printf("%d\r\n",buffer[buffer_index]);
+			buffer_index++;
+			if (buffer_index >= 3) {
+				update_pid_parameters(buffer,&pid_track_left);
+				update_pid_parameters(buffer,&pid_track_right);
+            buffer_index=0;
+        }
+//			printf("pid:%f,%f,%f\r\n",pid_track_left.Kp,pid_track_left.Ki,pid_track_left.Kd);
+			 // 重新启用串口三接收中断，以继续接收数据
+        HAL_UART_Receive_IT(&huart2, (uint8_t *)buffer, 1);
+			}	
 }
 
 /* USER CODE END 4 */

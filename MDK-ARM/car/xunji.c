@@ -72,30 +72,33 @@ if (i == 7) {
 
 void track(int flag,int speed){
 	
-	int left_pwm=speed;
-	int right_pwm=speed;
-   if (flag)
-   {
-//		motor_forward();
-     if (flag==1) {		 
-	car_stright(left_pwm, right_pwm);}
-	 else if(flag==2){
-    //    motor_turn_right();
-	 car_stright(left_pwm*0.5, right_pwm);
-	 }
-	 else if(flag==3){
-        //  motor_turn_left();
-	 car_stright(left_pwm, right_pwm*0.5);
-	 }
-     else if(flag==4){
-        //  motor_turn_right();
-	 car_stright(left_pwm*0.2, right_pwm);
-	 }
-     else if(flag==5){
-    //    motor_turn_left();
-	 car_stright(left_pwm, right_pwm*0.2);
-	 }
-   }	 
+	int left_pwm;
+	int right_pwm;
+    if (flag) {
+        if (flag == 1) {
+            left_pwm = speed;
+            right_pwm = speed;
+					track_pid(left_pwm, right_pwm);	
+        } else if (flag == 2) {
+            left_pwm = speed * 0.5;
+            right_pwm = speed;     
+track_pid(left_pwm, right_pwm);						
+        } else if (flag == 3) {
+            left_pwm = speed;
+            right_pwm = speed * 0.5;
+					track_pid(left_pwm, right_pwm);	
+            
+        } else if (flag == 4) {
+            left_pwm = speed * 0.2;
+            right_pwm = speed;
+					track_pid(left_pwm, right_pwm);	
+        } else if (flag == 5) {
+            left_pwm = speed;
+            right_pwm = speed * 0.2;
+					track_pid(left_pwm, right_pwm);	
+        }
+        
+    }
 // 	 else {
 // //        car_wait();
 // //    while (!CarRight90());
@@ -104,4 +107,48 @@ void track(int flag,int speed){
 //     }
 }
 
+PID_Controller pid_track_left;
+PID_Controller pid_track_right;
+void track_pid(int target_left,int target_right) {
+    int current_leftpwm=HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_2);
+		int current_rightpwm=HAL_TIM_ReadCapturedValue(&htim2, TIM_CHANNEL_3);
+	printf("left:%d,right:%d\r\n",current_leftpwm,current_rightpwm);
+		pid_init(&pid_track_left, target_left, 0.45, 0, 0.015);
+		pid_init(&pid_track_right, target_right, 0.45, 0, 0.015);
+		int control_left = pid_control(&pid_track_left, current_leftpwm);
+		int control_right = pid_control(&pid_track_right, current_rightpwm);
+		printf("conleft:%d,conright:%d\r\n",control_left,control_right);
+		current_leftpwm=control_left+current_leftpwm;
+		current_rightpwm=control_right+current_rightpwm;
+	// Apply limits
+    if (current_leftpwm > 500) {
+        current_leftpwm = 500;
+    } else if (current_leftpwm < 100) {
+        current_leftpwm = 100;
+    }
 
+    if (current_rightpwm > 500) {
+        current_rightpwm = 500;
+    } else if (current_rightpwm < 100) {
+        current_rightpwm = 100;
+    }
+		printf("left:%d,right:%d\r\n",current_leftpwm,current_rightpwm);	
+		car_stright(current_leftpwm, current_rightpwm);
+	
+	
+}
+
+//int calculate_pid_left(int target_left, int current_left) {
+//    static PID_Controller pid_track_left;
+//    pid_init(&pid_track_left, target_left, 1.0, 0, 0.01);
+//    int control_left = pid_control(&pid_track_left, current_left);
+//    return control_left;
+//}
+
+//// Function to calculate PID control value for right track
+//int calculate_pid_right(int target_right, int current_right) {
+//    static PID_Controller pid_track_right;
+//    pid_init(&pid_track_right, target_right, 1.0, 0, 0.01);
+//    int control_right = pid_control(&pid_track_right, current_right);
+//    return control_right;
+//}

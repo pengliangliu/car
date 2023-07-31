@@ -43,11 +43,11 @@ car\main.o: ../Core/Inc/usart.h
 car\main.o: ../Core/Inc/gpio.h
 car\main.o: C:\mdk\ARM\ARMCC\Bin\..\include\stdio.h
 car\main.o: ./car/xunji.h
+car\main.o: ../hardware/PID/pid.h
 car\main.o: ../hardware/MPU6050/mpu6050.h
+car\main.o: C:\mdk\ARM\ARMCC\Bin\..\include\math.h
 car\main.o: ../hardware/MPU6050/delay.h
 car\main.o: ../hardware/MPU6050/eMPL/inv_mpu.h
 car\main.o: ../hardware/MPU6050/eMPL/inv_mpu_dmp_motion_driver.h
-car\main.o: ../hardware/PID/pid.h
-car\main.o: C:\mdk\ARM\ARMCC\Bin\..\include\math.h
 car\main.o: ../hardware/Car/car.h
 car\main.o: ../hardware/oled/oled.h
