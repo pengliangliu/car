@@ -81,6 +81,7 @@ float Real_value;	// 真实值
 
 int16_t receivedX;
 int16_t receivedY;
+int pwmValue;
 
 /* USER CODE END PV */
 
@@ -109,6 +110,15 @@ void setServoPosition(int angle_x, int angle_y)
 	//	TIM3->CCR2 = 1199;
 }
 
+void setServoPwm(int pwm_x, int pwm_y)
+{
+	// 定时器3
+	TIM3->CCR1 = pwm_y;
+	TIM3->CCR2 = pwm_x;
+	// 定时器3
+	//	TIM3->CCR1 = 249;
+	//	TIM3->CCR2 = 1199;
+}
 // 获取编码器信息
 uint32_t getEncoderSpeed(void)
 {
@@ -197,7 +207,7 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-	setServoPosition(0, 70);
+	setServoPwm(509, 500);
 	// 使能串口三接收中断
 	HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
 	//	Mpu6050_Init();
@@ -213,9 +223,11 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
+
 		if (flag_servo)
 		{
 			servo_pid(receivedX, receivedY);
+
 			flag_servo = 0;
 		}
 		//		servo_pid(rxBuffer[0],rxBuffer[1]);

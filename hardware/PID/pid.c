@@ -152,13 +152,13 @@ void servo_pid(int x, int y)
 
     // 舵机往左转
     if (x > 10)
-        angle_x = angle_x + 5;
+        angle_x = angle_x - 2;
     else if (x < -10)
-        angle_x = angle_x - 5;
+        angle_x = angle_x + 2;
     if (y > 10)
-        angle_y = angle_y - 5;
+        angle_y = angle_y + 2;
     else if (y < -10)
-        angle_y = angle_y + 5;
+        angle_y = angle_y - 2;
     if (angle_y > 90)
         angle_y = 90;
     else if (angle_y < 0)
@@ -169,7 +169,7 @@ void servo_pid(int x, int y)
         angle_x = 0;
     setServoPosition(angle_x, angle_y);
     printf("angle :%d  %d\r\n", angle_x, angle_y);
-    // 读取当前舵机角度
+
 }
 
 // PID pid;
