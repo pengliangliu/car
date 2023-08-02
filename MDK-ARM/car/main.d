@@ -50,4 +50,4 @@ car\main.o: ../hardware/MPU6050/eMPL/inv_mpu_dmp_motion_driver.h
 car\main.o: ../hardware/PID/pid.h
 car\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
 car\main.o: ../hardware/Car/car.h
-car\main.o: ..\hardware\oled\oled.h
+car\main.o: ../hardware/oled/oled.h
