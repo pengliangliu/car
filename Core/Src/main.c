@@ -164,7 +164,7 @@ int main(void)
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
 	// setServoPwm(509, 500);
 	// [299, 1199]
-	setServoPwm(500, 750);
+	setServoPwm(675, 783);
 	// 使能串口三接收中�??
 	HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
 	HAL_UART_Receive_IT(&huart1, &buffer1[1], 1);
@@ -294,48 +294,74 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		buffer1[0] = huart->Instance->DR; // Read received data from UART DR register
 		if (buffer1[0] == 0x00)
 		{
-			setServoPwm(500, 750);
-			printf("reset\r\n", pwm_test_x);
+			setServoPwm(675, 783);
+			printf("reset\r\n");
 		}
+		// x轴 +-10
 		else if (buffer1[0] == 0x01)
 		{
 			pwm_test_x = pwm_test_x + 10;
-			printf("%d\r\n", pwm_test_x);
+			printf("pwm_test_x:%d\r\n", pwm_test_x);
 		}
 		else if (buffer1[0] == 0x02)
 		{
 			pwm_test_x = pwm_test_x - 10;
-			printf("%d\r\n", pwm_test_x);
+			printf("pwm_test_x:%d\r\n", pwm_test_x);
 		}
+		// y轴 +-10
 		else if (buffer1[0] == 0x03)
 		{
 			pwm_test_y = pwm_test_y + 10;
-			printf("%d\r\n", pwm_test_y);
+			printf("pwm_test_y:%d\r\n", pwm_test_y);
 		}
 		else if (buffer1[0] == 0x04)
 		{
 			pwm_test_y = pwm_test_y - 10;
-			printf("%d\r\n", pwm_test_y);
+			printf("pwm_test_y:%d\r\n", pwm_test_y);
 		}
+		// x轴 +-100
 		else if (buffer1[0] == 0x05)
 		{
 			pwm_test_x = pwm_test_x + 100;
-			printf("%d\r\n", pwm_test_x);
+			printf("pwm_test_x:%d\r\n", pwm_test_x);
 		}
 		else if (buffer1[0] == 0x06)
 		{
 			pwm_test_x = pwm_test_x - 100;
-			printf("%d\r\n", pwm_test_x);
+			printf("pwm_test_x:%d\r\n", pwm_test_x);
 		}
+		// y轴 +-100
 		else if (buffer1[0] == 0x07)
 		{
 			pwm_test_y = pwm_test_y + 100;
-			printf("%d\r\n", pwm_test_y);
+			printf("pwm_test_y:%d\r\n", pwm_test_y);
 		}
 		else if (buffer1[0] == 0x08)
 		{
 			pwm_test_y = pwm_test_y - 100;
-			printf("%d\r\n", pwm_test_y);
+			printf("pwm_test_y:%d\r\n", pwm_test_y);
+		}
+		// x轴 +-1
+		else if (buffer1[0] == 0x09)
+		{
+			pwm_test_x = pwm_test_x + 1;
+			printf("pwm_test_x:%d\r\n", pwm_test_x);
+		}
+		else if (buffer1[0] == 0x10)
+		{
+			pwm_test_x = pwm_test_x - 1;
+			printf("pwm_test_x:%d\r\n", pwm_test_x);
+		}
+		// y轴 +-1
+		else if (buffer1[0] == 0x12)
+		{
+			pwm_test_y = pwm_test_y + 1;
+			printf("pwm_test_y:%d\r\n", pwm_test_y);
+		}
+		else if (buffer1[0] == 0x13)
+		{
+			pwm_test_y = pwm_test_y - 1;
+			printf("pwm_test_y:%d\r\n", pwm_test_y);
 		}
 		// 重新启用串口接收中断，以继续接收数据
 		setServoPwm(pwm_test_x, pwm_test_y);
