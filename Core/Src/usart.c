@@ -42,11 +42,11 @@ int fputc(int ch, struct __FILE *stream)
   // 鍒ゆ柇涓插彛鏄惁鍙戦縼瀹屾�?
   // while (((USART1->SR & USART_SR_TXE) == 0) || ((USART2->SR & USART_SR_TXE) == 0))
   //   ;
-  while ((USART1->SR & USART_SR_TXE) == 0)
+  while ((USART1->SR & USART_SR_TXE) == 0) 
     ;
-  // 濡傛灉涓插彛宸茬粡鍙戦縼瀹屾垚锛屽彂�?佷笅涓夸釜�?��?��??
+  // ???????????????????????????
   USART1->DR = (uint8_t)ch;
-  // 濡傛灉涓插彛宸茬粡鍙戦縼瀹屾垚锛屽彂�?佷笅涓夸釜�?��?��??
+  // ???????????????????????????
   // USART2->DR = (uint8_t)ch;
   return ch;
 }
@@ -83,6 +83,7 @@ void MX_USART1_UART_Init(void)
   {
     Error_Handler();
   }
+  
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */

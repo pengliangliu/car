@@ -42,12 +42,24 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-// 编码器有关变�???
-float encoderDis = 0;
+#define BUFFER_SIZE 4
+// 编码器有关变量
+uint32_t encoderCount = 0; // 计数器
+uint32_t encoderSpeed = 0; // 速度
+uint32_t enc1_prev = 0;	   // 上次计数器的值
+
 float target_angle = 0.0;
 int flag = 0;
 GPIO_PinState ledStates[7];
 float current_yaw;
+
+// 缓冲区用于存储接收到的数据
+uint8_t rxBuffer[BUFFER_SIZE];
+uint32_t rxIndex = 0;
+
+// 舵机巡线
+int targetX = 0;
+int targetY = 0;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -70,8 +82,12 @@ float current_yaw;
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 /* USER CODE BEGIN PV */
-uint16_t ADC_value; // AD�???
-float Real_value;	// 真实�???
+uint16_t ADC_value; // AD值
+float Real_value;	// 真实值
+
+int16_t receivedX;
+int16_t receivedY;
+int pwmValue;
 
 /* USER CODE END PV */
 
@@ -79,26 +95,44 @@ float Real_value;	// 真实�???
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-void setServoPosition(uint16_t angle)
+int flag_servo;
+/*
+	逆时针增大
+	x[0,180]-> PWM[249,1199]
+	y[0,90]-> PWM[249,599]
+*/
+void setServoPosition(int angle_x, int angle_y)
 {
-	// 舵机
-	uint16_t pulse = (uint16_t)((angle * 999) / 180);
 
-	// 定时�???3，需要改配置
-	TIM3->CCR2 = pulse;
-	printf("%d\n", TIM2->CCR2);
+	// // 舵机
+	uint16_t pulse_x = ((angle_x * 350) / 180) + 249;
+	uint16_t pulse_y = ((angle_y * 350) / 180) + 249;
+
+	// 定时器3
+	TIM3->CCR1 = pulse_y;
+	TIM3->CCR2 = pulse_x;
+	// 定时器3
+	//	TIM3->CCR1 = 249;
+	//	TIM3->CCR2 = 1199;
 }
-// 获取编码器信�???
-float getEncoderDistant(void)
+
+void setServoPwm(int pwm_x, int pwm_y)
 {
-	float encoderDis = 0.0f;
-	float encoderCount = (float)(__HAL_TIM_GET_COUNTER(&htim4));
-	// printf("encoderCount:%d\r\n", encoderCount);
-	__HAL_TIM_SET_COUNTER(&htim4, 0); // 计数器清零
-	encoderDis = (encoderCount / 2288) * 3.14f * 7.2f;
-	printf("encoderCount:%f,encoderDis:%f\r\n", encoderCount, encoderDis);
-	return encoderDis;
+	// 定时器3
+	TIM3->CCR1 = pwm_y;
+	TIM3->CCR2 = pwm_x;
+	// 定时器3
+	//	TIM3->CCR1 = 249;
+	//	TIM3->CCR2 = 1199;
+}
+// 获取编码器信息
+uint32_t getEncoderSpeed(void)
+{
+	uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim1));
+	uint32_t pulseChange = enc1 - enc1_prev;
+	uint32_t speed = pulseChange * 10;
+	enc1_prev = enc1;
+	return speed;
 }
 // AD数模转换
 uint32_t ADC_Value;
@@ -116,7 +150,7 @@ void getVoltage(void)
 	}
 	HAL_Delay(1000);
 }
-// 调试�???
+// 调试用
 void car_wait(void)
 {
 
@@ -180,53 +214,32 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-	HAL_TIM_Base_Start_IT(&htim4); // 使能定时器2中断
+	// setServoPwm(509, 500);
+	// [299, 1199]
+	setServoPwm(599, 1199);
+	// 使能串口三接收中断
+	HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+	//	Mpu6050_Init();
 
-	// Mpu6050_Init();
-	// �?�? jy901 PC6 - PC7
-	//	User_USART_Init(&JY901_data);
-	//	printf("test!!\r\n");
+	//	OLED_Init();
+	//	OLED_Clear();
 
-	// OLED_Init();
-	// OLED_Clear();
 	// HAL_ADC_Start_IT(&hadc1);
-
+	printf("start\r\n");
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		car_stright(500, 500);
-		delay_ms(1000);
-		encoderDis = getEncoderDistant();
-		while (1)
+
+		if (flag_servo)
 		{
-			car_wait();
+			servo_pid(receivedX, receivedY);
+
+			flag_servo = 0;
 		}
 
-		// flag = readLEDsState(ledStates);
-		// current_yaw = get_yaw();
-		// printf("%f\r\n", current_yaw);
-		// //    OLED_ShowString(0,0,"gjkbhk",8);
-		// //				OLED_DrawBMP(40, 2, 88, 8);
-		// if (flag != 7)
-		// 	//		 track(readLEDsState(ledStates),500);	//巡线
-		// 	CarStraight(target_angle);
-		// else
-		// {
-		// 	target_angle -= 75.0f;
-		// 	delay_ms(150);
-		// 	car_wait();
-		// 	while (!CarRight90(target_angle))
-		// 		;
-		// 	car_wait();
-		// 	flag = 0;
-
-		// 	//		while(1){
-		// 	//		  CarStraight(target_angle);
-		// 	//		}
-		// }
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
@@ -292,6 +305,31 @@ void Mpu6050_Init(void)
 	}
 
 	printf("%s\r\n", "Mpu6050 Init OK!");
+}
+// 串口三接收中断处理函数
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if (huart == &huart3)
+	{
+		// 读取接收到的数据，并存储到缓冲区中
+		rxBuffer[rxIndex++] = huart3.Instance->DR;
+
+		// 判断是否接收完成
+		if (rxIndex >= BUFFER_SIZE)
+		{
+			// 接收完成，解析X坐标和Y坐标
+			receivedX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
+			receivedY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
+			// printf("%d  %d\r\n", receivedX, receivedY);
+			// 使用 receivedX 和 receivedY 进行后续处理
+			// 重置缓冲区索引，准备下一次接收
+			flag_servo = 1;
+			rxIndex = 0;
+		}
+
+		// 重新启用串口三接收中断，以继续接收数据
+		HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+	}
 }
 
 /* USER CODE END 4 */

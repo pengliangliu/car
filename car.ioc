@@ -322,11 +322,18 @@ TIM2.Channel-PWM\ Generation4\ CH4=TIM_CHANNEL_4
 TIM2.IPParameters=Period,Prescaler,Channel-PWM Generation1 CH1,Channel-PWM Generation2 CH2,Channel-PWM Generation3 CH3,Channel-PWM Generation4 CH4
 TIM2.Period=999
 TIM2.Prescaler=0
+TIM3.AutoReloadPreload=TIM_AUTORELOAD_PRELOAD_DISABLE
 TIM3.Channel-PWM\ Generation1\ CH1=TIM_CHANNEL_1
 TIM3.Channel-PWM\ Generation2\ CH2=TIM_CHANNEL_2
 TIM3.Channel-PWM\ Generation3\ CH3=TIM_CHANNEL_3
 TIM3.Channel-PWM\ Generation4\ CH4=TIM_CHANNEL_4
+<<<<<<< HEAD
 TIM3.IPParameters=Channel-PWM Generation2 CH2,Channel-PWM Generation3 CH3,Channel-PWM Generation4 CH4,Channel-PWM Generation1 CH1
+=======
+TIM3.IPParameters=Channel-PWM Generation1 CH1,Channel-PWM Generation2 CH2,Channel-PWM Generation3 CH3,Channel-PWM Generation4 CH4,Period,Prescaler,AutoReloadPreload
+TIM3.Period=19999
+TIM3.Prescaler=167
+>>>>>>> track_color
 TIM4.EncoderMode=TIM_ENCODERMODE_TI12
 TIM4.IPParameters=Prescaler,EncoderMode
 TIM4.Prescaler=3

@@ -54,9 +54,11 @@ extern "C"
   void Mpu6050_Init(void);
   void car_wait(void);
   void getVoltage(void);
-  float getEncoderDistant(void);
-  void setServoPosition(uint16_t angle);
+  uint32_t getEncoderSpeed(void);
+  void setServoPosition(int angle_x, int angle_y);
+  void setServoPwm(int pwm_x, int pwm_y);
 
+  // void implement();
   /* USER CODE END ET */
 
   /* Exported constants --------------------------------------------------------*/

@@ -1,8 +1,12 @@
 {
     "files.associations": {
+<<<<<<< HEAD
         "mpu6050.h": "c",
         "jy901.h": "c",
         "my_uart.h": "c",
         "main.h": "c"
+=======
+        "mpu6050.h": "c"
+>>>>>>> track_color
     }
 }

@@ -1,2 +1,7 @@
 Load "car\\car.axf" 
+<<<<<<< HEAD
 Erase Done.Programming Done.Verify OK.Flash Load finished at 15:43:40
+=======
+Erase Done.Programming Done.Verify OK.Application running ...
+Flash Load finished at 16:12:59
+>>>>>>> track_color

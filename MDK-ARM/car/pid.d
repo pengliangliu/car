@@ -44,3 +44,4 @@ car\pid.o: ../Core/Inc/usart.h
 car\pid.o: ../hardware/MPU6050/delay.h
 car\pid.o: ../hardware/Car/car.h
 car\pid.o: ./car/xunji.h
+car\pid.o: ../Core/Inc/tim.h
