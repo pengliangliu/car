@@ -53,6 +53,7 @@ int pwm_test_y = 750;
 int16_t receivedX;
 int16_t receivedY;
 int flag_servo;
+int flag_problem = 0;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -182,6 +183,16 @@ int main(void)
 	while (1)
 	{
 
+		if (flag_problem == 2)
+		{
+			Problem2();
+			flag_problem = 0;
+		}
+		else if (flag_problem == 3)
+		{
+			Problem3();
+			flag_problem = 0;
+		}
 		// if (flag_servo)
 		// {
 		// 	servo_pid(receivedX, receivedY);
@@ -204,21 +215,38 @@ void Problem2(void)
 {
 	// 顺时针移动
 	// 左上顶点
-	setServoPwm(500, 750);
-	delay_ms(100);
+	setServoPwm(750, 717);
+	delay_ms(1000);
 	// 右上顶点
-	setServoPwm(500, 750);
-	delay_ms(100);
+	setServoPwm(601, 712);
+	delay_ms(1000);
 	// 右下顶点
-	setServoPwm(500, 750);
-	delay_ms(100);
+	setServoPwm(605, 844);
+	delay_ms(1000);
 	// 左下顶点
-	setServoPwm(500, 750);
-	delay_ms(100);
+	setServoPwm(745, 844);
+	delay_ms(1000);
+	// 回左上角
+	setServoPwm(750, 717);
 }
 
 void Problem3(void)
 {
+	// 顺时针移动
+	// 左上顶点
+	setServoPwm(733, 765);
+	delay_ms(1000);
+	// 右上顶点
+	setServoPwm(647, 758);
+	delay_ms(1000);
+	// 右下顶点
+	setServoPwm(647, 818);
+	delay_ms(1000);
+	// 左下顶点
+	setServoPwm(730, 818);
+	delay_ms(1000);
+	// 回左上角
+	setServoPwm(733, 765);
 }
 /**
  * @brief System Clock Configuration
@@ -291,6 +319,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	}
 	if (huart == &huart1)
 	{
+		// x 左+ 右-
+		// y 下+ 上-
 		buffer1[0] = huart->Instance->DR; // Read received data from UART DR register
 		if (buffer1[0] == 0x00)
 		{
@@ -362,6 +392,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		{
 			pwm_test_y = pwm_test_y - 1;
 			printf("pwm_test_y:%d\r\n", pwm_test_y);
+		}
+		else if (buffer1[0] == 0x90)
+		{
+			flag_problem = 2;
+			printf("Problem2:\r\n");
+		}
+		else if (buffer1[0] == 0x91)
+		{
+			flag_problem = 3;
+			printf("Problem3:\r\n");
+		}
+		else if (buffer1[0] == 0x99)
+		{
+			printf("pwm_test_x:%d, pwm_test_y:%d\r\n", pwm_test_x, pwm_test_y);
 		}
 		// 重新启用串口接收中断，以继续接收数据
 		setServoPwm(pwm_test_x, pwm_test_y);
