@@ -54,6 +54,10 @@ float current_yaw;
 // 缓冲区用于存储接收到的数据
 uint8_t rxBuffer[BUFFER_SIZE];
 uint32_t rxIndex = 0;
+
+// 舵机巡线
+int targetX = 0;
+int targetY = 0;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -99,8 +103,8 @@ void setServoPosition(int angle_x, int angle_y)
 {
 
 	// // 舵机
-	uint16_t pulse_x = ((angle_x * 950) / 180) + 249;
-	uint16_t pulse_y = ((angle_y * 350) / 90) + 249;
+	uint16_t pulse_x = ((angle_x * 350) / 180) + 249;
+	uint16_t pulse_y = ((angle_y * 350) / 180) + 249;
 
 	// 定时器3
 	TIM3->CCR1 = pulse_y;
@@ -207,7 +211,9 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-	setServoPwm(509, 500);
+	// setServoPwm(509, 500);
+	// [299, 1199]
+	setServoPwm(599, 1199);
 	// 使能串口三接收中断
 	HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
 	//	Mpu6050_Init();
@@ -230,28 +236,7 @@ int main(void)
 
 			flag_servo = 0;
 		}
-		//		servo_pid(rxBuffer[0],rxBuffer[1]);
-		//    flag=readLEDsState(ledStates);
-		//		 current_yaw=get_yaw();
-		//		printf("%f\r\n",current_yaw);
-		//		//    OLED_ShowString(0,0,"gjkbhk",8);
-		////				OLED_DrawBMP(40, 2, 88, 8);
-		//		if(flag!=7)
-		////		 track(readLEDsState(ledStates),500);	//巡线
-		//		 CarStraight(target_angle);
-		//		else{
-		//			target_angle-=75.0f;
-		//			delay_ms(150);
-		//			car_wait();
-		//    while(!CarRight90(target_angle))
-		//			;
-		//		car_wait();
-		//		flag=0;
-		//
-		////		while(1){
-		////		  CarStraight(target_angle);
-		////		}
-		//	}
+
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */

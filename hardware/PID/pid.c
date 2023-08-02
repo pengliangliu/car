@@ -144,32 +144,30 @@ void CarStraight(float target_angle)
     Æ«ÒÆ·¶Î§ [-120, 120]
     ¶æ»úÔË¶¯½Ç¶È·¶Î§ []
 */
-int angle_x = 50;
-int angle_y = 50;
+int pwm_x = 50;
+int pwm_y = 50;
 void servo_pid(int x, int y)
 {
     // ³õÊ¼»¯PID¿ØÖÆÆ÷
 
     // ¶æ»úÍù×ó×ª
     if (x > 10)
-        angle_x = angle_x - 2;
+        pwm_x = pwm_x - 50;
     else if (x < -10)
-        angle_x = angle_x + 2;
+        pwm_x = pwm_x + 50;
     if (y > 10)
-        angle_y = angle_y + 2;
+        pwm_y = pwm_y + 50;
     else if (y < -10)
-        angle_y = angle_y - 2;
-    if (angle_y > 90)
-        angle_y = 90;
-    else if (angle_y < 0)
-        angle_y = 0;
-    if (angle_x > 180)
-        angle_x = 180;
-    else if (angle_x < 0)
-        angle_x = 0;
-    setServoPosition(angle_x, angle_y);
-    printf("angle :%d  %d\r\n", angle_x, angle_y);
-
+        pwm_y = pwm_y - 50;
+    if (pwm_x > 1199)
+        pwm_x = 1199;
+    else if (pwm_x < 299)
+        pwm_x = 299;
+    if (pwm_y > 1199)
+        pwm_y = 1199;
+    else if (pwm_y < 299)
+        pwm_y = 299;
+    setServoPwm(pwm_x, pwm_y);
 }
 
 // PID pid;
