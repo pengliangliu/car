@@ -40,7 +40,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define BUFFER_SIZE 4
+#define BUFFER_SIZE 16
 // 缓冲区用于存储接收到的数�??
 uint8_t rxBuffer[BUFFER_SIZE];
 uint32_t rxIndex = 0;
@@ -50,8 +50,20 @@ int targetY = 0;
 uint8_t buffer1[1];
 int pwm_test_x = 500;
 int pwm_test_y = 750;
-int16_t receivedX;
-int16_t receivedY;
+
+// 接收红色激光坐标
+int16_t redX;
+int16_t redY;
+// 接收黑框坐标
+int16_t x_left_top;
+int16_t y_left_top;
+int16_t x_right_top;
+int16_t y_right_top;
+int16_t x_right_bottom;
+int16_t y_right_bottom;
+int16_t x_left_bottom;
+int16_t y_left_bottom;
+
 int flag_servo;
 int flag_problem = 0;
 /* USER CODE END PTD */
@@ -229,7 +241,6 @@ void Problem2(void)
 	// 回左上角
 	setServoPwm(750, 717);
 }
-
 void Problem3(void)
 {
 	// 顺时针移动
@@ -305,8 +316,22 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		if (rxIndex >= BUFFER_SIZE)
 		{
 			// 接收完成，解析X坐标和Y坐标
-			receivedX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
-			receivedY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
+			// receivedX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
+			// receivedY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
+			x_left_top = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
+			y_left_top = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
+
+			x_right_top = (int16_t)((rxBuffer[7] << 8) | rxBuffer[6]);
+			y_right_top = (int16_t)((rxBuffer[5] << 8) | rxBuffer[4]);
+
+			x_right_bottom = (int16_t)((rxBuffer[11] << 8) | rxBuffer[10]);
+			y_right_bottom = (int16_t)((rxBuffer[9] << 8) | rxBuffer[8]);
+
+			x_left_bottom = (int16_t)((rxBuffer[15] << 8) | rxBuffer[14]);
+			y_left_bottom = (int16_t)((rxBuffer[13] << 8) | rxBuffer[12]);
+
+			printf("%d  %d\r\n", x_left_bottom, y_left_bottom);
+
 			// printf("%d  %d\r\n", receivedX, receivedY);
 			// 使用 receivedX �?? receivedY 进行后续处理
 			// 重置缓冲区索引，准备下一次接�??
