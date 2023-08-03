@@ -20,6 +20,8 @@ typedef struct
 // 舵机X和Y轴的PID控制器
 PID_Controller pid_x;
 PID_Controller pid_y;
+int current_x;
+int current_y;
 
 void pid_init(PID_Controller *pid, float target, float Kp, float Ki, float Kd)
 {
@@ -51,17 +53,17 @@ float pid_control(PID_Controller *pid, float current_value)
     偏移范围 [-120, 120]
     舵机运动角度范围 []
 */
-int pwm_x = 50;
-int pwm_y = 50;
+int pwm_x = 640;
+int pwm_y = 788;
 void servo_test(int x, int y)
 {
     // 初始化PID控制器
 
     // 舵机往左转
     if (x > 10)
-        pwm_x = pwm_x - 50;
+        pwm_x = pwm_x + 5;
     else if (x < -10)
-        pwm_x = pwm_x + 50;
+        pwm_x = pwm_x - 5;
     if (y > 10)
         pwm_y = pwm_y + 50;
     else if (y < -10)
@@ -74,7 +76,7 @@ void servo_test(int x, int y)
         pwm_y = 1199;
     else if (pwm_y < 299)
         pwm_y = 299;
-    setServoPwm(pwm_x, pwm_y);
+    setServoPwm(pwm_x, 788);
 }
 
 void servo_pid(int x, int y)
@@ -86,8 +88,8 @@ void servo_pid(int x, int y)
     }
     // x方向PID
     //    float target_angle = -10.0; // Target angle for the left turn
-    int pwm_x = 500;
-    int pwm_y = 500;
+    int pwm_x = 640;
+    int pwm_y = 788;
 
     // Initialize PID Controller for the left turn
     pid_init(&pid_x, 0, 2.0, 0, 0);
@@ -95,5 +97,37 @@ void servo_pid(int x, int y)
     float control = pid_control(&pid_x, x);
     pwm_x = pwm_x + control;
     printf("x: %d, control: %.3f, y: %d\r\n", pwm_x, control, pwm_y);
-    setServoPwm(pwm_x, 500);
+    setServoPwm(pwm_x, 788);
+}
+void servo_pid_test(int red_x, int red_y, int target_x, int target_y)
+{
+    int error_x = red_x - target_x;
+    int error_y = red_y - target_y;
+    int set_pwm_x;
+    int set_pwm_y;
+    if (fabs(error_x) < 5 && fabs(error_y) < 5)
+    {
+        return;
+    }
+    printf("error_x:%d\r\n", error_x);
+    // Initialize PID Controller for the left turn
+    pid_init(&pid_x, target_x, 3, 0.1, 0.1);
+
+    float control = pid_control(&pid_x, red_x);
+		control = control/10;
+    if (error_x > 0)
+    {
+        set_pwm_x = current_x + fabs(control);
+    }
+    else if (error_x < 0)
+    {
+        set_pwm_x = current_x - fabs(control);
+    }
+
+    if (set_pwm_x > 900)
+        set_pwm_x = 900;
+    else if (set_pwm_x < 400)
+        set_pwm_x = 400;
+    printf("x: %d, control: %.3f, y: %d\r\n", set_pwm_x, control, set_pwm_y);
+    setServoPwm(set_pwm_x, 788);
 }
