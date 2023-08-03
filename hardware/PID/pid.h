@@ -13,7 +13,6 @@ extern int CarLeft90(float target_angle);
 extern int CarRight90(float target_angle);
 extern void CarStraight(float target_angle);
 extern void CarBack(void);
-void servo_pid(int  x,int  y) ;
 void Cargo(float target_angle);
 // Define PID Controller structure
 typedef struct {
@@ -31,9 +30,31 @@ float pid_control(PID_Controller* pid, float current_value);
 // Define PID Controllers for left turn and straight movement
 extern PID_Controller left_turn_pid;
 extern PID_Controller straight_pid;
+
+typedef struct 
+{
+	float X_Kp;
+	float X_Ki;
+	float X_Kd;
+	float X_err;
+	float X_err_sum;
+	float X_err_last;	
+	
+	float Y_Kp;
+	float Y_Ki;
+	float Y_Kd;
+	float Y_err;
+	float Y_err_sum;
+	float Y_err_last;	
+}PID;
+
+void PID_Init(void);
+int PID_Level(int x);
+int PID_vertical(int y);
+extern PID pid;
 // 舵机X和Y轴的PID控制器
-extern PID_Controller pid_x;
-extern PID_Controller pid_y;
+//extern PID_Controller pid_x;
+//extern PID_Controller pid_y;
 //typedef struct 
 //{
 //	float X_Kp;

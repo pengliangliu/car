@@ -54,7 +54,7 @@ void Mpu6050_Init(void);
 void car_wait(void);
 void getVoltage(void);
 uint32_t getEncoderSpeed(void);
-void setServoPosition(int angle_x,int angle_y);
+void setServoPosition(float angle_x,float angle_y);
 //void implement();
 /* USER CODE END ET */
 

@@ -127,31 +127,68 @@ void CarStraight(float target_angle) {
         return;
     }
 }
-int current_angle_x=0;
-int current_angle_y=0;
-int current_pwm_x = 249;
-int current_pwm_y = 249;
-void servo_pid(int x ,int y) {
-    // 初始化PID控制器
-    
-	 // 读取当前舵机角度
 
 
-	pid_init(&pid_x, x, 2.0, 0.0, 0.01); // 目标角度为90度，比例系数为2.0
-    pid_init(&pid_y, y, 2.0, 0.0, 0.01); // 目标角度为150度，比例系数为2.0
-        // 计算PID控制量并设置舵机位置
-        int control_x = pid_control(&pid_x, current_pwm_x);
-        int control_y = pid_control(&pid_y, current_pwm_y);
-				printf("colx:%d\r\n",control_x);
-				printf("coly:%d\r\n",control_y);
-	      current_angle_x =current_pwm_x+control_x;
-        current_angle_y = current_angle_y+control_y;
+//舵机pid
+PID pid;
 
-				printf("x:%d\r\n",current_angle_x);
-				printf("y:%d\r\n",current_angle_y);
-	current_angle_x = (current_angle_x - 249)*180/950;
-	current_angle_y = (current_angle_y - 249)*300/950;
-	      setServoPosition(current_angle_x,current_angle_y);
+void PID_Init()
+{
+	pid.X_Kp = 0.66;
+	pid.X_Ki = 0.018;
+	pid.X_Kd = 0.02;
+	pid.X_err = 0;
+	pid.X_err_sum = 0;
+	pid.X_err_last = 0;
+	
+	pid.Y_Kp=0.66;
+	pid.Y_Ki=0.015;
+	pid.Y_Kd=0.025;
+	pid.Y_err=0;
+	pid.Y_err_sum=0;
+	pid.Y_err_last=0;
+}
+
+//水平方向
+int lim=36;
+int PID_Level(int receivedX)
+{
+	int out;
+	
+	pid.X_err = receivedX;
+	pid.X_err_sum += pid.X_err;
+	out = pid.X_Kp*(pid.X_err)
+		+ pid.X_Ki*(pid.X_err_sum)
+		+ pid.X_Kd*(pid.X_err - pid.X_err_last);
+	pid.X_err_last = pid.X_err;
+	
+	if (out>=lim)
+		return lim-15;
+	else if (out<=-lim)
+		return -lim+15;
+	if (fabs(receivedX)<=4)
+		return 0;
+	return out;
+}
+
+//垂直方向
+int PID_vertical(int receivedY)
+{
+	int out;
+		
+	pid.Y_err = receivedY;
+	pid.Y_err_sum += pid.Y_err;
+	out = pid.Y_Kp*(pid.Y_err)
+		+ pid.Y_Ki*(pid.Y_err_sum)
+		+ pid.Y_Kd*(pid.Y_err - pid.Y_err_last);
+	pid.Y_err_last = pid.Y_err;
+	if (out>=lim)
+		return lim;
+	else if (out<=-lim)
+		return -lim;
+	if (fabs(receivedY)<=4)
+		return 0;
+	return out;
 }
 
 

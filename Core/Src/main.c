@@ -35,7 +35,7 @@
 #include "pid.h"
 #include "car.h"
 #include "oled.h"
-
+#include "math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,6 +55,8 @@
 	uint8_t rxBuffer[BUFFER_SIZE];
 	uint32_t rxIndex = 0;
 	uint8_t buffer[3];
+	uint8_t buffer_index = 0;
+uint8_t buffer1[1];
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -90,23 +92,135 @@ int16_t receivedY;
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 int flag_servo;
+float angle_x1=135;
+float angle_y1=30;
+uint16_t pulse_x =1749;
+uint16_t pulse_y =1749;
 
-void setServoPosition(int angle_x,int angle_y) {
+// 定义PID常数
+#define Kp_x 1
+#define Ki_x 0.0
+#define Kd_x 0.01
+
+#define Kp_y 0.2
+#define Ki_y 0.0
+#define Kd_y 0.01
+
+// 初始化PID变量
+float prev_error_x = 0;
+float integral_x = 0;
+float derivative_x = 0;
+
+float prev_error_y = 0;
+float integral_y = 0;
+float derivative_y = 0;
+
+//// PID控制函数
+//void servo_pidControl() {
+//    
+////    // 判断是否接收完成
+////    if (flag_servo == 1) {
+//        // 接收完成，解析X坐标和Y坐标的误差
+//        float error_x = receivedX;
+//        float error_y = receivedY;
+//        // 计算PID控制量
+//        float P_term_x = Kp_x * error_x;
+//        float I_term_x = Ki_x * (integral_x + error_x);
+//        float D_term_x = Kd_x * (error_x - prev_error_x);
+//        float pid_output_x = P_term_x + I_term_x + D_term_x;
+//        float P_term_y = Kp_y * error_y;
+//        float I_term_y = Ki_y * (integral_y + error_y);
+//        float D_term_y = Kd_y * (error_y - prev_error_y);
+//        float pid_output_y = P_term_y + I_term_y + D_term_y;
+//				printf("outX%f  outY%f\r\n", pid_output_x, pid_output_y);
+//        // 误差小于3时，对应方向的控制量置为0，停止运动
+//        if (fabs(error_x) <= 10) {
+//            pid_output_x = 0;
+//        }
+//        if (fabs(error_y) <= 10) {
+//            pid_output_y = 0;
+//        }
+//				printf("pidX%f  pidY%f\r\n", pid_output_x, pid_output_y);
+//        // 限制PID输出范围，避免过大或过小的输出
+//        float max_output = 5; // 可根据实际需求调整
+//        float min_output = -5; // 可根据实际需求调整
+//        pulse_x -= (pid_output_x > max_output) ? max_output : pid_output_x;
+//        pulse_x -= (pid_output_x < min_output) ? min_output : pid_output_x;
+//        pulse_y -= (pid_output_y > max_output) ?  max_output : pid_output_y;
+//        pulse_y -= (pid_output_y < min_output) ? min_output : pid_output_y;
+//				
+//        // 更新舵机位置    
+//				TIM3->CCR1 = pulse_x;
+//				TIM3->CCR2 = pulse_y;				
+////				if (angle_x1>=300)
+////				angle_x1=300;
+////			if (angle_y1>=90)
+////				angle_y1=90;
+////			if (angle_x1<=0)
+////				angle_x1=0;
+////			if(angle_y1<=0)
+////				angle_y1=0;	
+//        // 更新PID变量
+//        prev_error_x = error_x;
+//        integral_x += error_x;
+//        derivative_x = error_x - prev_error_x;
+
+//        prev_error_y = error_y;
+//        integral_y += error_y;
+//        derivative_y = error_y - prev_error_y;    
+////				flag_servo =0;
+//			
+//			
+////    }
+//    
+//}
+
+
+//舵机pid
+void setServoPosition(float angle_x,float angle_y) {
 	// 舵机
-	uint16_t pulse_x = ((angle_x * 950) / 180)+249;
-	uint16_t pulse_y = ((angle_y * 950) / 300)+249;
+	 pulse_x = ((angle_x * 2500) / 270)+499;
+	 pulse_y = ((angle_y * 1000) / 120)+1499;
 
 	// 定时器3
-	TIM3->CCR1 = pulse_y;
-	TIM3->CCR2 = pulse_x;
+	TIM3->CCR1 = pulse_x;
+	TIM3->CCR2 = pulse_y;
+	printf("angx: %f angy:n%f\r\n",angle_x1,angle_y1);
+	printf("pwmx: %d  pwmy: %d\r\n",pulse_x,pulse_y);
+	printf("\r\n");
 	// 定时器3
 //	TIM3->CCR1 = 249;
 //	TIM3->CCR2 = 1199;
 }
-
+void implement()
+{
+	int ccrx,ccry;
+	
+	if(flag_servo)
+	{
+		
+		ccrx = PID_Level(receivedX);
+		ccry = PID_vertical(receivedY);
+		
+		pulse_x = pulse_x - ccrx;
+		pulse_y = pulse_y - ccry;
+		
+		if(pulse_x>=3000)pulse_x=3000;
+		else if(pulse_x<=500) pulse_x=500;
+		if(pulse_y>=2500)pulse_y=2500;
+		else if(pulse_y<=1500) pulse_y=1500;
+		
+		//        // 更新舵机位置    
+				TIM3->CCR1 = pulse_x;
+				TIM3->CCR2 = pulse_y;			
+		printf("pidX%d  pidY%d\r\n", pulse_x, pulse_y);
+		flag_servo = 0;
+		
+	}
+}
 //获取编码器信息
 uint32_t getEncoderSpeed(void) {
-	uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim1));
+	uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim4));
 	uint32_t pulseChange = enc1 - enc1_prev;
 	uint32_t speed = pulseChange * 10;
 	enc1_prev = enc1;
@@ -175,8 +289,10 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-	HAL_TIM_Base_Start(&htim1);
-	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+//	HAL_TIM_Base_Start(&htim1);
+//	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+HAL_TIM_Base_Start_IT(&htim1);       //通过这行代码，以中断的方式启动定时器。  
+
 	HAL_TIM_Base_Start(&htim2);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
@@ -189,14 +305,14 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_Base_Start(&htim4);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-//	setServoPosition(0,0);
+	setServoPosition(angle_x1,angle_y1);
 	// 使能串口三接收中断
-//    HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+    HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+		HAL_UART_Receive_IT(&huart1, &buffer1[1], 1);
+		PID_Init();
 // 重新启用串口三接收中断，以继续接收数据
-        HAL_UART_Receive_IT(&huart2, (uint8_t *)buffer, 1);
+//        HAL_UART_Receive_IT(&huart2, (uint8_t *)buffer, 1);
 //		Mpu6050_Init();
-	
-	 
 //	OLED_Init();
 //	OLED_Clear();
 
@@ -207,6 +323,8 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
+		
+		
 //		if (flag_servo){
 //		servo_pid(receivedX,receivedY);
 //			flag_servo=0;
@@ -282,6 +400,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+//void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+//    if (htim->Instance == TIM1) {
+//        implement();
+//			 HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_9);
+//    }
+//}
 void Mpu6050_Init(void) {
 	printf("%s\r\n", "MPU Init...");
 	while (MPU_Init())
@@ -311,9 +436,9 @@ void update_pid_parameters(uint8_t* buffer,PID_Controller *pid) {
         pid->Ki = new_ki;
         pid->Kd = new_kd;
     }
-//		printf("pid:%f,%f,%f\r\n",pid->Kp,pid->Ki,pid->Kd);
+		printf("pid:%f,%f,%f\r\n",pid->Kp,pid->Ki,pid->Kd);
 }
-uint8_t buffer_index = 0;
+
 // 串口三接收中断处理函数
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -328,14 +453,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
             // 接收完成，解析X坐标和Y坐标
              receivedX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
              receivedY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
-            printf("%d  %d,",receivedX,receivedY);
+							printf("%d  %d\r\n",receivedX,receivedY);
             // 使用 receivedX 和 receivedY 进行后续处理
             // 重置缓冲区索引，准备下一次接收
 					  flag_servo=1;
             rxIndex = 0;
+						implement();
+//					servo_pidControl();
         }
-        // 重新启用串口三接收中断，以继续接收数据
-        HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+				// 重新启用串口三接收中断，以继续接收数据
+        HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);       
     }
 		if (huart == &huart2)
     {
@@ -351,6 +478,38 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			 // 重新启用串口三接收中断，以继续接收数据
         HAL_UART_Receive_IT(&huart2, (uint8_t *)buffer, 1);
 			}	
+		if (huart == &huart1)
+    {
+			buffer1[0] = huart->Instance->DR; // Read received data from UART DR register
+			if(buffer1[0]==1){
+				angle_x1++;
+			
+			}
+			if(buffer1[0]==2){
+				angle_x1--;
+			
+			}
+			if(buffer1[0]==3){
+				
+			angle_y1++;
+			}
+			if(buffer1[0]==4){
+				
+			angle_y1--;
+			}
+			if (angle_x1>=270)
+				angle_x1=270;
+			if (angle_y1>=180)
+				angle_y1=180;
+			if (angle_x1<=0)
+				angle_x1=0;
+			if(angle_y1<=0)
+				angle_y1=0;
+				// 重新启用串口接收中断，以继续接收数据		
+			setServoPosition(angle_x1,angle_y1);
+        HAL_UART_Receive_IT(&huart1, &buffer1[1], 1);
+        
+    }
 }
 
 /* USER CODE END 4 */
