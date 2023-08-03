@@ -112,22 +112,37 @@ void servo_pid_test(int red_x, int red_y, int target_x, int target_y)
     printf("error_x:%d\r\n", error_x);
     // Initialize PID Controller for the left turn
     pid_init(&pid_x, target_x, 3, 0.1, 0.1);
+    pid_init(&pid_y, target_y, 3, 0.1, 0.1);
 
-    float control = pid_control(&pid_x, red_x);
-		control = control/10;
-    if (error_x > 0)
+    float control_x = pid_control(&pid_x, red_x);
+    float control_y = pid_control(&pid_y, red_y);
+    control_x = control_x / 10;
+    control_y = control_y / 10;
+    if (error_x >= 0)
     {
-        set_pwm_x = current_x + fabs(control);
+        set_pwm_x = current_x + fabs(control_x);
     }
     else if (error_x < 0)
     {
-        set_pwm_x = current_x - fabs(control);
+        set_pwm_x = current_x - fabs(control_x);
+    }
+    if (error_y >= 0)
+    {
+        set_pwm_y = current_y - fabs(control_y);
+    }
+    else if (error_y < 0)
+    {
+        set_pwm_y = current_y + fabs(control_y);
     }
 
     if (set_pwm_x > 900)
         set_pwm_x = 900;
     else if (set_pwm_x < 400)
         set_pwm_x = 400;
-    printf("x: %d, control: %.3f, y: %d\r\n", set_pwm_x, control, set_pwm_y);
-    setServoPwm(set_pwm_x, 788);
+    if (set_pwm_y > 900)
+        set_pwm_y = 900;
+    else if (set_pwm_y < 400)
+        set_pwm_y = 400;
+
+    setServoPwm(set_pwm_x, set_pwm_y);
 }

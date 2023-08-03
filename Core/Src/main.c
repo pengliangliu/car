@@ -121,10 +121,19 @@ void setServoPosition(int angle_x, int angle_y)
 
 void setServoPwm(int pwm_x, int pwm_y)
 {
+	if (pwm_x > 900)
+		pwm_x = 900;
+	else if (pwm_x < 400)
+		pwm_x = 400;
+	if (pwm_y > 900)
+		pwm_y = 900;
+	else if (pwm_y < 400)
+		pwm_y = 400;
 	TIM3->CCR1 = pwm_y;
 	TIM3->CCR2 = pwm_x;
 	current_x = pwm_x;
 	current_y = pwm_y;
+	printf("current_x:%d,current_x:%d\r\n", current_x, current_y);
 }
 
 /* USER CODE END 0 */
