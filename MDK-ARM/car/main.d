@@ -42,6 +42,8 @@ car\main.o: ../Core/Inc/tim.h
 car\main.o: ../Core/Inc/usart.h
 car\main.o: ../Core/Inc/gpio.h
 car\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
+car\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
+car\main.o: ..\hardware\OpenMV\OpenMV.h
 car\main.o: ./car/xunji.h
 car\main.o: ../hardware/MPU6050/mpu6050.h
 car\main.o: ../hardware/MPU6050/delay.h

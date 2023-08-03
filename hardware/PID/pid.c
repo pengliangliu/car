@@ -58,24 +58,27 @@ int pwm_y = 788;
 void servo_test(int x, int y)
 {
     // 初始化PID控制器
-
+    if (x == 80 && y == 60)
+        return;
     // 舵机往左转
-    if (x > 10)
+    if (x > 80)
         pwm_x = pwm_x + 5;
-    else if (x < -10)
+    else if (x < 80)
         pwm_x = pwm_x - 5;
-    if (y > 10)
+    if (y > 60)
         pwm_y = pwm_y + 50;
-    else if (y < -10)
+    else if (y < 60)
         pwm_y = pwm_y - 50;
-    if (pwm_x > 1199)
-        pwm_x = 1199;
-    else if (pwm_x < 299)
-        pwm_x = 299;
-    if (pwm_y > 1199)
-        pwm_y = 1199;
-    else if (pwm_y < 299)
-        pwm_y = 299;
+    if (pwm_x > 700)
+        pwm_x = 700;
+    else if (pwm_x < 400)
+        pwm_x = 400;
+    if (pwm_y > 700)
+        pwm_y = 700;
+    else if (pwm_y < 400)
+        pwm_y = 400;
+    printf("set_pwm_x:%d, set_pwm_y:%d\r\n", pwm_x, pwm_y);
+
     setServoPwm(pwm_x, 788);
 }
 
@@ -109,28 +112,27 @@ void servo_pid_test(int red_x, int red_y, int target_x, int target_y)
     {
         return;
     }
-    printf("error_x:%d\r\n", error_x);
     // Initialize PID Controller for the left turn
-    pid_init(&pid_x, target_x, 3, 0.1, 0.1);
-    pid_init(&pid_y, target_y, 3, 0.1, 0.1);
+    pid_init(&pid_x, target_x, 0.66, 0.02, 0.1);
+    pid_init(&pid_y, target_y, 0.66, 0.02, 0.1);
 
     float control_x = pid_control(&pid_x, red_x);
     float control_y = pid_control(&pid_y, red_y);
     control_x = control_x / 10;
     control_y = control_y / 10;
-    if (error_x >= 0)
+    if (error_x >= 80)
     {
         set_pwm_x = current_x + fabs(control_x);
     }
-    else if (error_x < 0)
+    else if (error_x < 80)
     {
         set_pwm_x = current_x - fabs(control_x);
     }
-    if (error_y >= 0)
+    if (error_y >= 60)
     {
         set_pwm_y = current_y - fabs(control_y);
     }
-    else if (error_y < 0)
+    else if (error_y < 60)
     {
         set_pwm_y = current_y + fabs(control_y);
     }
@@ -143,6 +145,7 @@ void servo_pid_test(int red_x, int red_y, int target_x, int target_y)
         set_pwm_y = 900;
     else if (set_pwm_y < 400)
         set_pwm_y = 400;
-
-    setServoPwm(set_pwm_x, set_pwm_y);
+    printf("control_x:%.3f, control_y:%.3f\r\n", control_x, control_y);
+    printf("set_pwm_x:%d, set_pwm_y:%d\r\n", set_pwm_x, set_pwm_y);
+    setServoPwm(set_pwm_x, 788);
 }

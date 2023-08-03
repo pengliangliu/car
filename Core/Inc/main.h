@@ -59,6 +59,17 @@ extern "C"
   void setServoPwm(int pwm_x, int pwm_y);
   extern int current_x;
   extern int current_y;
+  extern int16_t x_left_top;
+  extern int16_t y_left_top;
+  extern int16_t x_right_top;
+  extern int16_t y_right_top;
+  extern int16_t x_right_bottom;
+  extern int16_t y_right_bottom;
+  extern int16_t x_left_bottom;
+  extern int16_t y_left_bottom;
+  extern int16_t redX;
+  extern int16_t redY;
+  extern int flag_servo;
 
   // void implement();
   /* USER CODE END ET */

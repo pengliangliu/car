@@ -27,6 +27,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include <stdlib.h>
+#include "OpenMV.h"
 #include "xunji.h"
 #include "mpu6050.h"
 #include "delay.h"
@@ -40,10 +42,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define BUFFER_SIZE 16
-#define RED_BUFFER 2
+#define BUFFER_SIZE 20
+#define RED_BUFFER 4
 // 缓冲区用于存储接收到的数�???
-uint8_t rxBuffer[BUFFER_SIZE];
+uint8_t rxBuffer;
 uint32_t rxIndex = 0;
 uint8_t redBuffer[RED_BUFFER];
 uint32_t redIndex = 0;
@@ -71,6 +73,10 @@ int16_t y_left_bottom;
 
 int flag_servo = 0;
 int flag_problem = 0;
+
+int receivedData;
+char *endPtr;
+char *token;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -133,7 +139,7 @@ void setServoPwm(int pwm_x, int pwm_y)
 	TIM3->CCR2 = pwm_x;
 	current_x = pwm_x;
 	current_y = pwm_y;
-	printf("current_x:%d,current_x:%d\r\n", current_x, current_y);
+	// printf("current_x:%d,current_x:%d\r\n", current_x, current_y);
 }
 
 /* USER CODE END 0 */
@@ -199,7 +205,7 @@ int main(void)
 	setServoPwm(orign_x, orign_y);
 
 	// 使能串口三接收中�???
-	HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+	HAL_UART_Receive_IT(&huart3, (void *)&rxBuffer, 1);
 	HAL_UART_Receive_IT(&huart1, &buffer1[1], 1);
 	// HAL_UART_Receive_IT(&huart2, &redBuffer[redIndex], 1);
 	HAL_UART_Receive_IT(&huart6, &redBuffer[redIndex], 1);
@@ -217,7 +223,6 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-
 		// if (flag_problem == 2)
 		// {
 		// 	Problem2();
@@ -230,8 +235,12 @@ int main(void)
 		// }
 		if (flag_servo)
 		{
-			servo_pid_test(redX, redY, 0, 0);
+
+			// servo_pid_test(redX, redY, 80, 60);
 			// servo_test(redX, redY);
+
+			// printf("x_left_top:%d y_left_top:%d \r\n", x_left_top, y_left_top);
+			printf("redX1:%d redY1:%d\r\n", redX, redY);
 			flag_servo = 0;
 		}
 
@@ -330,61 +339,66 @@ void Problem3(void)
 	setServoPwm(733, 765);
 }
 // 串口三接收中断处理函�??
+uint8_t tempt;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
+	
 	if (huart == &huart3)
 	{
+		tempt = rxBuffer;
+		Openmv_Receive_Data(tempt);
 		// 读取接收到的数据，并存储到缓冲区�??
-		rxBuffer[rxIndex++] = huart3.Instance->DR;
+		// rxBuffer[rxIndex++] = huart3.Instance->DR;
 
-		// 判断是否接收完成
-		if (rxIndex >= BUFFER_SIZE)
-		{
-			// 接收完成，解析X坐标和Y坐标
-			redY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
-			redX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
+		// // 判断是否接收完成
+		// if (rxIndex >= BUFFER_SIZE)
+		// {
+		// 	// 接收完成，解析X坐标和Y坐标
+		// 	// redY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
+		// 	// redX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
+		// 	int x=atoi(rxBuffer);
+		// 	printf("%d\r\n", x);
 
-			// x_left_top = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
-			// y_left_top = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
+		// 	// x_left_top = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
+		// 	// y_left_top = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
 
-			// x_right_top = (int16_t)((rxBuffer[7] << 8) | rxBuffer[6]);
-			// y_right_top = (int16_t)((rxBuffer[5] << 8) | rxBuffer[4]);
+		// 	// x_right_top = (int16_t)((rxBuffer[5] << 8) | rxBuffer[4]);
+		// 	// y_right_top = (int16_t)((rxBuffer[7] << 8) | rxBuffer[6]);
 
-			// x_right_bottom = (int16_t)((rxBuffer[11] << 8) | rxBuffer[10]);
-			// y_right_bottom = (int16_t)((rxBuffer[9] << 8) | rxBuffer[8]);
+		// 	// x_right_bottom = (int16_t)((rxBuffer[9] << 8) | rxBuffer[8]);
+		// 	// y_right_bottom = (int16_t)((rxBuffer[11] << 8) | rxBuffer[10]);
 
-			// x_left_bottom = (int16_t)((rxBuffer[15] << 8) | rxBuffer[14]);
-			// y_left_bottom = (int16_t)((rxBuffer[13] << 8) | rxBuffer[12]);
+		// 	// x_left_bottom = (int16_t)((rxBuffer[13] << 8) | rxBuffer[12]);
+		// 	// y_left_bottom = (int16_t)((rxBuffer[15] << 8) | rxBuffer[14]);
 
-			// redX = (int16_t)((rxBuffer[19] << 8) | rxBuffer[18]);
-			// redY = (int16_t)((rxBuffer[17] << 8) | rxBuffer[16]);
+		// 	// redX = (int16_t)((rxBuffer[17] << 8) | rxBuffer[16]);
+		// 	// redY = (int16_t)((rxBuffer[19] << 8) | rxBuffer[18]);
 
-			// printf("%d  %d\r\n", x_left_bottom, y_left_bottom);
+		// 	// printf("%d  %d\r\n", x_left_bottom, y_left_bottom);
 
-			printf("redX:%d  redY:%d\r\n", redX, redY);
-			// 使用 receivedX �?? receivedY 进行后续处理
-			// 重置缓冲区索引，准备下一次接�??
-			flag_servo = 1;
-			rxIndex = 0;
-		}
+		// 	// printf("x_left_top:%d \r\n", x_left_top);
+		// 	// printf("redX:%d redY:%d\r\n", redX, redY);
+		// 	// 使用 receivedX �?? receivedY 进行后续处理
+		// 	// 重置缓冲区索引，准备下一次接�??
+		// 	flag_servo = 1;
+		// 	rxIndex = 0;
+		// }
 
 		// 重新启用串口三接收中断，以继续接收数�??
-		HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+		HAL_UART_Receive_IT(&huart3, (void *)&rxBuffer, 1);
 	}
 	// if (huart == &huart6)
 	// {
 	// 	// 读取接收到的数据，并存储到缓冲区�??
-	// 	redBuffer[redIndex++] = huart2.Instance->DR;
+	// 	redBuffer[redIndex++] = huart6.Instance->DR;
 
 	// 	// 判断是否接收完成
 	// 	if (redIndex >= RED_BUFFER)
 	// 	{
 	// 		// 接收完成，解析X坐标和Y坐标
-	// 		// receivedX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
-	// 		// receivedY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
 
-	// 		redX = (int16_t)((redBuffer[1] << 8));
-	// 		redY = (int16_t)((redBuffer[0] << 8));
+	// 		redY = (int16_t)((rxBuffer[3] << 8) | rxBuffer[2]);
+	// 		redX = (int16_t)((rxBuffer[1] << 8) | rxBuffer[0]);
 
 	// 		printf("redX:%d, redY:%d\r\n", redX, redY);
 
