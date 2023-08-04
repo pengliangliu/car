@@ -72,6 +72,7 @@ int16_t x_right_bottom = 118;
 int16_t y_right_bottom = 86;
 int16_t x_left_bottom = 56;
 int16_t y_left_bottom = 86;
+
 int16_t rect_orign_x;
 int16_t rect_orign_y;
 
@@ -356,20 +357,73 @@ void TrackXY(int x1, int x2, int y1, int y2)
 {
 	int countX = x1 - x2;
 	int countY = y1 - y2;
+	int flagX = countX > 0 ? -1 : 1;
+	int flagY = countY > 0 ? -1 : 1;
+	printf("flagX:%d,flagY:%d\r\n", flagX, flagY);
 	int minCount = countX < countY ? countY : countX; // 取最大次数
-	int stepX = (int)countX / minCount;
-	int stepY = (int)countY / minCount + 1;
-	for (int i = 0; i < fabs(minCount); i++)
+	float stepX = abs(countX / (minCount * 1.0));
+	float stepY = abs(countY / (minCount * 1.0));
+	int x_point = abs((int)(stepX * 10) % 10);
+	int y_point = abs((int)(stepY * 10) % 10);
+	printf("x1:%d,x2:%d,y1:%d,y2:%d\r\n", x1, x2, y1, y2);
+	printf("minCount:%d,stepX:%.3f,stepY:%.3f\r\n", minCount, stepX, stepY);
+	printf("x_point:%d,y_point:%d\r\n", x_point, y_point);
+	for (int i = 0; i < fabs(minCount) / 2; i++)
 	{
-		if (countX > 0)
-			x1 = x1 - stepX;
-		else if (countX < 0)
-			x1 = x1 + stepX;
-		if (countY > 0)
-			y1 = y1 - stepY;
-		else if (countY < 0)
-			y1 = y1 + stepY;
-
+		if (stepX == 1.0f)
+		{
+			x1 = x1 + (int)stepX * flagX;
+			// 小数部分大于0.5
+			if (y_point > 5)
+			{
+				if (i % 2 == 0)
+				{
+					y1 = y1 + (int)stepY * flagY;
+				}
+				else
+				{
+					y1 = y1 + ((int)stepY - 1) * flagY;
+				}
+			}
+			else
+			{
+				if (i % 2 == 0)
+				{
+					y1 = y1 + (int)stepY * flagY;
+				}
+				else
+				{
+					y1 = y1 + ((int)stepY + 1) * flagY;
+				}
+			}
+		}
+		else if (stepY == 1.0f)
+		{
+			y1 = y1 + (int)stepY * flagY;
+			if (x_point > 5)
+			{
+				if (i % 2 == 0)
+				{
+					x1 = x1 + (int)stepX * flagX;
+				}
+				else
+				{
+					x1 = x1 + ((int)stepX - 1) * flagX;
+				}
+			}
+			else
+			{
+				if (i % 2 == 0)
+				{
+					x1 = x1 + (int)stepX * flagY;
+				}
+				else
+				{
+					x1 = x1 + ((int)stepX + 1) * flagX;
+				}
+			}
+		}
+		printf("i:%d,x1:%d,y1:%d\r\n", i, x1, y1);
 		setServoPwm(x1, y1);
 		delay_ms(20);
 	}
@@ -546,9 +600,9 @@ void Problem4(void)
 
 	rect_orign_x = (int)(x_left_top_p4 + x_right_top_p4 + x_left_bottom_p4 + x_right_bottom_p4) / 4;
 	rect_orign_y = (int)(y_left_top_p4 + y_right_top_p4 + y_left_bottom_p4 + y_right_bottom_p4) / 4;
-	printf("rect_orign_x:%d,rect_orign_y:%d\r\n", rect_orign_x, rect_orign_y);
-	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top_p4, y_left_top_p4, x_right_top_p4, y_right_top_p4);
-	printf("x_left_bottom:%d,y_left_bottom:%d,x_right_bottom:%d,y_right_bottom:%d\r\n", x_left_bottom_p4, y_left_bottom_p4, x_right_bottom_p4, y_right_bottom_p4);
+	// printf("rect_orign_x:%d,rect_orign_y:%d\r\n", rect_orign_x, rect_orign_y);
+	// printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top_p4, y_left_top_p4, x_right_top_p4, y_right_top_p4);
+	// printf("x_left_bottom:%d,y_left_bottom:%d,x_right_bottom:%d,y_right_bottom:%d\r\n", x_left_bottom_p4, y_left_bottom_p4, x_right_bottom_p4, y_right_bottom_p4);
 
 	float pwm_rate_x = 1;
 	float pwm_rate_y = 1;
@@ -598,21 +652,26 @@ void Problem4(void)
 	delay_ms(1000);
 
 	setServoPwm(pwm_x_left_top, pwm_y_left_top);
-	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
+	// printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
 	delay_ms(1000);
-	// TrackXY(pwm_x_left_top, pwm_x_right_top, pwm_y_left_top, pwm_y_right_top);
+	TrackXY(pwm_x_left_top, pwm_x_right_top, pwm_y_left_top, pwm_y_right_top);
 	setServoPwm(pwm_x_right_top, pwm_y_right_top);
 	printf("pwm_x_right_top:%d, pwm_y_right_top:%d\r\n", pwm_x_right_top, pwm_y_right_top);
-
 	delay_ms(1000);
+	TrackXY(pwm_x_right_top, pwm_x_right_bottom, pwm_y_right_top, pwm_y_right_bottom);
+
 	setServoPwm(pwm_x_right_bottom, pwm_y_right_bottom);
 	printf("pwm_x_right_bottom:%d, pwm_y_right_bottom:%d\r\n", pwm_x_right_bottom, pwm_y_right_bottom);
 
 	delay_ms(1000);
+	TrackXY(pwm_x_right_bottom, pwm_x_left_bottom, pwm_y_right_bottom, pwm_y_left_bottom);
+
 	setServoPwm(pwm_x_left_bottom, pwm_y_left_bottom);
 	printf("pwm_x_left_bottom:%d, pwm_y_left_bottom:%d\r\n", pwm_x_left_bottom, pwm_y_left_bottom);
 
 	delay_ms(1000);
+	TrackXY(pwm_x_left_bottom, pwm_x_left_top, pwm_y_left_bottom, pwm_y_left_top);
+
 	setServoPwm(pwm_x_left_top, pwm_y_left_top);
 	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
 
