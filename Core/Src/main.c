@@ -468,18 +468,39 @@ void Problem4(void)
 	int pwm_x_left_bottom;
 	int pwm_y_left_bottom;
 
-	if (fabs(y_right_top_error) > 20)
+	if (fabs(y_right_top_error) < 16)
 	{
-		x_left_top_track = 0;
-		y_left_top_track = 0;
-		x_right_top_track = 0;
-		y_right_top_track = 0;
-		x_right_bottom_track = 0;
-		y_right_bottom_track = 0;
-		x_left_bottom_track = 0;
-		y_left_bottom_track = 0;
+		x_left_top_track = -4;
+		y_left_top_track = -4;
+		x_right_top_track = 7;
+		y_right_top_track = 7;
+		x_right_bottom_track = 2;
+		y_right_bottom_track = -4;
+		x_left_bottom_track = -9;
+		y_left_bottom_track = -4;
 	}
-
+	else if (fabs(y_right_top_error) < 26)
+	{
+		x_left_top_track = -3;
+		y_left_top_track = -4;
+		x_right_top_track = 4;
+		y_right_top_track = 7;
+		x_right_bottom_track = 4;
+		y_right_bottom_track = -6;
+		x_left_bottom_track = -8;
+		y_left_bottom_track = -2;
+	}
+	// else if (fabs(y_right_top_error) < 34)
+	// {
+	// 	int x_left_top_track = -3;
+	// 	int y_left_top_track = -3;
+	// 	int x_right_top_track = 5;
+	// 	int y_right_top_track = 5;
+	// 	int x_right_bottom_track = 2;
+	// 	int y_right_bottom_track = -2;
+	// 	int x_left_bottom_track = -4;
+	// 	int y_left_bottom_track = -4;
+	// }
 	pwm_x_left_top = pwm_orign_x + (int)x_left_top_error / pwm_rate_x + x_left_top_track;
 	pwm_y_left_top = pwm_orign_y - (int)y_left_top_error / pwm_rate_y + y_left_top_track;
 
