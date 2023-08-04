@@ -55,7 +55,7 @@ int targetY = 0;
 uint8_t buffer1[1];
 
 int pwm_orign_x = 655;
-int pwm_orign_y = 776;
+int pwm_orign_y = 774;
 int pwm_test_x;
 int pwm_test_y;
 // 接收红色�?光坐�?
@@ -70,6 +70,8 @@ int16_t x_right_bottom = 121;
 int16_t y_right_bottom = 82;
 int16_t x_left_bottom = 57;
 int16_t y_left_bottom = 85;
+int16_t rect_orign_x;
+int16_t rect_orign_y;
 
 int flag_servo = 0;
 int flag_problem = 0;
@@ -397,68 +399,66 @@ void Problem2(void)
 }
 void Problem3(void)
 {
-	int x0, y0;
-	int x1, y1;
-	int x2, y2;
-	int x3, y3;
-	int x4, y4;
-	x1 = 687;
-	y1 = 754;
-	x2 = 628;
-	y2 = 750;
-	x3 = 624;
-	y3 = 794;
-	x4 = 685;
-	y4 = 798;
-	x0 = x1;
-	y0 = y1;
-	// 顺时针移动
-	// 左上顶点
-	setServoPwm(x1, y1);
-	delay_ms(100);
-	TrackX(x1, x2, y1, y2);
-	// 右上顶点
-	setServoPwm(x2, y2);
-	delay_ms(100);
-	TrackY(x2, x3, y2, y3);
-	// 右下顶点
-	setServoPwm(x3, y3);
-	delay_ms(100);
-	TrackX(x3, x4, y3, y4);
-	// 左下顶点
-	setServoPwm(x4, y4);
-	delay_ms(100);
-	TrackY(x4, x1, y4, y1);
-	// 回左上角
-	setServoPwm(x0, y0);
-}
-void Problem4(void)
-{
-	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d", x_left_top, y_left_top, x_right_top, y_right_top);
-	int x_left_top_track = -3;
-	int y_left_top_track = -3;
-	int x_right_top_track = 5;
-	int y_right_top_track = 5;
-	int x_right_bottom_track = 2;
-	int y_right_bottom_track = -2;
-	int x_left_bottom_track = -4;
-	int y_left_bottom_track = -4;
+	// int x0, y0;
+	// int x1, y1;
+	// int x2, y2;
+	// int x3, y3;
+	// int x4, y4;
+	// x1 = 687;
+	// y1 = 754;
+	// x2 = 628;
+	// y2 = 750;
+	// x3 = 624;
+	// y3 = 794;
+	// x4 = 685;
+	// y4 = 798;
+	// x0 = x1;
+	// y0 = y1;
+	// // 顺时针移动
+	// // 左上顶点
+	// setServoPwm(x1, y1);
+	// delay_ms(100);
+	// TrackX(x1, x2, y1, y2);
+	// // 右上顶点
+	// setServoPwm(x2, y2);
+	// delay_ms(100);
+	// TrackY(x2, x3, y2, y3);
+	// // 右下顶点
+	// setServoPwm(x3, y3);
+	// delay_ms(100);
+	// TrackX(x3, x4, y3, y4);
+	// // 左下顶点
+	// setServoPwm(x4, y4);
+	// delay_ms(100);
+	// TrackY(x4, x1, y4, y1);
+	// // 回左上角
+	// setServoPwm(x0, y0);
+	rect_orign_x = (int)(x_left_top + x_right_top + x_left_bottom + x_right_bottom) / 4;
+	rect_orign_y = (int)(y_left_top + y_right_top + y_left_bottom + y_right_bottom) / 4;
+	printf("rect_orign_x:%d,rect_orign_y:%d\r\n", rect_orign_x, rect_orign_y);
+	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top, y_left_top, x_right_top, y_right_top);
+	printf("x_left_bottom:%d,y_left_bottom:%d,x_right_bottom:%d,y_right_bottom:%d\r\n", x_left_bottom, y_left_bottom, x_right_bottom, y_right_bottom);
 
 	float pwm_rate_x = 1;
 	float pwm_rate_y = 1;
 
-	int x_left_top_error = redX - x_left_top;
-	int y_left_top_error = redY - y_left_top;
+	int x_center_error = 86 - rect_orign_x;
+	int y_center_error = 54 - rect_orign_y;
 
-	int x_right_top_error = x_left_top - x_right_top;
-	int y_right_top_error = y_left_top - y_right_top;
+	int x_left_top_error = rect_orign_x - x_left_top;
+	int y_left_top_error = rect_orign_y - y_left_top;
 
-	int x_right_bottom_error = x_right_top - x_right_bottom;
-	int y_right_bottom_error = y_right_top - y_right_bottom;
+	int x_right_top_error = rect_orign_x - x_right_top;
+	int y_right_top_error = rect_orign_y - y_right_top;
 
-	int x_left_bottom_error = x_right_bottom - x_left_bottom;
-	int y_left_bottom_error = y_right_bottom - y_left_bottom;
+	int x_right_bottom_error = rect_orign_x - x_right_bottom;
+	int y_right_bottom_error = rect_orign_y - y_right_bottom;
 
+	int x_left_bottom_error = rect_orign_x - x_left_bottom;
+	int y_left_bottom_error = rect_orign_y - y_left_bottom;
+
+	int pwm_x_center;
+	int pwm_y_center;
 	int pwm_x_left_top;
 	int pwm_y_left_top;
 	int pwm_x_right_top;
@@ -468,71 +468,119 @@ void Problem4(void)
 	int pwm_x_left_bottom;
 	int pwm_y_left_bottom;
 
-	if (fabs(y_right_top_error) < 16)
-	{
-		x_left_top_track = -4;
-		y_left_top_track = -4;
-		x_right_top_track = 7;
-		y_right_top_track = 7;
-		x_right_bottom_track = 2;
-		y_right_bottom_track = -4;
-		x_left_bottom_track = -9;
-		y_left_bottom_track = -4;
-	}
-	else if (fabs(y_right_top_error) < 26)
-	{
-		x_left_top_track = -3;
-		y_left_top_track = -4;
-		x_right_top_track = 4;
-		y_right_top_track = 7;
-		x_right_bottom_track = 4;
-		y_right_bottom_track = -6;
-		x_left_bottom_track = -8;
-		y_left_bottom_track = -2;
-	}
-	// else if (fabs(y_right_top_error) < 34)
-	// {
-	// 	int x_left_top_track = -3;
-	// 	int y_left_top_track = -3;
-	// 	int x_right_top_track = 5;
-	// 	int y_right_top_track = 5;
-	// 	int x_right_bottom_track = 2;
-	// 	int y_right_bottom_track = -2;
-	// 	int x_left_bottom_track = -4;
-	// 	int y_left_bottom_track = -4;
-	// }
-	pwm_x_left_top = pwm_orign_x + (int)x_left_top_error / pwm_rate_x + x_left_top_track;
-	pwm_y_left_top = pwm_orign_y - (int)y_left_top_error / pwm_rate_y + y_left_top_track;
+	pwm_x_center = pwm_orign_x + (int)x_center_error / pwm_rate_x;
+	pwm_y_center = pwm_orign_y - (int)y_center_error / pwm_rate_y;
 
-	pwm_x_right_top = pwm_x_left_top + (int)x_right_top_error / pwm_rate_x + x_right_top_track;
-	pwm_y_right_top = pwm_y_left_top - (int)y_right_top_error / pwm_rate_y + y_right_top_track;
+	pwm_x_left_top = pwm_x_center + (int)x_left_top_error / pwm_rate_x;
+	pwm_y_left_top = pwm_y_center - (int)y_left_top_error / pwm_rate_y;
 
-	pwm_x_right_bottom = pwm_x_right_top + (int)x_right_bottom_error / pwm_rate_x + x_right_bottom_track;
-	pwm_y_right_bottom = pwm_y_right_top - (int)y_right_bottom_error / pwm_rate_y + y_right_bottom_track;
+	pwm_x_right_top = pwm_x_center + (int)x_right_top_error / pwm_rate_x;
+	pwm_y_right_top = pwm_y_center - (int)y_right_top_error / pwm_rate_y;
 
-	pwm_x_left_bottom = pwm_x_right_bottom + (int)x_left_bottom_error / pwm_rate_x + x_left_bottom_track;
-	pwm_y_left_bottom = pwm_y_right_bottom - (int)y_left_bottom_error / pwm_rate_y + y_left_bottom_track;
+	pwm_x_right_bottom = pwm_x_center + (int)x_right_bottom_error / pwm_rate_x;
+	pwm_y_right_bottom = pwm_y_center - (int)y_right_bottom_error / pwm_rate_y;
 
-	// printf("x_left_top_error:%d,y_left_top_error:%d\r\n", x_left_top_error, y_left_top_error);
-	// printf("x_right_top_error:%d,y_right_top_error:%d\r\n", x_right_top_error, y_right_top_error);
-	// printf("x_right_bottom_error:%d,y_right_bottom_error:%d\r\n", x_right_bottom_error, y_right_bottom_error);
-	// printf("x_left_bottom_error:%d,y_left_bottom_error:%d\r\n", x_left_bottom_error, y_left_bottom_error);
+	pwm_x_left_bottom = pwm_x_center + (int)x_left_bottom_error / pwm_rate_x;
+	pwm_y_left_bottom = pwm_y_center - (int)y_left_bottom_error / pwm_rate_y;
 
-	// printf("pwm_x_left_top:%d,pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
-	// printf("pwm_x_right_top:%d,pwm_y_right_top:%d\r\n", pwm_x_right_top, pwm_y_right_top);
-	// printf("pwm_x_right_bottom:%d,pwm_y_right_bottom:%d\r\n", pwm_x_right_bottom, pwm_y_right_bottom);
-	// printf("pwm_x_left_bottom:%d,pwm_y_left_bottom:%d\r\n", pwm_x_left_bottom, pwm_y_left_bottom);
+	setServoPwm(pwm_x_center, pwm_y_center);
+	delay_ms(1000);
 
 	setServoPwm(pwm_x_left_top, pwm_y_left_top);
+	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
 	delay_ms(1000);
 	// TrackXY(pwm_x_left_top, pwm_x_right_top, pwm_y_left_top, pwm_y_right_top);
 	setServoPwm(pwm_x_right_top, pwm_y_right_top);
+	printf("pwm_x_right_top:%d, pwm_y_right_top:%d\r\n", pwm_x_right_top, pwm_y_right_top);
+
 	delay_ms(1000);
 	setServoPwm(pwm_x_right_bottom, pwm_y_right_bottom);
+	printf("pwm_x_right_bottom:%d, pwm_y_right_bottom:%d\r\n", pwm_x_right_bottom, pwm_y_right_bottom);
+
 	delay_ms(1000);
 	setServoPwm(pwm_x_left_bottom, pwm_y_left_bottom);
+	printf("pwm_x_left_bottom:%d, pwm_y_left_bottom:%d\r\n", pwm_x_left_bottom, pwm_y_left_bottom);
+
 	delay_ms(1000);
 	setServoPwm(pwm_x_left_top, pwm_y_left_top);
+	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
+
+	delay_ms(1000);
+}
+void Problem4(void)
+{
+	rect_orign_x = (int)(x_left_top + x_right_top + x_left_bottom + x_right_bottom) / 4;
+	rect_orign_y = (int)(y_left_top + y_right_top + y_left_bottom + y_right_bottom) / 4;
+	printf("rect_orign_x:%d,rect_orign_y:%d\r\n", rect_orign_x, rect_orign_y);
+	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top, y_left_top, x_right_top, y_right_top);
+	printf("x_left_bottom:%d,y_left_bottom:%d,x_right_bottom:%d,y_right_bottom:%d\r\n", x_left_bottom, y_left_bottom, x_right_bottom, y_right_bottom);
+
+	float pwm_rate_x = 1;
+	float pwm_rate_y = 1;
+
+	int x_center_error = 86 - rect_orign_x;
+	int y_center_error = 54 - rect_orign_y;
+
+	int x_left_top_error = rect_orign_x - x_left_top;
+	int y_left_top_error = rect_orign_y - y_left_top;
+
+	int x_right_top_error = rect_orign_x - x_right_top;
+	int y_right_top_error = rect_orign_y - y_right_top;
+
+	int x_right_bottom_error = rect_orign_x - x_right_bottom;
+	int y_right_bottom_error = rect_orign_y - y_right_bottom;
+
+	int x_left_bottom_error = rect_orign_x - x_left_bottom;
+	int y_left_bottom_error = rect_orign_y - y_left_bottom;
+
+	int pwm_x_center;
+	int pwm_y_center;
+	int pwm_x_left_top;
+	int pwm_y_left_top;
+	int pwm_x_right_top;
+	int pwm_y_right_top;
+	int pwm_x_right_bottom;
+	int pwm_y_right_bottom;
+	int pwm_x_left_bottom;
+	int pwm_y_left_bottom;
+
+	pwm_x_center = pwm_orign_x + (int)x_center_error / pwm_rate_x;
+	pwm_y_center = pwm_orign_y - (int)y_center_error / pwm_rate_y;
+
+	pwm_x_left_top = pwm_x_center + (int)x_left_top_error / pwm_rate_x;
+	pwm_y_left_top = pwm_y_center - (int)y_left_top_error / pwm_rate_y;
+
+	pwm_x_right_top = pwm_x_center + (int)x_right_top_error / pwm_rate_x;
+	pwm_y_right_top = pwm_y_center - (int)y_right_top_error / pwm_rate_y;
+
+	pwm_x_right_bottom = pwm_x_center + (int)x_right_bottom_error / pwm_rate_x;
+	pwm_y_right_bottom = pwm_y_center - (int)y_right_bottom_error / pwm_rate_y;
+
+	pwm_x_left_bottom = pwm_x_center + (int)x_left_bottom_error / pwm_rate_x;
+	pwm_y_left_bottom = pwm_y_center - (int)y_left_bottom_error / pwm_rate_y;
+
+	setServoPwm(pwm_x_center, pwm_y_center);
+	delay_ms(1000);
+
+	setServoPwm(pwm_x_left_top, pwm_y_left_top);
+	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
+	delay_ms(1000);
+	// TrackXY(pwm_x_left_top, pwm_x_right_top, pwm_y_left_top, pwm_y_right_top);
+	setServoPwm(pwm_x_right_top, pwm_y_right_top);
+	printf("pwm_x_right_top:%d, pwm_y_right_top:%d\r\n", pwm_x_right_top, pwm_y_right_top);
+
+	delay_ms(1000);
+	setServoPwm(pwm_x_right_bottom, pwm_y_right_bottom);
+	printf("pwm_x_right_bottom:%d, pwm_y_right_bottom:%d\r\n", pwm_x_right_bottom, pwm_y_right_bottom);
+
+	delay_ms(1000);
+	setServoPwm(pwm_x_left_bottom, pwm_y_left_bottom);
+	printf("pwm_x_left_bottom:%d, pwm_y_left_bottom:%d\r\n", pwm_x_left_bottom, pwm_y_left_bottom);
+
+	delay_ms(1000);
+	setServoPwm(pwm_x_left_top, pwm_y_left_top);
+	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
+
 	delay_ms(1000);
 }
 
