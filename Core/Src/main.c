@@ -444,7 +444,7 @@ void Problem4(void)
 	int x_left_bottom_track = -4;
 	int y_left_bottom_track = -4;
 
-	float pwm_rate_x = 0.95;
+	float pwm_rate_x = 1;
 	float pwm_rate_y = 1;
 
 	int x_left_top_error = redX - x_left_top;
