@@ -449,6 +449,7 @@ void Problem3(void)
 	// TrackY(x4, x1, y4, y1);
 	// // 回左上角
 	// setServoPwm(x0, y0);
+	
 	rect_orign_x = (int)(x_left_top + x_right_top + x_left_bottom + x_right_bottom) / 4;
 	rect_orign_y = (int)(y_left_top + y_right_top + y_left_bottom + y_right_bottom) / 4;
 	printf("rect_orign_x:%d,rect_orign_y:%d\r\n", rect_orign_x, rect_orign_y);
