@@ -544,7 +544,7 @@ void Problem4(void)
 	int x_left_bottom_p4 = x_left_bottom - 3;
 	int y_left_bottom_p4 = y_left_bottom - 3;
 
-	rect_orign_x = (int)(x_left_top_p4 + x_right_top_p4 + x_left_bottom_p4 + x_right_bottom_p4) / 4 ;
+	rect_orign_x = (int)(x_left_top_p4 + x_right_top_p4 + x_left_bottom_p4 + x_right_bottom_p4) / 4;
 	rect_orign_y = (int)(y_left_top_p4 + y_right_top_p4 + y_left_bottom_p4 + y_right_bottom_p4) / 4;
 	printf("rect_orign_x:%d,rect_orign_y:%d\r\n", rect_orign_x, rect_orign_y);
 	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top_p4, y_left_top_p4, x_right_top_p4, y_right_top_p4);
@@ -583,15 +583,15 @@ void Problem4(void)
 	pwm_y_center = pwm_orign_y - (int)y_center_error / pwm_rate_y;
 
 	pwm_x_left_top = pwm_x_center + (int)x_left_top_error / pwm_rate_x;
-	pwm_y_left_top = pwm_y_center - (int)y_left_top_error / pwm_rate_y;
+	pwm_y_left_top = pwm_y_center - (int)(y_left_top_error - 2) / pwm_rate_y;
 
-	pwm_x_right_top = pwm_x_center + (int)x_right_top_error / pwm_rate_x;
+	pwm_x_right_top = pwm_x_center + (int)(x_right_top_error + 3) / pwm_rate_x;
 	pwm_y_right_top = pwm_y_center - (int)y_right_top_error / pwm_rate_y;
 
 	pwm_x_right_bottom = pwm_x_center + (int)x_right_bottom_error / pwm_rate_x;
-	pwm_y_right_bottom = pwm_y_center - (int)y_right_bottom_error / pwm_rate_y;
+	pwm_y_right_bottom = pwm_y_center - (int)(y_right_bottom_error + 3) / pwm_rate_y;
 
-	pwm_x_left_bottom = pwm_x_center + (int)x_left_bottom_error / pwm_rate_x;
+	pwm_x_left_bottom = pwm_x_center + (int)(x_left_bottom_error - 2) / pwm_rate_x;
 	pwm_y_left_bottom = pwm_y_center - (int)y_left_bottom_error / pwm_rate_y;
 
 	setServoPwm(pwm_x_center, pwm_y_center);
