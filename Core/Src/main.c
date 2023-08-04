@@ -61,6 +61,8 @@ int pwm_test_y;
 // 接收红色�?光坐�?
 int16_t redX = 86;
 int16_t redY = 54;
+int16_t origin_x = 89;
+int16_t origin_y = 51;
 // 接收黑框坐标
 int16_t x_left_top = 56;
 int16_t y_left_top = 40;
@@ -449,29 +451,37 @@ void Problem3(void)
 	// TrackY(x4, x1, y4, y1);
 	// // 回左上角
 	// setServoPwm(x0, y0);
-	rect_orign_x = (int)(x_left_top + x_right_top + x_left_bottom + x_right_bottom) / 4;
-	rect_orign_y = (int)(y_left_top + y_right_top + y_left_bottom + y_right_bottom) / 4;
+	int x_left_top_p3 = x_left_top - 1;
+	int y_left_top_p3 = y_left_top - 1;
+	int x_right_top_p3 = x_right_top - 1;
+	int y_right_top_p3 = y_right_top - 1;
+	int x_right_bottom_p3 = x_right_bottom - 3;
+	int y_right_bottom_p3 = y_right_bottom - 1;
+	int x_left_bottom_p3 = x_left_bottom - 1;
+	int y_left_bottom_p3 = y_left_bottom - 1;
+	rect_orign_x = (int)(x_left_top_p3 + x_right_top_p3 + x_left_bottom_p3 + x_right_bottom_p3) / 4;
+	rect_orign_y = (int)(y_left_top_p3 + y_right_top_p3 + y_left_bottom_p3 + y_right_bottom_p3) / 4;
 	printf("rect_orign_x:%d,rect_orign_y:%d\r\n", rect_orign_x, rect_orign_y);
-	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top, y_left_top, x_right_top, y_right_top);
-	printf("x_left_bottom:%d,y_left_bottom:%d,x_right_bottom:%d,y_right_bottom:%d\r\n", x_left_bottom, y_left_bottom, x_right_bottom, y_right_bottom);
+	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top_p3, y_left_top_p3, x_right_top_p3, y_right_top_p3);
+	printf("x_left_bottom:%d,y_left_bottom:%d,x_right_bottom:%d,y_right_bottom:%d\r\n", x_left_bottom_p3, y_left_bottom_p3, x_right_bottom_p3, y_right_bottom_p3);
 
 	float pwm_rate_x = 1;
 	float pwm_rate_y = 1;
 
-	int x_center_error = 86 - rect_orign_x;
-	int y_center_error = 54 - rect_orign_y;
+	int x_center_error = origin_x - rect_orign_x;
+	int y_center_error = origin_y - rect_orign_y;
 
-	int x_left_top_error = rect_orign_x - x_left_top;
-	int y_left_top_error = rect_orign_y - y_left_top;
+	int x_left_top_error = rect_orign_x - x_left_top_p3;
+	int y_left_top_error = rect_orign_y - y_left_top_p3;
 
-	int x_right_top_error = rect_orign_x - x_right_top;
-	int y_right_top_error = rect_orign_y - y_right_top;
+	int x_right_top_error = rect_orign_x - x_right_top_p3;
+	int y_right_top_error = rect_orign_y - y_right_top_p3;
 
-	int x_right_bottom_error = rect_orign_x - x_right_bottom;
-	int y_right_bottom_error = rect_orign_y - y_right_bottom;
+	int x_right_bottom_error = rect_orign_x - x_right_bottom_p3;
+	int y_right_bottom_error = rect_orign_y - y_right_bottom_p3;
 
-	int x_left_bottom_error = rect_orign_x - x_left_bottom;
-	int y_left_bottom_error = rect_orign_y - y_left_bottom;
+	int x_left_bottom_error = rect_orign_x - x_left_bottom_p3;
+	int y_left_bottom_error = rect_orign_y - y_left_bottom_p3;
 
 	int pwm_x_center;
 	int pwm_y_center;
@@ -525,29 +535,38 @@ void Problem3(void)
 }
 void Problem4(void)
 {
-	rect_orign_x = (int)(x_left_top + x_right_top + x_left_bottom + x_right_bottom) / 4;
-	rect_orign_y = (int)(y_left_top + y_right_top + y_left_bottom + y_right_bottom) / 4;
+	int x_left_top_p4 = x_left_top - 1;
+	int y_left_top_p4 = y_left_top - 2;
+	int x_right_top_p4 = x_right_top - 2;
+	int y_right_top_p4 = y_right_top + 3;
+	int x_right_bottom_p4 = x_right_bottom - 6;
+	int y_right_bottom_p4 = y_right_bottom;
+	int x_left_bottom_p4 = x_left_bottom - 3;
+	int y_left_bottom_p4 = y_left_bottom - 3;
+
+	rect_orign_x = (int)(x_left_top_p4 + x_right_top_p4 + x_left_bottom_p4 + x_right_bottom_p4) / 4 ;
+	rect_orign_y = (int)(y_left_top_p4 + y_right_top_p4 + y_left_bottom_p4 + y_right_bottom_p4) / 4;
 	printf("rect_orign_x:%d,rect_orign_y:%d\r\n", rect_orign_x, rect_orign_y);
-	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top, y_left_top, x_right_top, y_right_top);
-	printf("x_left_bottom:%d,y_left_bottom:%d,x_right_bottom:%d,y_right_bottom:%d\r\n", x_left_bottom, y_left_bottom, x_right_bottom, y_right_bottom);
+	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d\r\n", x_left_top_p4, y_left_top_p4, x_right_top_p4, y_right_top_p4);
+	printf("x_left_bottom:%d,y_left_bottom:%d,x_right_bottom:%d,y_right_bottom:%d\r\n", x_left_bottom_p4, y_left_bottom_p4, x_right_bottom_p4, y_right_bottom_p4);
 
 	float pwm_rate_x = 1;
 	float pwm_rate_y = 1;
 
-	int x_center_error = 86 - rect_orign_x;
-	int y_center_error = 54 - rect_orign_y;
+	int x_center_error = origin_x - rect_orign_x;
+	int y_center_error = origin_y - rect_orign_y;
 
-	int x_left_top_error = rect_orign_x - x_left_top;
-	int y_left_top_error = rect_orign_y - y_left_top;
+	int x_left_top_error = rect_orign_x - x_left_top_p4;
+	int y_left_top_error = rect_orign_y - y_left_top_p4;
 
-	int x_right_top_error = rect_orign_x - x_right_top;
-	int y_right_top_error = rect_orign_y - y_right_top;
+	int x_right_top_error = rect_orign_x - x_right_top_p4;
+	int y_right_top_error = rect_orign_y - y_right_top_p4;
 
-	int x_right_bottom_error = rect_orign_x - x_right_bottom;
-	int y_right_bottom_error = rect_orign_y - y_right_bottom;
+	int x_right_bottom_error = rect_orign_x - x_right_bottom_p4;
+	int y_right_bottom_error = rect_orign_y - y_right_bottom_p4;
 
-	int x_left_bottom_error = rect_orign_x - x_left_bottom;
-	int y_left_bottom_error = rect_orign_y - y_left_bottom;
+	int x_left_bottom_error = rect_orign_x - x_left_bottom_p4;
+	int y_left_bottom_error = rect_orign_y - y_left_bottom_p4;
 
 	int pwm_x_center;
 	int pwm_y_center;

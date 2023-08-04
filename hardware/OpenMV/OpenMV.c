@@ -37,15 +37,31 @@ void Openmv_Receive_Data(uint8_t Com_Data)
 			RxState = 3;
 			if (count < 20)
 			{
-				x_left_top = RxBuffer1[RxCounter1 - 8]-2;
-				y_left_top = RxBuffer1[RxCounter1 - 6]-1;
-				x_right_top = RxBuffer1[RxCounter1 - 12]-2;
-				y_right_top = RxBuffer1[RxCounter1 - 10]-1;
-				x_right_bottom = RxBuffer1[RxCounter1 - 16] - 4;
-				y_right_bottom = RxBuffer1[RxCounter1 - 14]-1;
-				x_left_bottom = RxBuffer1[RxCounter1 - 20]-2;
-				y_left_bottom = RxBuffer1[RxCounter1 - 18]-1;
-				count = count + 1;
+				if ((RxBuffer1[RxCounter1 - 18] - RxBuffer1[RxCounter1 - 14]) > 0)
+				{
+					x_left_top = RxBuffer1[RxCounter1 - 12];
+					y_left_top = RxBuffer1[RxCounter1 - 10];
+					x_right_top = RxBuffer1[RxCounter1 - 16];
+					y_right_top = RxBuffer1[RxCounter1 - 14];
+					x_right_bottom = RxBuffer1[RxCounter1 - 20];
+					y_right_bottom = RxBuffer1[RxCounter1 - 18];
+					x_left_bottom = RxBuffer1[RxCounter1 - 8];
+					y_left_bottom = RxBuffer1[RxCounter1 - 6];
+					count = count + 1;
+				}
+				else
+				{
+					x_left_top = RxBuffer1[RxCounter1 - 8];
+					y_left_top = RxBuffer1[RxCounter1 - 6];
+					x_right_top = RxBuffer1[RxCounter1 - 12];
+					y_right_top = RxBuffer1[RxCounter1 - 10];
+					x_right_bottom = RxBuffer1[RxCounter1 - 16];
+					y_right_bottom = RxBuffer1[RxCounter1 - 14];
+					x_left_bottom = RxBuffer1[RxCounter1 - 20];
+					y_left_bottom = RxBuffer1[RxCounter1 - 18];
+					count = count + 1;
+				}
+				
 			}
 			redX = RxBuffer1[RxCounter1 - 4];
 			redY = RxBuffer1[RxCounter1 - 2];
