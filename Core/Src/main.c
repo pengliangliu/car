@@ -64,12 +64,12 @@ int16_t redY = 54;
 // 接收黑框坐标
 int16_t x_left_top = 56;
 int16_t y_left_top = 40;
-int16_t x_right_top = 117;
-int16_t y_right_top = 36;
-int16_t x_right_bottom = 121;
-int16_t y_right_bottom = 82;
-int16_t x_left_bottom = 57;
-int16_t y_left_bottom = 85;
+int16_t x_right_top = 118;
+int16_t y_right_top = 40;
+int16_t x_right_bottom = 118;
+int16_t y_right_bottom = 86;
+int16_t x_left_bottom = 56;
+int16_t y_left_bottom = 86;
 int16_t rect_orign_x;
 int16_t rect_orign_y;
 
@@ -316,7 +316,14 @@ void TrackX(int x1, int x2, int y1, int y2)
 			x1 = x1 - 1;
 		else if (countX < 0)
 			x1 = x1 + 1;
-		setServoPwm(x1, (y1 + y2) / 2);
+		if (i == fabs(countX))
+		{
+			if (x1 > x2)
+				x1 = x2;
+			else if (x1 < x2)
+				x1 = x2;
+		}
+		setServoPwm(x1, y2);
 		delay_ms(20);
 	}
 }
@@ -330,7 +337,15 @@ void TrackY(int x1, int x2, int y1, int y2)
 			y1 = y1 - 1;
 		else if (countY < 0)
 			y1 = y1 + 1;
-		setServoPwm((x1 + x2) / 2, y1);
+		if (i == fabs(countY) - 1)
+		{
+			if (y1 > y2)
+				y1 = y2;
+			else if (y1 < y2)
+				y1 = y2;
+		}
+
+		setServoPwm(x2, y1);
 		delay_ms(20);
 	}
 }
@@ -352,6 +367,7 @@ void TrackXY(int x1, int x2, int y1, int y2)
 			y1 = y1 - stepY;
 		else if (countY < 0)
 			y1 = y1 + stepY;
+
 		setServoPwm(x1, y1);
 		delay_ms(20);
 	}
@@ -489,22 +505,22 @@ void Problem3(void)
 	setServoPwm(pwm_x_left_top, pwm_y_left_top);
 	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
 	delay_ms(1000);
+	TrackX(pwm_x_left_top, pwm_x_right_top, pwm_y_left_top, pwm_y_right_top);
 	// TrackXY(pwm_x_left_top, pwm_x_right_top, pwm_y_left_top, pwm_y_right_top);
 	setServoPwm(pwm_x_right_top, pwm_y_right_top);
 	printf("pwm_x_right_top:%d, pwm_y_right_top:%d\r\n", pwm_x_right_top, pwm_y_right_top);
-
 	delay_ms(1000);
+	TrackY(pwm_x_right_top, pwm_x_right_bottom, pwm_y_right_top, pwm_y_right_bottom);
 	setServoPwm(pwm_x_right_bottom, pwm_y_right_bottom);
 	printf("pwm_x_right_bottom:%d, pwm_y_right_bottom:%d\r\n", pwm_x_right_bottom, pwm_y_right_bottom);
-
 	delay_ms(1000);
+	TrackX(pwm_x_right_bottom, pwm_x_left_bottom, pwm_y_right_bottom, pwm_y_left_bottom);
 	setServoPwm(pwm_x_left_bottom, pwm_y_left_bottom);
 	printf("pwm_x_left_bottom:%d, pwm_y_left_bottom:%d\r\n", pwm_x_left_bottom, pwm_y_left_bottom);
-
 	delay_ms(1000);
+	TrackY(pwm_x_left_bottom, pwm_x_left_top, pwm_y_left_bottom, pwm_y_left_top);
 	setServoPwm(pwm_x_left_top, pwm_y_left_top);
 	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
-
 	delay_ms(1000);
 }
 void Problem4(void)
