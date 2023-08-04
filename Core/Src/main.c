@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "adc.h"
 #include "i2c.h"
 #include "tim.h"
 #include "usart.h"
@@ -36,11 +35,23 @@
 #include "car.h"
 #include "oled.h"
 #include "math.h"
+#include "stmflash.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 #define BUFFER_SIZE 4
+#define FLASH_SAVE_ADDR  0X08010000
+// 定义行和列的数量
+#define NUM_ROWS 4
+#define NUM_COLS 4
+
+// 行和列对应的IO口
+GPIO_TypeDef* row_ports[NUM_ROWS] = {GPIOA, GPIOC, GPIOA, GPIOA};
+uint16_t row_pins[NUM_ROWS] = {GPIO_PIN_2, GPIO_PIN_2, GPIO_PIN_4, GPIO_PIN_7};
+
+GPIO_TypeDef* col_ports[NUM_COLS] = {GPIOC, GPIOB, GPIOF, GPIOF};
+uint16_t col_pins[NUM_COLS] = {GPIO_PIN_5, GPIO_PIN_1, GPIO_PIN_11, GPIO_PIN_7};
 // 编码器有关变量
 	uint32_t encoderCount = 0;  // 计数器
 	uint32_t encoderSpeed = 0;  // 速度
@@ -56,7 +67,8 @@
 	uint32_t rxIndex = 0;
 	uint8_t buffer[3];
 	uint8_t buffer_index = 0;
-uint8_t buffer1[1];
+	uint8_t buffer1[1];
+	u32 load[20];
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -84,18 +96,47 @@ float Real_value; //真实值
 
 int16_t receivedX;
 int16_t receivedY;
-
+int keyNumbers[NUM_ROWS][NUM_COLS] = {
+    {1, 2, 3, 4},
+    {5, 6, 7, 8},
+    {9, 10, 11, 12},
+    {13, 14, 15, 16}
+};
 /* USER CODE END PV */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+u8 datatemp[1];
 int flag_servo;
-float angle_x1=135;
-float angle_y1=30;
-uint16_t pulse_x =1749;
-uint16_t pulse_y =1749;
+int angle_x1=90;
+int angle_y1=75;
+	
+
+uint16_t pulse_x =1332;
+uint16_t pulse_y =2124;
+
+int center_x=0;
+int center_y=0;
+
+int pencil_lefttop_x=0;
+int pencil_lefttop_y=0;
+int pencil_righttop_x=0;
+int pencil_righttop_y=0;
+int pencil_leftbottom_x=0;
+int pencil_leftbottom_y=0;
+int pencil_rightbottom_x=0;
+int pencil_rightbottom_y=0;
+	
+int rect_lefttop_x=0;
+int rect_lefttop_y=0;
+int rect_righttop_x=0;
+int rect_righttop_y=0;
+int rect_leftbottom_x=0;
+int rect_leftbottom_y=0;
+int rect_rightbottom_x=0;
+int rect_rightbottom_y=0;
 
 // 定义PID常数
 #define Kp_x 1
@@ -114,68 +155,23 @@ float derivative_x = 0;
 float prev_error_y = 0;
 float integral_y = 0;
 float derivative_y = 0;
+#define DEBOUNCE_DELAY_MS 20 // 调整此值以适应您的需求
+int isButtonPressed(GPIO_TypeDef* port, uint16_t pin) {
+    uint32_t startTime = HAL_GetTick(); // 获取当前时间
 
-//// PID控制函数
-//void servo_pidControl() {
-//    
-////    // 判断是否接收完成
-////    if (flag_servo == 1) {
-//        // 接收完成，解析X坐标和Y坐标的误差
-//        float error_x = receivedX;
-//        float error_y = receivedY;
-//        // 计算PID控制量
-//        float P_term_x = Kp_x * error_x;
-//        float I_term_x = Ki_x * (integral_x + error_x);
-//        float D_term_x = Kd_x * (error_x - prev_error_x);
-//        float pid_output_x = P_term_x + I_term_x + D_term_x;
-//        float P_term_y = Kp_y * error_y;
-//        float I_term_y = Ki_y * (integral_y + error_y);
-//        float D_term_y = Kd_y * (error_y - prev_error_y);
-//        float pid_output_y = P_term_y + I_term_y + D_term_y;
-//				printf("outX%f  outY%f\r\n", pid_output_x, pid_output_y);
-//        // 误差小于3时，对应方向的控制量置为0，停止运动
-//        if (fabs(error_x) <= 10) {
-//            pid_output_x = 0;
-//        }
-//        if (fabs(error_y) <= 10) {
-//            pid_output_y = 0;
-//        }
-//				printf("pidX%f  pidY%f\r\n", pid_output_x, pid_output_y);
-//        // 限制PID输出范围，避免过大或过小的输出
-//        float max_output = 5; // 可根据实际需求调整
-//        float min_output = -5; // 可根据实际需求调整
-//        pulse_x -= (pid_output_x > max_output) ? max_output : pid_output_x;
-//        pulse_x -= (pid_output_x < min_output) ? min_output : pid_output_x;
-//        pulse_y -= (pid_output_y > max_output) ?  max_output : pid_output_y;
-//        pulse_y -= (pid_output_y < min_output) ? min_output : pid_output_y;
-//				
-//        // 更新舵机位置    
-//				TIM3->CCR1 = pulse_x;
-//				TIM3->CCR2 = pulse_y;				
-////				if (angle_x1>=300)
-////				angle_x1=300;
-////			if (angle_y1>=90)
-////				angle_y1=90;
-////			if (angle_x1<=0)
-////				angle_x1=0;
-////			if(angle_y1<=0)
-////				angle_y1=0;	
-//        // 更新PID变量
-//        prev_error_x = error_x;
-//        integral_x += error_x;
-//        derivative_x = error_x - prev_error_x;
+    while (HAL_GetTick() - startTime < DEBOUNCE_DELAY_MS) {
+        if (HAL_GPIO_ReadPin(port, pin) == GPIO_PIN_RESET) {
+            // 按键仍然按下
+            HAL_Delay(10); // 延迟一小段时间，确保按键稳定
+        } else {
+            // 按键已经释放
+            return 0;
+        }
+    }
 
-//        prev_error_y = error_y;
-//        integral_y += error_y;
-//        derivative_y = error_y - prev_error_y;    
-////				flag_servo =0;
-//			
-//			
-////    }
-//    
-//}
-
-
+    // 在一段时间内保持按下状态，认为按键按下
+    return 1;
+}
 //舵机pid
 void setServoPosition(float angle_x,float angle_y) {
 	// 舵机
@@ -185,12 +181,9 @@ void setServoPosition(float angle_x,float angle_y) {
 	// 定时器3
 	TIM3->CCR1 = pulse_x;
 	TIM3->CCR2 = pulse_y;
-	printf("angx: %f angy:n%f\r\n",angle_x1,angle_y1);
+	printf("angx: %d angy: %d\r\n",angle_x1,angle_y1);
 	printf("pwmx: %d  pwmy: %d\r\n",pulse_x,pulse_y);
 	printf("\r\n");
-	// 定时器3
-//	TIM3->CCR1 = 249;
-//	TIM3->CCR2 = 1199;
 }
 void implement()
 {
@@ -218,35 +211,60 @@ void implement()
 		
 	}
 }
-//获取编码器信息
-uint32_t getEncoderSpeed(void) {
-	uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim4));
-	uint32_t pulseChange = enc1 - enc1_prev;
-	uint32_t speed = pulseChange * 10;
-	enc1_prev = enc1;
-	return speed;
-}
+
+////获取编码器信息
+//uint32_t getEncoderSpeed(void) {
+//	uint32_t enc1 = (uint32_t)(__HAL_TIM_GET_COUNTER(&htim4));
+//	uint32_t pulseChange = enc1 - enc1_prev;
+//	uint32_t speed = pulseChange * 10;
+//	enc1_prev = enc1;
+//	return speed;
+//}
 //AD数模转换
-uint32_t ADC_Value;
-void getVoltage(void) {
-	HAL_ADC_Start(&hadc1);
-	HAL_ADC_PollForConversion(&hadc1, 50);
+//uint32_t ADC_Value;
+//void getVoltage(void) {
+//	HAL_ADC_Start(&hadc1);
+//	HAL_ADC_PollForConversion(&hadc1, 50);
 
-	if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc1), HAL_ADC_STATE_REG_EOC)) {
-		ADC_Value = HAL_ADC_GetValue(&hadc1);
+//	if (HAL_IS_BIT_SET(HAL_ADC_GetState(&hadc1), HAL_ADC_STATE_REG_EOC)) {
+//		ADC_Value = HAL_ADC_GetValue(&hadc1);
 
-		printf("ADC1 Reading : %d \r\n", ADC_Value);
-		printf("PA4 True Voltage value : %.4f \r\n", ADC_Value * 3.3f / 4096);
+//		printf("ADC1 Reading : %d \r\n", ADC_Value);
+//		printf("PA4 True Voltage value : %.4f \r\n", ADC_Value * 3.3f / 4096);
 
-	}
-	HAL_Delay(1000);
-}
+//	}
+//	HAL_Delay(1000);
+//}
 //调试用
-void car_wait(void) {
+//void car_wait(void) {
 
-	car_stop();
-	delay_ms(50);
-	motor_forward();
+//	car_stop();
+//	delay_ms(50);
+//	motor_forward();
+//}
+int currentLevel = 0;
+int previousLevel = 0;
+int currentMenu = 0; // 当前所在菜单
+int model=1;
+int scanKeyMatrix(void) {
+    int pressedKey = 0; // 默认值表示没有按键按下
+    
+    for (int i = 0; i < NUM_COLS; i++) {
+        // 设置当前列为低电平
+        HAL_GPIO_WritePin(col_ports[i], col_pins[i], GPIO_PIN_RESET);
+        delay_ms(30);
+        // 检查每一行的状态
+        for (int j = 0; j < NUM_ROWS; j++) {
+            if (HAL_GPIO_ReadPin(row_ports[j], row_pins[j]) == GPIO_PIN_RESET) {
+                pressedKey = keyNumbers[j][i]; // 获取按键编号
+            }
+        }
+        
+        // 恢复当前列为高电平
+        HAL_GPIO_WritePin(col_ports[i], col_pins[i], GPIO_PIN_SET);
+    }
+    
+    return pressedKey;
 }
 /* USER CODE END 0 */
 
@@ -280,10 +298,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM1_Init();
   MX_USART1_UART_Init();
-  MX_TIM2_Init();
   MX_TIM3_Init();
-  MX_TIM4_Init();
-  MX_ADC1_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
   MX_USART2_UART_Init();
@@ -291,40 +306,588 @@ int main(void)
   /* USER CODE BEGIN 2 */
 //	HAL_TIM_Base_Start(&htim1);
 //	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-HAL_TIM_Base_Start_IT(&htim1);       //通过这行代码，以中断的方式启动定时器。  
-
-	HAL_TIM_Base_Start(&htim2);
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_3);
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+	HAL_TIM_Base_Start_IT(&htim1);       //通过这行代码，以中断的方式启动定时器。  
+	
 	HAL_TIM_Base_Start(&htim3);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_3);
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-	HAL_TIM_Base_Start(&htim4);
-	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-	setServoPosition(angle_x1,angle_y1);
+//	setServoPosition(angle_x1,angle_y1);
+	STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+//  pencil_lefttop_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR);
+//  pencil_lefttop_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+4);
+//  pencil_righttop_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR+8);
+//  pencil_righttop_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+12);
+//  pencil_leftbottom_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR+16);
+//  pencil_leftbottom_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+20);
+//  pencil_rightbottom_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR+24);
+//  pencil_rightbottom_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+28);
+//	
+//  rect_lefttop_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR+32);
+//  rect_lefttop_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+36);
+//  rect_righttop_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR+40);
+//  rect_righttop_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+44);
+//  rect_leftbottom_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR+48);
+//  rect_leftbottom_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+52);
+//  rect_rightbottom_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR+56);
+//  rect_rightbottom_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+60);
+//	
+//	center_x=STMFLASH_ReadWord(FLASH_SAVE_ADDR+64);
+//	center_y=STMFLASH_ReadWord(FLASH_SAVE_ADDR+68);
+ 
+	printf("%d %d\r\n",load[0],load[1]); 
 	// 使能串口三接收中断
-    HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
+//    HAL_UART_Receive_IT(&huart3, &rxBuffer[rxIndex], 1);
 		HAL_UART_Receive_IT(&huart1, &buffer1[1], 1);
 		PID_Init();
 // 重新启用串口三接收中断，以继续接收数据
 //        HAL_UART_Receive_IT(&huart2, (uint8_t *)buffer, 1);
 //		Mpu6050_Init();
-//	OLED_Init();
-//	OLED_Clear();
-
+	OLED_Init();
+	OLED_Clear();
+//		OLED_ShowString(0,0,"Hello",8);
+//		OLED_ShowCHinese(0,2,0);  //物
+//		OLED_ShowCHinese(16,2,1);	//联
+//		OLED_ShowCHinese(32,2,2);	//网
+//		OLED_ShowCHinese(48,2,3);	//小
+//		OLED_ShowCHinese(64,2,4);	//白
+//		OLED_ShowString(80,2,"Jayce",16);
+//OLED_ShowString(0,0,"key number:",8);
+						
+				 
 	//HAL_ADC_Start_IT(&hadc1);
 	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	while (1) {
-		
-		
+while (1) {
+
+	int pressedKey = scanKeyMatrix();
+	if (pressedKey) {
+		switch (model) {
+			case 1:
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Main Menu", 8);
+						model = 1;
+//				 OLED_ShowNum(94,52,pressedKey,3,12);	//显示ASCII字符的码值
+				switch (pressedKey) {					
+					case 8:
+						model=2;
+						if (model > 40)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+			case 2:
+				switch (pressedKey) {
+					
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				
+				case 4:
+				switch (pressedKey) {	
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				case 6:
+				switch (pressedKey) {
+					
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				case 8:
+				switch (pressedKey) {
+					
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				case 10:
+				switch (pressedKey) {
+					
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				case 12:
+				switch (pressedKey) {
+					
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				case 14:
+				switch (pressedKey) {
+					
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				case 16:
+				switch (pressedKey) {
+					
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				case 18:
+				switch (pressedKey) {
+					
+					case 2:							
+						load[model-1]--;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 10:								
+						load[model-1]++;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 5:							
+						load[model-2]++;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					
+					case 7:							
+						load[model-2]--;
+					printf("x:%d\r\n",angle_x1);
+						OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						printf("x:%d\r\n", load[0]);
+						printf("y:%d\r\n", load[1]);
+						break;
+					case 4: // 返回上一级菜单
+						model = 1;
+//						OLED_Clear();
+						// 显示回到主菜单
+						break;
+						// ... 其他 model1 子菜单按键处理
+					case 8:
+						model+=2;
+						if (model > 20)
+							model = 1;
+						OLED_Clear();
+						OLED_ShowString(0, 0, "Model", 1);
+						OLED_ShowString(16, 2, "x:", 1);
+						OLED_ShowString(16, 4, "y:", 1);
+						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
+						
+						break;
+				}
+				break;
+				case 20:
+					model=1;
+				break;
+				
+		}
+	}
+}
 //		if (flag_servo){
 //		servo_pid(receivedX,receivedY);
 //			flag_servo=0;
@@ -349,7 +912,7 @@ HAL_TIM_Base_Start_IT(&htim1);       //通过这行代码，以中断的方式�
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	}
+	
   /* USER CODE END 3 */
 }
 
@@ -440,6 +1003,7 @@ void update_pid_parameters(uint8_t* buffer,PID_Controller *pid) {
 }
 
 // 串口三接收中断处理函数
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
     if (huart == &huart3)
@@ -482,31 +1046,37 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     {
 			buffer1[0] = huart->Instance->DR; // Read received data from UART DR register
 			if(buffer1[0]==1){
-				angle_x1++;
-			
+				angle_x1+=1;		
 			}
 			if(buffer1[0]==2){
-				angle_x1--;
-			
+				angle_x1-=1;			
 			}
-			if(buffer1[0]==3){
-				
-			angle_y1++;
+			if(buffer1[0]==3){				
+			angle_y1+=1;
 			}
-			if(buffer1[0]==4){
-				
-			angle_y1--;
+			if(buffer1[0]==4){				
+			angle_y1-=1;
 			}
 			if (angle_x1>=270)
 				angle_x1=270;
-			if (angle_y1>=180)
-				angle_y1=180;
+			if (angle_y1>=120)
+				angle_y1=120;
 			if (angle_x1<=0)
 				angle_x1=0;
 			if(angle_y1<=0)
 				angle_y1=0;
+			 
+			load[0] = angle_x1;
+			load[1]=angle_y1;
+			STMFLASH_Write(FLASH_SAVE_ADDR,(uint32_t*)load,sizeof(load)/sizeof (uint32_t));
+			STMFLASH_Read(FLASH_SAVE_ADDR,load,sizeof(load)/sizeof (uint32_t));
+			printf("x:%d\r\n", load[0]);
+      printf("y:%d\r\n", load[1]);
+			
+//			printf("data:%d\r\n", datatemp[0]);
 				// 重新启用串口接收中断，以继续接收数据		
-			setServoPosition(angle_x1,angle_y1);
+//				setServoPosition(angle_x1,angle_y1);
+			
         HAL_UART_Receive_IT(&huart1, &buffer1[1], 1);
         
     }

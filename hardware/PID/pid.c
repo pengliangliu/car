@@ -134,23 +134,24 @@ PID pid;
 
 void PID_Init()
 {
-	pid.X_Kp = 0.66;
-	pid.X_Ki = 0.018;
-	pid.X_Kd = 0.02;
+	pid.X_Kp = 0.75;
+	pid.X_Ki = 0.003;
+	pid.X_Kd = 0.01;
 	pid.X_err = 0;
 	pid.X_err_sum = 0;
 	pid.X_err_last = 0;
 	
 	pid.Y_Kp=0.66;
-	pid.Y_Ki=0.015;
-	pid.Y_Kd=0.025;
+	pid.Y_Ki=0.005;
+	pid.Y_Kd=0.01;
 	pid.Y_err=0;
 	pid.Y_err_sum=0;
 	pid.Y_err_last=0;
 }
 
 //水平方向
-int lim=36;
+//int lim=18;
+int lim=27;
 int PID_Level(int receivedX)
 {
 	int out;
@@ -163,10 +164,10 @@ int PID_Level(int receivedX)
 	pid.X_err_last = pid.X_err;
 	
 	if (out>=lim)
-		return lim-15;
-	else if (out<=-lim)
-		return -lim+15;
-	if (fabs(receivedX)<=4)
+		return lim;
+	else if (out<=-lim+6)
+		return -lim;
+	if (fabs(receivedX)<=10)
 		return 0;
 	return out;
 }
@@ -176,7 +177,7 @@ int PID_vertical(int receivedY)
 {
 	int out;
 		
-	pid.Y_err = receivedY;
+	pid.Y_err = -receivedY;
 	pid.Y_err_sum += pid.Y_err;
 	out = pid.Y_Kp*(pid.Y_err)
 		+ pid.Y_Ki*(pid.Y_err_sum)
@@ -184,9 +185,9 @@ int PID_vertical(int receivedY)
 	pid.Y_err_last = pid.Y_err;
 	if (out>=lim)
 		return lim;
-	else if (out<=-lim)
+	else if (out<=-lim+6)
 		return -lim;
-	if (fabs(receivedY)<=4)
+	if (fabs(receivedY)<=10)
 		return 0;
 	return out;
 }
