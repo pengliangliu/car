@@ -2,6 +2,7 @@
     "files.associations": {
         "mpu6050.h": "c",
         "xunji.h": "c",
-        "openmv.h": "c"
+        "openmv.h": "c",
+        "algorithm": "c"
     }
 }

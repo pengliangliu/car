@@ -1,7 +1,7 @@
 #include "OpenMV.h"
 #include "stdio.h"
 #include "usart.h"
-#define buff_size 22
+#define buff_size 18
 /*四个变量用于存放目标物体的中心坐标以及宽度，高度*/
 int count = 0;
 /*数据接收函数*/
@@ -37,33 +37,24 @@ void Openmv_Receive_Data(uint8_t Com_Data)
 			RxState = 3;
 			if (count < 20)
 			{
-				x_left_top = RxBuffer1[RxCounter1 - 20];
-				y_left_top = RxBuffer1[RxCounter1 - 18];
-				x_right_top = RxBuffer1[RxCounter1 - 16];
-				y_right_top = RxBuffer1[RxCounter1 - 14];
+				x_left_top = RxBuffer1[RxCounter1 - 4];
+				y_left_top = RxBuffer1[RxCounter1 - 2];
+				x_right_top = RxBuffer1[RxCounter1 - 8];
+				y_right_top = RxBuffer1[RxCounter1 - 6];
 				x_right_bottom = RxBuffer1[RxCounter1 - 12];
 				y_right_bottom = RxBuffer1[RxCounter1 - 10];
-				x_left_bottom = RxBuffer1[RxCounter1 - 8];
-				y_left_bottom = RxBuffer1[RxCounter1 - 6];
+				x_left_bottom = RxBuffer1[RxCounter1 - 16];
+				y_left_bottom = RxBuffer1[RxCounter1 - 14];
 				count = count + 1;
+				printf("%d  %d  %d  %d  %d  %d  %d  %d\r\n", x_left_bottom, y_left_bottom, x_right_bottom, y_right_bottom, x_right_top, y_right_top, x_left_top, y_left_top);
 			}
 
-				redX = RxBuffer1[RxCounter1 - 4];
-				redY = RxBuffer1[RxCounter1 - 2];
+			// printf("redX2:%d redY2:%d\r\n", redX, redY);
 
-				printf("redX2:%d redY2:%d\r\n", redX, redY);
+			flag_servo = 1;
 
-				flag_servo = 1;
-				// printf("%d\r   ", x_left_top);
-				// printf("%d\r   ", y_left_top);
-				// printf("%d\r   ", x_right_top);
-				// printf("%d\r   ", y_right_top);
-				// printf("%d\r   ", x_right_bottom);
-				// printf("%d\r   ", y_right_bottom);
-				// printf("%d\r   ", x_left_bottom);
-				// printf("%d\r   ", y_left_bottom);
-				// printf("%d\r   ", redX);
-				// printf("%d\r\n", redY);
+			// printf("%d\r   ", redX);
+			// printf("%d\r\n", redY);
 		}
 	}
 

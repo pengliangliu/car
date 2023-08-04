@@ -58,28 +58,30 @@ int pwm_y = 788;
 void servo_test(int x, int y)
 {
     // 初始化PID控制器
-    if (x == 80 && y == 60)
-        return;
+    if (x == 80)
+        pwm_x = pwm_x;
+    if (y == 60)
+        pwm_y = pwm_y;
     // 舵机往左转
     if (x > 80)
-        pwm_x = pwm_x + 5;
-    else if (x < 80)
         pwm_x = pwm_x - 5;
+    else if (x < 80)
+        pwm_x = pwm_x + 5;
     if (y > 60)
-        pwm_y = pwm_y + 50;
+        pwm_y = pwm_y + 5;
     else if (y < 60)
-        pwm_y = pwm_y - 50;
-    if (pwm_x > 700)
-        pwm_x = 700;
-    else if (pwm_x < 400)
-        pwm_x = 400;
-    if (pwm_y > 700)
+        pwm_y = pwm_y - 5;
+    if (pwm_x > 900)
+        pwm_x = 900;
+    else if (pwm_x < 500)
+        pwm_x = 500;
+    if (pwm_y > 850)
+        pwm_y = 850;
+    else if (pwm_y < 700)
         pwm_y = 700;
-    else if (pwm_y < 400)
-        pwm_y = 400;
     printf("set_pwm_x:%d, set_pwm_y:%d\r\n", pwm_x, pwm_y);
 
-    setServoPwm(pwm_x, 788);
+    setServoPwm(pwm_x, pwm_y);
 }
 
 void servo_pid(int x, int y)

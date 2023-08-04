@@ -54,22 +54,22 @@ int targetX = 0;
 int targetY = 0;
 uint8_t buffer1[1];
 
-int orign_x = 640;
-int orign_y = 788;
+int pwm_orign_x = 655;
+int pwm_orign_y = 776;
 int pwm_test_x;
 int pwm_test_y;
 // 接收红色�?光坐�?
-int16_t redX;
-int16_t redY;
+int16_t redX = 86;
+int16_t redY = 54;
 // 接收黑框坐标
-int16_t x_left_top;
-int16_t y_left_top;
-int16_t x_right_top;
-int16_t y_right_top;
-int16_t x_right_bottom;
-int16_t y_right_bottom;
-int16_t x_left_bottom;
-int16_t y_left_bottom;
+int16_t x_left_top = 56;
+int16_t y_left_top = 40;
+int16_t x_right_top = 117;
+int16_t y_right_top = 36;
+int16_t x_right_bottom = 121;
+int16_t y_right_bottom = 82;
+int16_t x_left_bottom = 57;
+int16_t y_left_bottom = 85;
 
 int flag_servo = 0;
 int flag_problem = 0;
@@ -103,6 +103,8 @@ void Problem1(void);
 void Problem2(void);
 void Problem3(void);
 void Problem4(void);
+void TrackX(int x1, int x2, int y1, int y2);
+void TrackY(int x1, int x2, int y1, int y2);
 /* USER CODE END PV */
 
 /* USER CODE END PFP */
@@ -151,8 +153,8 @@ void setServoPwm(int pwm_x, int pwm_y)
 int main(void)
 {
 	/* USER CODE BEGIN 1 */
-	pwm_test_x = orign_x;
-	pwm_test_y = orign_y;
+	pwm_test_x = pwm_orign_x;
+	pwm_test_y = pwm_orign_y;
 
 	/* USER CODE END 1 */
 
@@ -202,7 +204,7 @@ int main(void)
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
 	// setServoPwm(509, 500);
 	// [299, 1199]
-	setServoPwm(orign_x, orign_y);
+	setServoPwm(pwm_orign_x, pwm_orign_y);
 
 	// 使能串口三接收中�???
 	HAL_UART_Receive_IT(&huart3, (void *)&rxBuffer, 1);
@@ -223,26 +225,31 @@ int main(void)
 	/* USER CODE BEGIN WHILE */
 	while (1)
 	{
-		// if (flag_problem == 2)
-		// {
-		// 	Problem2();
-		// 	flag_problem = 0;
-		// }
-		// else if (flag_problem == 3)
-		// {
-		// 	Problem3();
-		// 	flag_problem = 0;
-		// }
-		if (flag_servo)
+		if (flag_problem == 2)
 		{
-
-			// servo_pid_test(redX, redY, 80, 60);
-			// servo_test(redX, redY);
-
-			// printf("x_left_top:%d y_left_top:%d \r\n", x_left_top, y_left_top);
-			printf("redX1:%d redY1:%d\r\n", redX, redY);
-			flag_servo = 0;
+			Problem2();
+			flag_problem = 0;
 		}
+		else if (flag_problem == 3)
+		{
+			Problem3();
+			flag_problem = 0;
+		}
+		else if (flag_problem == 4)
+		{
+			Problem4();
+			flag_problem = 0;
+		}
+		// if (flag_servo)
+		// {
+
+		// 	// servo_pid_test(redX, redY, 80, 60);
+		// 	servo_test(redX, redY);
+
+		// 	// printf("x_left_top:%d y_left_top:%d \r\n", x_left_top, y_left_top);
+		// 	// printf("redX1:%d redY1:%d\r\n", redX, redY);
+		// 	flag_servo = 0;
+		// }
 
 		/* USER CODE END WHILE */
 
@@ -297,52 +304,222 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void TrackX(int x1, int x2, int y1, int y2)
+{
+	int countX = 0;
+	countX = x1 - x2;
+	for (int i = 0; i < fabs(countX); i++)
+	{
+		if (countX > 0)
+			x1 = x1 - 1;
+		else if (countX < 0)
+			x1 = x1 + 1;
+		setServoPwm(x1, (y1 + y2) / 2);
+		delay_ms(20);
+	}
+}
+void TrackY(int x1, int x2, int y1, int y2)
+{
+	int countY = 0;
+	countY = y1 - y2;
+	for (int i = 0; i < fabs(countY); i++)
+	{
+		if (countY > 0)
+			y1 = y1 - 1;
+		else if (countY < 0)
+			y1 = y1 + 1;
+		setServoPwm((x1 + x2) / 2, y1);
+		delay_ms(20);
+	}
+}
 
+void TrackXY(int x1, int x2, int y1, int y2)
+{
+	int countX = x1 - x2;
+	int countY = y1 - y2;
+	int minCount = countX < countY ? countY : countX; // 取最大次数
+	int stepX = (int)countX / minCount;
+	int stepY = (int)countY / minCount + 1;
+	for (int i = 0; i < fabs(minCount); i++)
+	{
+		if (countX > 0)
+			x1 = x1 - stepX;
+		else if (countX < 0)
+			x1 = x1 + stepX;
+		if (countY > 0)
+			y1 = y1 - stepY;
+		else if (countY < 0)
+			y1 = y1 + stepY;
+		setServoPwm(x1, y1);
+		delay_ms(20);
+	}
+}
 void Problem1(void)
 {
-	setServoPwm(orign_x, orign_y);
+	setServoPwm(pwm_orign_x, pwm_orign_y);
 }
 void Problem2(void)
 {
+	int x0, y0;
+	int x1, y1;
+	int x2, y2;
+	int x3, y3;
+	int x4, y4;
+	x1 = 708;
+	y1 = 724;
+	x2 = 602;
+	y2 = 724;
+	x3 = 602;
+	y3 = 828;
+	x4 = 708;
+	y4 = 828;
+	x0 = x1;
+	y0 = y1;
 	// 顺时针移动
 	// 左上顶点
-	setServoPwm(750, 717);
+	setServoPwm(x1, y1);
 	delay_ms(1000);
+	TrackX(x1, x2, y1, y2);
 	// 右上顶点
-	setServoPwm(601, 712);
-	delay_ms(1000);
+	setServoPwm(x2, y2);
+	delay_ms(100);
+	TrackY(x2, x3, y2, y3);
 	// 右下顶点
-	setServoPwm(605, 844);
-	delay_ms(1000);
+	setServoPwm(x3, y3);
+	delay_ms(100);
+	TrackX(x3, x4, y3, y4);
 	// 左下顶点
-	setServoPwm(745, 844);
-	delay_ms(1000);
+	setServoPwm(x4, y4);
+	delay_ms(100);
+	TrackY(x4, x1, y4, y1);
 	// 回左上角
-	setServoPwm(750, 717);
+	setServoPwm(x0, y0);
 }
 void Problem3(void)
 {
+	int x0, y0;
+	int x1, y1;
+	int x2, y2;
+	int x3, y3;
+	int x4, y4;
+	x1 = 687;
+	y1 = 754;
+	x2 = 628;
+	y2 = 750;
+	x3 = 624;
+	y3 = 794;
+	x4 = 685;
+	y4 = 798;
+	x0 = x1;
+	y0 = y1;
 	// 顺时针移动
 	// 左上顶点
-	setServoPwm(733, 765);
-	delay_ms(1000);
+	setServoPwm(x1, y1);
+	delay_ms(100);
+	TrackX(x1, x2, y1, y2);
 	// 右上顶点
-	setServoPwm(647, 758);
-	delay_ms(1000);
+	setServoPwm(x2, y2);
+	delay_ms(100);
+	TrackY(x2, x3, y2, y3);
 	// 右下顶点
-	setServoPwm(647, 818);
-	delay_ms(1000);
+	setServoPwm(x3, y3);
+	delay_ms(100);
+	TrackX(x3, x4, y3, y4);
 	// 左下顶点
-	setServoPwm(730, 818);
-	delay_ms(1000);
+	setServoPwm(x4, y4);
+	delay_ms(100);
+	TrackY(x4, x1, y4, y1);
 	// 回左上角
-	setServoPwm(733, 765);
+	setServoPwm(x0, y0);
 }
+void Problem4(void)
+{
+	printf("x_left_top:%d,y_left_top:%d,x_right_top:%d,y_right_top:%d", x_left_top, y_left_top, x_right_top, y_right_top);
+	int x_left_top_track = -3;
+	int y_left_top_track = -3;
+	int x_right_top_track = 5;
+	int y_right_top_track = 5;
+	int x_right_bottom_track = 2;
+	int y_right_bottom_track = -2;
+	int x_left_bottom_track = -4;
+	int y_left_bottom_track = -4;
+
+	float pwm_rate_x = 0.95;
+	float pwm_rate_y = 1;
+
+	int x_left_top_error = redX - x_left_top;
+	int y_left_top_error = redY - y_left_top;
+
+	int x_right_top_error = x_left_top - x_right_top;
+	int y_right_top_error = y_left_top - y_right_top;
+
+	int x_right_bottom_error = x_right_top - x_right_bottom;
+	int y_right_bottom_error = y_right_top - y_right_bottom;
+
+	int x_left_bottom_error = x_right_bottom - x_left_bottom;
+	int y_left_bottom_error = y_right_bottom - y_left_bottom;
+
+	int pwm_x_left_top;
+	int pwm_y_left_top;
+	int pwm_x_right_top;
+	int pwm_y_right_top;
+	int pwm_x_right_bottom;
+	int pwm_y_right_bottom;
+	int pwm_x_left_bottom;
+	int pwm_y_left_bottom;
+
+	if (fabs(y_right_top_error) > 20)
+	{
+		x_left_top_track = 0;
+		y_left_top_track = 0;
+		x_right_top_track = 0;
+		y_right_top_track = 0;
+		x_right_bottom_track = 0;
+		y_right_bottom_track = 0;
+		x_left_bottom_track = 0;
+		y_left_bottom_track = 0;
+	}
+
+	pwm_x_left_top = pwm_orign_x + (int)x_left_top_error / pwm_rate_x + x_left_top_track;
+	pwm_y_left_top = pwm_orign_y - (int)y_left_top_error / pwm_rate_y + y_left_top_track;
+
+	pwm_x_right_top = pwm_x_left_top + (int)x_right_top_error / pwm_rate_x + x_right_top_track;
+	pwm_y_right_top = pwm_y_left_top - (int)y_right_top_error / pwm_rate_y + y_right_top_track;
+
+	pwm_x_right_bottom = pwm_x_right_top + (int)x_right_bottom_error / pwm_rate_x + x_right_bottom_track;
+	pwm_y_right_bottom = pwm_y_right_top - (int)y_right_bottom_error / pwm_rate_y + y_right_bottom_track;
+
+	pwm_x_left_bottom = pwm_x_right_bottom + (int)x_left_bottom_error / pwm_rate_x + x_left_bottom_track;
+	pwm_y_left_bottom = pwm_y_right_bottom - (int)y_left_bottom_error / pwm_rate_y + y_left_bottom_track;
+
+	// printf("x_left_top_error:%d,y_left_top_error:%d\r\n", x_left_top_error, y_left_top_error);
+	// printf("x_right_top_error:%d,y_right_top_error:%d\r\n", x_right_top_error, y_right_top_error);
+	// printf("x_right_bottom_error:%d,y_right_bottom_error:%d\r\n", x_right_bottom_error, y_right_bottom_error);
+	// printf("x_left_bottom_error:%d,y_left_bottom_error:%d\r\n", x_left_bottom_error, y_left_bottom_error);
+
+	// printf("pwm_x_left_top:%d,pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
+	// printf("pwm_x_right_top:%d,pwm_y_right_top:%d\r\n", pwm_x_right_top, pwm_y_right_top);
+	// printf("pwm_x_right_bottom:%d,pwm_y_right_bottom:%d\r\n", pwm_x_right_bottom, pwm_y_right_bottom);
+	// printf("pwm_x_left_bottom:%d,pwm_y_left_bottom:%d\r\n", pwm_x_left_bottom, pwm_y_left_bottom);
+
+	setServoPwm(pwm_x_left_top, pwm_y_left_top);
+	delay_ms(1000);
+	// TrackXY(pwm_x_left_top, pwm_x_right_top, pwm_y_left_top, pwm_y_right_top);
+	setServoPwm(pwm_x_right_top, pwm_y_right_top);
+	delay_ms(1000);
+	setServoPwm(pwm_x_right_bottom, pwm_y_right_bottom);
+	delay_ms(1000);
+	setServoPwm(pwm_x_left_bottom, pwm_y_left_bottom);
+	delay_ms(1000);
+	setServoPwm(pwm_x_left_top, pwm_y_left_top);
+	delay_ms(1000);
+}
+
 // 串口三接收中断处理函�??
 uint8_t tempt;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	
+
 	if (huart == &huart3)
 	{
 		tempt = rxBuffer;
@@ -483,6 +660,27 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 			pwm_test_y = pwm_test_y - 1;
 			printf("pwm_test_y:%d\r\n", pwm_test_y);
 		}
+		else if (buffer1[0] == 0x14)
+		{
+			pwm_test_x = pwm_test_x + 50;
+			printf("pwm_test_x:%d\r\n", pwm_test_x);
+		}
+		else if (buffer1[0] == 0x15)
+		{
+			pwm_test_x = pwm_test_x - 50;
+			printf("pwm_test_x:%d\r\n", pwm_test_x);
+		}
+		// y轴 +-1
+		else if (buffer1[0] == 0x16)
+		{
+			pwm_test_y = pwm_test_y + 50;
+			printf("pwm_test_y:%d\r\n", pwm_test_y);
+		}
+		else if (buffer1[0] == 0x17)
+		{
+			pwm_test_y = pwm_test_y - 50;
+			printf("pwm_test_y:%d\r\n", pwm_test_y);
+		}
 		else if (buffer1[0] == 0x90)
 		{
 			flag_problem = 2;
@@ -492,6 +690,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		{
 			flag_problem = 3;
 			printf("Problem3:\r\n");
+		}
+		else if (buffer1[0] == 0x92)
+		{
+			flag_problem = 4;
+			printf("Problem4:\r\n");
+		}
+		else if (buffer1[0] == 0x98)
+		{
+			printf("current  x_left_top:%d, y_left_top:%d,x_right_top:%d,y_right_top:%d,x_right_bottom:%d,y_right_bottom:%d,x_left_bottom:%d,y_left_bottom:%d\r\n", x_left_top, y_left_top, x_right_top, y_right_top, x_right_bottom, y_right_bottom, x_left_bottom, y_left_bottom);
 		}
 		else if (buffer1[0] == 0x99)
 		{
