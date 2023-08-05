@@ -73,6 +73,24 @@ int16_t y_right_bottom = 86;
 int16_t x_left_bottom = 56;
 int16_t y_left_bottom = 86;
 
+int pwm_x_left_top_p2 = 708;
+int pwm_y_left_top_p2 = 724;
+int pwm_x_right_top_p2= 602;
+int pwm_y_right_top_p2= 724;
+int pwm_x_right_bottom_p2= 602;
+int pwm_y_right_bottom_p2= 828;
+int pwm_x_left_bottom_p2= 708;
+int pwm_y_left_bottom_p2 = 828;
+
+int x_left_top_p3;
+int y_left_top_p3;
+int x_right_top_p3;
+int y_right_top_p3;
+int x_right_bottom_p3;
+int y_right_bottom_p3;
+int x_left_bottom_p3;
+int y_left_bottom_p3;
+
 int16_t rect_orign_x;
 int16_t rect_orign_y;
 
@@ -434,40 +452,25 @@ void Problem1(void)
 }
 void Problem2(void)
 {
-	int x0, y0;
-	int x1, y1;
-	int x2, y2;
-	int x3, y3;
-	int x4, y4;
-	x1 = 708;
-	y1 = 724;
-	x2 = 602;
-	y2 = 724;
-	x3 = 602;
-	y3 = 828;
-	x4 = 708;
-	y4 = 828;
-	x0 = x1;
-	y0 = y1;
 	// 顺时针移动
 	// 左上顶点
-	setServoPwm(x1, y1);
+	setServoPwm(pwm_x_left_top_p2, pwm_y_left_top_p2);
 	delay_ms(1000);
-	TrackX(x1, x2, y1, y2);
+	TrackX(pwm_x_left_top_p2, pwm_x_right_top_p2, pwm_y_left_top_p2, pwm_y_right_top_p2);
 	// 右上顶点
-	setServoPwm(x2, y2);
+	setServoPwm(pwm_x_right_top_p2, pwm_y_right_top_p2);
 	delay_ms(100);
-	TrackY(x2, x3, y2, y3);
+	TrackY(pwm_x_right_top_p2, pwm_x_right_bottom_p2, pwm_y_right_top_p2, pwm_y_right_bottom_p2);
 	// 右下顶点
-	setServoPwm(x3, y3);
+	setServoPwm(pwm_x_right_bottom_p2, pwm_y_right_bottom_p2);
 	delay_ms(100);
-	TrackX(x3, x4, y3, y4);
+	TrackX(pwm_x_right_bottom_p2, pwm_x_left_bottom_p2, pwm_y_right_bottom_p2, pwm_y_left_bottom_p2);
 	// 左下顶点
-	setServoPwm(x4, y4);
+	setServoPwm(pwm_x_left_bottom_p2, pwm_y_left_bottom_p2);
 	delay_ms(100);
-	TrackY(x4, x1, y4, y1);
+	TrackY(pwm_x_left_bottom_p2, pwm_x_left_top_p2, pwm_y_left_bottom_p2, pwm_y_left_top_p2);
 	// 回左上角
-	setServoPwm(x0, y0);
+	setServoPwm(pwm_x_left_top_p2, pwm_y_left_top_p2);
 }
 void Problem3(void)
 {
