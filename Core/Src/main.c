@@ -384,25 +384,52 @@ while (1) {
 						OLED_ShowNum(32, 0, model, 3, 8);	//显示ASCII字符的码
 						
 						break;
+						case 16:
+						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
+						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
+						break;
 				}
 				break;
 			case 2:
 				switch (pressedKey) {
-					
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -419,8 +446,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -444,20 +471,42 @@ while (1) {
 				
 				case 4:
 				switch (pressedKey) {	
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -474,8 +523,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -499,20 +548,42 @@ while (1) {
 				case 6:
 				switch (pressedKey) {
 					
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -529,8 +600,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -554,20 +625,42 @@ while (1) {
 				case 8:
 				switch (pressedKey) {
 					
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -584,8 +677,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -609,20 +702,42 @@ while (1) {
 				case 10:
 				switch (pressedKey) {
 					
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -639,8 +754,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -664,20 +779,42 @@ while (1) {
 				case 12:
 				switch (pressedKey) {
 					
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -694,8 +831,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -719,20 +856,42 @@ while (1) {
 				case 14:
 				switch (pressedKey) {
 					
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -749,8 +908,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -774,20 +933,42 @@ while (1) {
 				case 16:
 				switch (pressedKey) {
 					
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -804,8 +985,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -829,20 +1010,42 @@ while (1) {
 				case 18:
 				switch (pressedKey) {
 					
+					case 1:							
+						load[model-1]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 2:							
 						load[model-1]--;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 3:							
+						load[model-1]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
+					case 9:							
+						load[model-2]-=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;
 					case 10:								
 						load[model-1]++;
 					printf("y:%d\r\n",load[model-1]);
 					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
 						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
 						break;
-					
+					case 11:							
+						load[model-2]+=10;
+					printf("y:%d\r\n",load[model-1]);
+					OLED_ShowNum(64, 2, load[model-2], 4, 8);	//显示ASCII字符的码
+						OLED_ShowNum(64, 4, load[model-1], 4, 8);	//显示ASCII字符的码
+						break;				
 					case 5:							
 						load[model-2]++;
 					printf("x:%d\r\n",angle_x1);
@@ -859,8 +1062,8 @@ while (1) {
 					case 16:
 						STMFLASH_Write(FLASH_SAVE_ADDR, (uint32_t*)load, sizeof(load) / sizeof (uint32_t));
 						STMFLASH_Read(FLASH_SAVE_ADDR, load, sizeof(load) / sizeof (uint32_t));
-						printf("x:%d\r\n", load[0]);
-						printf("y:%d\r\n", load[1]);
+						OLED_Clear();
+						OLED_ShowString(0, 0, "save_ok", 1);
 						break;
 					case 4: // 返回上一级菜单
 						model = 1;
@@ -882,7 +1085,7 @@ while (1) {
 				}
 				break;
 				case 20:
-					model=1;
+				model=1;
 				break;
 				
 		}

@@ -106,11 +106,11 @@ Section Cross References
     main.o(i.main) refers to main.o(i.scanKeyMatrix) for scanKeyMatrix
     main.o(i.main) refers to oled.o(i.OLED_ShowString) for OLED_ShowString
     main.o(i.main) refers to oled.o(i.OLED_ShowNum) for OLED_ShowNum
-    main.o(i.main) refers to stmflash.o(i.STMFLASH_Write) for STMFLASH_Write
     main.o(i.main) refers to tim.o(.bss) for htim1
     main.o(i.main) refers to main.o(.bss) for .bss
     main.o(i.main) refers to main.o(.data) for .data
     main.o(i.main) refers to usart.o(.bss) for huart1
+    main.o(i.main) refers to stmflash.o(i.STMFLASH_Write) for STMFLASH_Write
     main.o(i.scanKeyMatrix) refers to stm32f4xx_hal_gpio.o(i.HAL_GPIO_WritePin) for HAL_GPIO_WritePin
     main.o(i.scanKeyMatrix) refers to stm32f4xx_hal.o(i.HAL_Delay) for HAL_Delay
     main.o(i.scanKeyMatrix) refers to stm32f4xx_hal_gpio.o(i.HAL_GPIO_ReadPin) for HAL_GPIO_ReadPin
@@ -2583,44 +2583,44 @@ Image Symbol Table
     i.fputc                                  0x08005248   Section        0  usart.o(i.fputc)
     i.implement                              0x0800525c   Section        0  main.o(i.implement)
     i.main                                   0x080052e4   Section        0  main.o(i.main)
-    i.oled_pow                               0x08005784   Section        0  oled.o(i.oled_pow)
-    i.scanKeyMatrix                          0x08005794   Section        0  main.o(i.scanKeyMatrix)
-    i.update_pid_parameters                  0x0800580c   Section        0  main.o(i.update_pid_parameters)
-    locale$$code                             0x0800589c   Section       44  lc_numeric_c.o(locale$$code)
-    x$fpl$dcmpinf                            0x080058c8   Section       24  dcmpi.o(x$fpl$dcmpinf)
-    $v0                                      0x080058c8   Number         0  dcmpi.o(x$fpl$dcmpinf)
-    x$fpl$dflt                               0x080058e0   Section       46  dflt_clz.o(x$fpl$dflt)
-    $v0                                      0x080058e0   Number         0  dflt_clz.o(x$fpl$dflt)
-    x$fpl$dleqf                              0x08005910   Section      120  dleqf.o(x$fpl$dleqf)
-    $v0                                      0x08005910   Number         0  dleqf.o(x$fpl$dleqf)
-    x$fpl$dnaninf                            0x08005988   Section      156  dnaninf.o(x$fpl$dnaninf)
-    $v0                                      0x08005988   Number         0  dnaninf.o(x$fpl$dnaninf)
-    x$fpl$dretinf                            0x08005a24   Section       12  dretinf.o(x$fpl$dretinf)
-    $v0                                      0x08005a24   Number         0  dretinf.o(x$fpl$dretinf)
-    x$fpl$f2d                                0x08005a30   Section       86  f2d.o(x$fpl$f2d)
-    $v0                                      0x08005a30   Number         0  f2d.o(x$fpl$f2d)
-    x$fpl$fnaninf                            0x08005a86   Section      140  fnaninf.o(x$fpl$fnaninf)
-    $v0                                      0x08005a86   Number         0  fnaninf.o(x$fpl$fnaninf)
-    x$fpl$fpinit                             0x08005b12   Section       10  fpinit.o(x$fpl$fpinit)
-    $v0                                      0x08005b12   Number         0  fpinit.o(x$fpl$fpinit)
-    x$fpl$printf1                            0x08005b1c   Section        4  printf1.o(x$fpl$printf1)
-    $v0                                      0x08005b1c   Number         0  printf1.o(x$fpl$printf1)
-    .constdata                               0x08005b20   Section       16  system_stm32f4xx.o(.constdata)
-    x$fpl$usenofp                            0x08005b20   Section        0  usenofp.o(x$fpl$usenofp)
-    .constdata                               0x08005b30   Section        8  system_stm32f4xx.o(.constdata)
-    .constdata                               0x08005b38   Section     2568  oled.o(.constdata)
-    .constdata                               0x08006540   Section       17  __printf_flags_wp.o(.constdata)
-    maptable                                 0x08006540   Data          17  __printf_flags_wp.o(.constdata)
-    .constdata                               0x08006554   Section      148  bigflt0.o(.constdata)
-    tenpwrs_x                                0x08006554   Data          60  bigflt0.o(.constdata)
-    tenpwrs_i                                0x08006590   Data          64  bigflt0.o(.constdata)
-    locale$$data                             0x08006608   Section       28  lc_numeric_c.o(locale$$data)
-    __lcnum_c_name                           0x0800660c   Data           2  lc_numeric_c.o(locale$$data)
-    __lcnum_c_start                          0x08006614   Data           0  lc_numeric_c.o(locale$$data)
-    __lcnum_c_point                          0x08006620   Data           0  lc_numeric_c.o(locale$$data)
-    __lcnum_c_thousands                      0x08006622   Data           0  lc_numeric_c.o(locale$$data)
-    __lcnum_c_grouping                       0x08006623   Data           0  lc_numeric_c.o(locale$$data)
-    __lcnum_c_end                            0x08006624   Data           0  lc_numeric_c.o(locale$$data)
+    i.oled_pow                               0x0800590c   Section        0  oled.o(i.oled_pow)
+    i.scanKeyMatrix                          0x0800591c   Section        0  main.o(i.scanKeyMatrix)
+    i.update_pid_parameters                  0x08005994   Section        0  main.o(i.update_pid_parameters)
+    locale$$code                             0x08005a24   Section       44  lc_numeric_c.o(locale$$code)
+    x$fpl$dcmpinf                            0x08005a50   Section       24  dcmpi.o(x$fpl$dcmpinf)
+    $v0                                      0x08005a50   Number         0  dcmpi.o(x$fpl$dcmpinf)
+    x$fpl$dflt                               0x08005a68   Section       46  dflt_clz.o(x$fpl$dflt)
+    $v0                                      0x08005a68   Number         0  dflt_clz.o(x$fpl$dflt)
+    x$fpl$dleqf                              0x08005a98   Section      120  dleqf.o(x$fpl$dleqf)
+    $v0                                      0x08005a98   Number         0  dleqf.o(x$fpl$dleqf)
+    x$fpl$dnaninf                            0x08005b10   Section      156  dnaninf.o(x$fpl$dnaninf)
+    $v0                                      0x08005b10   Number         0  dnaninf.o(x$fpl$dnaninf)
+    x$fpl$dretinf                            0x08005bac   Section       12  dretinf.o(x$fpl$dretinf)
+    $v0                                      0x08005bac   Number         0  dretinf.o(x$fpl$dretinf)
+    x$fpl$f2d                                0x08005bb8   Section       86  f2d.o(x$fpl$f2d)
+    $v0                                      0x08005bb8   Number         0  f2d.o(x$fpl$f2d)
+    x$fpl$fnaninf                            0x08005c0e   Section      140  fnaninf.o(x$fpl$fnaninf)
+    $v0                                      0x08005c0e   Number         0  fnaninf.o(x$fpl$fnaninf)
+    x$fpl$fpinit                             0x08005c9a   Section       10  fpinit.o(x$fpl$fpinit)
+    $v0                                      0x08005c9a   Number         0  fpinit.o(x$fpl$fpinit)
+    x$fpl$printf1                            0x08005ca4   Section        4  printf1.o(x$fpl$printf1)
+    $v0                                      0x08005ca4   Number         0  printf1.o(x$fpl$printf1)
+    .constdata                               0x08005ca8   Section       16  system_stm32f4xx.o(.constdata)
+    x$fpl$usenofp                            0x08005ca8   Section        0  usenofp.o(x$fpl$usenofp)
+    .constdata                               0x08005cb8   Section        8  system_stm32f4xx.o(.constdata)
+    .constdata                               0x08005cc0   Section     2568  oled.o(.constdata)
+    .constdata                               0x080066c8   Section       17  __printf_flags_wp.o(.constdata)
+    maptable                                 0x080066c8   Data          17  __printf_flags_wp.o(.constdata)
+    .constdata                               0x080066dc   Section      148  bigflt0.o(.constdata)
+    tenpwrs_x                                0x080066dc   Data          60  bigflt0.o(.constdata)
+    tenpwrs_i                                0x08006718   Data          64  bigflt0.o(.constdata)
+    locale$$data                             0x08006790   Section       28  lc_numeric_c.o(locale$$data)
+    __lcnum_c_name                           0x08006794   Data           2  lc_numeric_c.o(locale$$data)
+    __lcnum_c_start                          0x0800679c   Data           0  lc_numeric_c.o(locale$$data)
+    __lcnum_c_point                          0x080067a8   Data           0  lc_numeric_c.o(locale$$data)
+    __lcnum_c_thousands                      0x080067aa   Data           0  lc_numeric_c.o(locale$$data)
+    __lcnum_c_grouping                       0x080067ab   Data           0  lc_numeric_c.o(locale$$data)
+    __lcnum_c_end                            0x080067ac   Data           0  lc_numeric_c.o(locale$$data)
     .data                                    0x20000000   Section      152  main.o(.data)
     .data                                    0x20000098   Section        4  usart.o(.data)
     .data                                    0x2000009c   Section       12  stm32f4xx_hal.o(.data)
@@ -2979,35 +2979,35 @@ Image Symbol Table
     _sys_exit                                0x08005247   Thumb Code     2  usart.o(i._sys_exit)
     fputc                                    0x08005249   Thumb Code    14  usart.o(i.fputc)
     implement                                0x0800525d   Thumb Code   106  main.o(i.implement)
-    main                                     0x080052e5   Thumb Code  1178  main.o(i.main)
-    oled_pow                                 0x08005785   Thumb Code    16  oled.o(i.oled_pow)
-    scanKeyMatrix                            0x08005795   Thumb Code   114  main.o(i.scanKeyMatrix)
-    update_pid_parameters                    0x0800580d   Thumb Code   126  main.o(i.update_pid_parameters)
-    _get_lc_numeric                          0x0800589d   Thumb Code    44  lc_numeric_c.o(locale$$code)
-    __fpl_dcmp_Inf                           0x080058c9   Thumb Code    24  dcmpi.o(x$fpl$dcmpinf)
-    __aeabi_i2d                              0x080058e1   Thumb Code     0  dflt_clz.o(x$fpl$dflt)
-    _dflt                                    0x080058e1   Thumb Code    46  dflt_clz.o(x$fpl$dflt)
-    __aeabi_cdcmple                          0x08005911   Thumb Code     0  dleqf.o(x$fpl$dleqf)
-    _dcmple                                  0x08005911   Thumb Code   120  dleqf.o(x$fpl$dleqf)
-    __fpl_dcmple_InfNaN                      0x08005973   Thumb Code     0  dleqf.o(x$fpl$dleqf)
-    __fpl_dnaninf                            0x08005989   Thumb Code   156  dnaninf.o(x$fpl$dnaninf)
-    __fpl_dretinf                            0x08005a25   Thumb Code    12  dretinf.o(x$fpl$dretinf)
-    __aeabi_f2d                              0x08005a31   Thumb Code     0  f2d.o(x$fpl$f2d)
-    _f2d                                     0x08005a31   Thumb Code    86  f2d.o(x$fpl$f2d)
-    __fpl_fnaninf                            0x08005a87   Thumb Code   140  fnaninf.o(x$fpl$fnaninf)
-    _fp_init                                 0x08005b13   Thumb Code    10  fpinit.o(x$fpl$fpinit)
-    __fplib_config_fpu_vfp                   0x08005b1b   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    __fplib_config_pureend_doubles           0x08005b1b   Thumb Code     0  fpinit.o(x$fpl$fpinit)
-    _printf_fp_dec                           0x08005b1d   Thumb Code     4  printf1.o(x$fpl$printf1)
-    AHBPrescTable                            0x08005b20   Data          16  system_stm32f4xx.o(.constdata)
-    __I$use$fp                               0x08005b20   Number         0  usenofp.o(x$fpl$usenofp)
-    APBPrescTable                            0x08005b30   Data           8  system_stm32f4xx.o(.constdata)
-    F6x8                                     0x08005b38   Data         552  oled.o(.constdata)
-    F8X16                                    0x08005d60   Data        1504  oled.o(.constdata)
-    Hzk                                      0x08006340   Data         256  oled.o(.constdata)
-    GIF                                      0x08006440   Data         256  oled.o(.constdata)
-    Region$$Table$$Base                      0x080065e8   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08006608   Number         0  anon$$obj.o(Region$$Table)
+    main                                     0x080052e5   Thumb Code  1558  main.o(i.main)
+    oled_pow                                 0x0800590d   Thumb Code    16  oled.o(i.oled_pow)
+    scanKeyMatrix                            0x0800591d   Thumb Code   114  main.o(i.scanKeyMatrix)
+    update_pid_parameters                    0x08005995   Thumb Code   126  main.o(i.update_pid_parameters)
+    _get_lc_numeric                          0x08005a25   Thumb Code    44  lc_numeric_c.o(locale$$code)
+    __fpl_dcmp_Inf                           0x08005a51   Thumb Code    24  dcmpi.o(x$fpl$dcmpinf)
+    __aeabi_i2d                              0x08005a69   Thumb Code     0  dflt_clz.o(x$fpl$dflt)
+    _dflt                                    0x08005a69   Thumb Code    46  dflt_clz.o(x$fpl$dflt)
+    __aeabi_cdcmple                          0x08005a99   Thumb Code     0  dleqf.o(x$fpl$dleqf)
+    _dcmple                                  0x08005a99   Thumb Code   120  dleqf.o(x$fpl$dleqf)
+    __fpl_dcmple_InfNaN                      0x08005afb   Thumb Code     0  dleqf.o(x$fpl$dleqf)
+    __fpl_dnaninf                            0x08005b11   Thumb Code   156  dnaninf.o(x$fpl$dnaninf)
+    __fpl_dretinf                            0x08005bad   Thumb Code    12  dretinf.o(x$fpl$dretinf)
+    __aeabi_f2d                              0x08005bb9   Thumb Code     0  f2d.o(x$fpl$f2d)
+    _f2d                                     0x08005bb9   Thumb Code    86  f2d.o(x$fpl$f2d)
+    __fpl_fnaninf                            0x08005c0f   Thumb Code   140  fnaninf.o(x$fpl$fnaninf)
+    _fp_init                                 0x08005c9b   Thumb Code    10  fpinit.o(x$fpl$fpinit)
+    __fplib_config_fpu_vfp                   0x08005ca3   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    __fplib_config_pureend_doubles           0x08005ca3   Thumb Code     0  fpinit.o(x$fpl$fpinit)
+    _printf_fp_dec                           0x08005ca5   Thumb Code     4  printf1.o(x$fpl$printf1)
+    AHBPrescTable                            0x08005ca8   Data          16  system_stm32f4xx.o(.constdata)
+    __I$use$fp                               0x08005ca8   Number         0  usenofp.o(x$fpl$usenofp)
+    APBPrescTable                            0x08005cb8   Data           8  system_stm32f4xx.o(.constdata)
+    F6x8                                     0x08005cc0   Data         552  oled.o(.constdata)
+    F8X16                                    0x08005ee8   Data        1504  oled.o(.constdata)
+    Hzk                                      0x080064c8   Data         256  oled.o(.constdata)
+    GIF                                      0x080065c8   Data         256  oled.o(.constdata)
+    Region$$Table$$Base                      0x08006770   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08006790   Number         0  anon$$obj.o(Region$$Table)
     buffer_index                             0x20000000   Data           1  main.o(.data)
     buffer1                                  0x20000001   Data           1  main.o(.data)
     pulse_x                                  0x20000002   Data           2  main.o(.data)
@@ -3060,9 +3060,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000189
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00006818, Max: 0x00100000, ABSOLUTE, COMPRESSED[0x0000672c])
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x000069a0, Max: 0x00100000, ABSOLUTE, COMPRESSED[0x000068b4])
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00006624, Max: 0x00100000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000067ac, Max: 0x00100000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -3331,33 +3331,33 @@ Memory Map of the image
     0x08005246   0x08005246   0x00000002   Code   RO          482    i._sys_exit         usart.o
     0x08005248   0x08005248   0x00000014   Code   RO          483    i.fputc             usart.o
     0x0800525c   0x0800525c   0x00000088   Code   RO          197    i.implement         main.o
-    0x080052e4   0x080052e4   0x000004a0   Code   RO          199    i.main              main.o
-    0x08005784   0x08005784   0x00000010   Code   RO         4471    i.oled_pow          oled.o
-    0x08005794   0x08005794   0x00000078   Code   RO          200    i.scanKeyMatrix     main.o
-    0x0800580c   0x0800580c   0x00000090   Code   RO          202    i.update_pid_parameters  main.o
-    0x0800589c   0x0800589c   0x0000002c   Code   RO         4947    locale$$code        c_w.l(lc_numeric_c.o)
-    0x080058c8   0x080058c8   0x00000018   Code   RO         4828    x$fpl$dcmpinf       fz_wm.l(dcmpi.o)
-    0x080058e0   0x080058e0   0x0000002e   Code   RO         4761    x$fpl$dflt          fz_wm.l(dflt_clz.o)
-    0x0800590e   0x0800590e   0x00000002   PAD
-    0x08005910   0x08005910   0x00000078   Code   RO         4766    x$fpl$dleqf         fz_wm.l(dleqf.o)
-    0x08005988   0x08005988   0x0000009c   Code   RO         4830    x$fpl$dnaninf       fz_wm.l(dnaninf.o)
-    0x08005a24   0x08005a24   0x0000000c   Code   RO         4832    x$fpl$dretinf       fz_wm.l(dretinf.o)
-    0x08005a30   0x08005a30   0x00000056   Code   RO         4770    x$fpl$f2d           fz_wm.l(f2d.o)
-    0x08005a86   0x08005a86   0x0000008c   Code   RO         4834    x$fpl$fnaninf       fz_wm.l(fnaninf.o)
-    0x08005b12   0x08005b12   0x0000000a   Code   RO         5029    x$fpl$fpinit        fz_wm.l(fpinit.o)
-    0x08005b1c   0x08005b1c   0x00000004   Code   RO         4772    x$fpl$printf1       fz_wm.l(printf1.o)
-    0x08005b20   0x08005b20   0x00000000   Code   RO         4838    x$fpl$usenofp       fz_wm.l(usenofp.o)
-    0x08005b20   0x08005b20   0x00000010   Data   RO         3618    .constdata          system_stm32f4xx.o
-    0x08005b30   0x08005b30   0x00000008   Data   RO         3619    .constdata          system_stm32f4xx.o
-    0x08005b38   0x08005b38   0x00000a08   Data   RO         4472    .constdata          oled.o
-    0x08006540   0x08006540   0x00000011   Data   RO         4718    .constdata          c_w.l(__printf_flags_wp.o)
-    0x08006551   0x08006551   0x00000003   PAD
-    0x08006554   0x08006554   0x00000094   Data   RO         4918    .constdata          c_w.l(bigflt0.o)
-    0x080065e8   0x080065e8   0x00000020   Data   RO         5094    Region$$Table       anon$$obj.o
-    0x08006608   0x08006608   0x0000001c   Data   RO         4946    locale$$data        c_w.l(lc_numeric_c.o)
+    0x080052e4   0x080052e4   0x00000628   Code   RO          199    i.main              main.o
+    0x0800590c   0x0800590c   0x00000010   Code   RO         4471    i.oled_pow          oled.o
+    0x0800591c   0x0800591c   0x00000078   Code   RO          200    i.scanKeyMatrix     main.o
+    0x08005994   0x08005994   0x00000090   Code   RO          202    i.update_pid_parameters  main.o
+    0x08005a24   0x08005a24   0x0000002c   Code   RO         4947    locale$$code        c_w.l(lc_numeric_c.o)
+    0x08005a50   0x08005a50   0x00000018   Code   RO         4828    x$fpl$dcmpinf       fz_wm.l(dcmpi.o)
+    0x08005a68   0x08005a68   0x0000002e   Code   RO         4761    x$fpl$dflt          fz_wm.l(dflt_clz.o)
+    0x08005a96   0x08005a96   0x00000002   PAD
+    0x08005a98   0x08005a98   0x00000078   Code   RO         4766    x$fpl$dleqf         fz_wm.l(dleqf.o)
+    0x08005b10   0x08005b10   0x0000009c   Code   RO         4830    x$fpl$dnaninf       fz_wm.l(dnaninf.o)
+    0x08005bac   0x08005bac   0x0000000c   Code   RO         4832    x$fpl$dretinf       fz_wm.l(dretinf.o)
+    0x08005bb8   0x08005bb8   0x00000056   Code   RO         4770    x$fpl$f2d           fz_wm.l(f2d.o)
+    0x08005c0e   0x08005c0e   0x0000008c   Code   RO         4834    x$fpl$fnaninf       fz_wm.l(fnaninf.o)
+    0x08005c9a   0x08005c9a   0x0000000a   Code   RO         5029    x$fpl$fpinit        fz_wm.l(fpinit.o)
+    0x08005ca4   0x08005ca4   0x00000004   Code   RO         4772    x$fpl$printf1       fz_wm.l(printf1.o)
+    0x08005ca8   0x08005ca8   0x00000000   Code   RO         4838    x$fpl$usenofp       fz_wm.l(usenofp.o)
+    0x08005ca8   0x08005ca8   0x00000010   Data   RO         3618    .constdata          system_stm32f4xx.o
+    0x08005cb8   0x08005cb8   0x00000008   Data   RO         3619    .constdata          system_stm32f4xx.o
+    0x08005cc0   0x08005cc0   0x00000a08   Data   RO         4472    .constdata          oled.o
+    0x080066c8   0x080066c8   0x00000011   Data   RO         4718    .constdata          c_w.l(__printf_flags_wp.o)
+    0x080066d9   0x080066d9   0x00000003   PAD
+    0x080066dc   0x080066dc   0x00000094   Data   RO         4918    .constdata          c_w.l(bigflt0.o)
+    0x08006770   0x08006770   0x00000020   Data   RO         5094    Region$$Table       anon$$obj.o
+    0x08006790   0x08006790   0x0000001c   Data   RO         4946    locale$$data        c_w.l(lc_numeric_c.o)
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08006624, Size: 0x00000b58, Max: 0x0001c000, ABSOLUTE, COMPRESSED[0x00000108])
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080067ac, Size: 0x00000b58, Max: 0x0001c000, ABSOLUTE, COMPRESSED[0x00000108])
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -3380,7 +3380,7 @@ Memory Map of the image
     0x20000758        -       0x00000400   Zero   RW            1    STACK               startup_stm32f407xx.o
 
 
-    Execution Region RW_IRAM2 (Exec base: 0x2001c000, Load base: 0x0800672c, Size: 0x00000000, Max: 0x00004000, ABSOLUTE)
+    Execution Region RW_IRAM2 (Exec base: 0x2001c000, Load base: 0x080068b4, Size: 0x00000000, Max: 0x00004000, ABSOLUTE)
 
     **** No section assigned to this execution region ****
 
@@ -3394,7 +3394,7 @@ Image component sizes
 
        404         32          0          0          0       1219   gpio.o
        356         50          0          0        168       2462   i2c.o
-      2100        228          0        152         80      11695   main.o
+      2492        402          0        152         80      12019   main.o
        538         28       2568        315          0       7644   oled.o
        404         58          0         11         96       3696   pid.o
         64         26        392          0       1536        860   startup_stm32f407xx.o
@@ -3418,7 +3418,7 @@ Image component sizes
          0          0          0          0         48     709214   xunji.o
 
     ----------------------------------------------------------------------
-     17178       1194       3016        500       2308     888685   Object Totals
+     17570       1368       3016        500       2308     889009   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         32          0          0          2          0          0   (incl. Padding)
 
@@ -3502,15 +3502,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     22936       1418       3212        500       2404     874741   Grand Totals
-     22936       1418       3212        264       2404     874741   ELF Image Totals (compressed)
-     22936       1418       3212        264          0          0   ROM Totals
+     23328       1592       3212        500       2404     875065   Grand Totals
+     23328       1592       3212        264       2404     875065   ELF Image Totals (compressed)
+     23328       1592       3212        264          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                26148 (  25.54kB)
+    Total RO  Size (Code + RO Data)                26540 (  25.92kB)
     Total RW  Size (RW Data + ZI Data)              2904 (   2.84kB)
-    Total ROM Size (Code + RO Data + RW Data)      26412 (  25.79kB)
+    Total ROM Size (Code + RO Data + RW Data)      26804 (  26.18kB)
 
 ==============================================================================
 
