@@ -3,6 +3,9 @@
         "mpu6050.h": "c",
         "xunji.h": "c",
         "openmv.h": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "main.h": "c",
+        "stm32f4xx_hal.h": "c",
+        "memory_resource": "c"
     }
 }

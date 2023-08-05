@@ -23,9 +23,6 @@ car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
-car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc.h
-car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_adc.h
-car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_adc_ex.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
@@ -36,14 +33,13 @@ car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
 car\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-car\main.o: ../Core/Inc/adc.h
 car\main.o: ../Core/Inc/i2c.h
 car\main.o: ../Core/Inc/tim.h
 car\main.o: ../Core/Inc/usart.h
 car\main.o: ../Core/Inc/gpio.h
 car\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdio.h
 car\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\stdlib.h
-car\main.o: ..\hardware\OpenMV\OpenMV.h
+car\main.o: ../hardware/OpenMV/OpenMV.h
 car\main.o: ./car/xunji.h
 car\main.o: ../hardware/MPU6050/mpu6050.h
 car\main.o: ../hardware/MPU6050/delay.h
@@ -53,3 +49,5 @@ car\main.o: ../hardware/PID/pid.h
 car\main.o: D:\keil5\ARM\ARMCC\Bin\..\include\math.h
 car\main.o: ../hardware/Car/car.h
 car\main.o: ../hardware/oled/oled.h
+car\main.o: ../hardware/STMFLASH/stmflash.h
+car\main.o: ../hardware/sys/sys.h

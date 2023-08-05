@@ -23,8 +23,7 @@
 #define __MAIN_H
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -47,16 +46,17 @@ extern "C"
 #define LED5_GPIO_Port GPIOC
 #define LED6_Pin GPIO_PIN_7
 #define LED6_GPIO_Port GPIOG
-  /* USER CODE END Includes */
+/* USER CODE END Includes */
 
-  /* Exported types ------------------------------------------------------------*/
-  /* USER CODE BEGIN ET */
+/* Exported types ------------------------------------------------------------*/
+/* USER CODE BEGIN ET */
   void Mpu6050_Init(void);
   void car_wait(void);
   void getVoltage(void);
   uint32_t getEncoderSpeed(void);
   void setServoPosition(int angle_x, int angle_y);
   void setServoPwm(int pwm_x, int pwm_y);
+  int scanKeyMatrix(void);
   extern int current_x;
   extern int current_y;
   extern int16_t x_left_top;
@@ -70,32 +70,32 @@ extern "C"
   extern int16_t redX;
   extern int16_t redY;
   extern int flag_servo;
-
+  extern int flag_stop;
   // void implement();
-  /* USER CODE END ET */
+/* USER CODE END ET */
 
-  /* Exported constants --------------------------------------------------------*/
-  /* USER CODE BEGIN EC */
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
 
-  /* USER CODE END EC */
+/* USER CODE END EC */
 
-  /* Exported macro ------------------------------------------------------------*/
-  /* USER CODE BEGIN EM */
+/* Exported macro ------------------------------------------------------------*/
+/* USER CODE BEGIN EM */
 
-  /* USER CODE END EM */
+/* USER CODE END EM */
 
-  /* Exported functions prototypes ---------------------------------------------*/
-  void Error_Handler(void);
+/* Exported functions prototypes ---------------------------------------------*/
+void Error_Handler(void);
 
-  /* USER CODE BEGIN EFP */
+/* USER CODE BEGIN EFP */
 
-  /* USER CODE END EFP */
+/* USER CODE END EFP */
 
-  /* Private defines -----------------------------------------------------------*/
+/* Private defines -----------------------------------------------------------*/
 
-  /* USER CODE BEGIN Private defines */
+/* USER CODE BEGIN Private defines */
 
-  /* USER CODE END Private defines */
+/* USER CODE END Private defines */
 
 #ifdef __cplusplus
 }
