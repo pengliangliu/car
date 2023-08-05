@@ -47,6 +47,8 @@ void Openmv_Receive_Data(uint8_t Com_Data)
 					y_right_bottom = RxBuffer1[RxCounter1 - 18];
 					x_left_bottom = RxBuffer1[RxCounter1 - 8];
 					y_left_bottom = RxBuffer1[RxCounter1 - 6];
+					redX = RxBuffer1[RxCounter1 - 4];
+					redY = RxBuffer1[RxCounter1 - 2];
 					count = count + 1;
 				}
 				else
@@ -59,12 +61,14 @@ void Openmv_Receive_Data(uint8_t Com_Data)
 					y_right_bottom = RxBuffer1[RxCounter1 - 14];
 					x_left_bottom = RxBuffer1[RxCounter1 - 20];
 					y_left_bottom = RxBuffer1[RxCounter1 - 18];
+					redX = RxBuffer1[RxCounter1 - 4];
+					redY = RxBuffer1[RxCounter1 - 2];
 					count = count + 1;
 				}
-				
 			}
-			redX = RxBuffer1[RxCounter1 - 4];
-			redY = RxBuffer1[RxCounter1 - 2];
+
+			origin_x = redX;
+			origin_y = redY;
 			printf("%d  %d  %d  %d  %d  %d  %d  %d %d %d\r\n", x_left_bottom, y_left_bottom, x_right_bottom, y_right_bottom, x_right_top, y_right_top, x_left_top, y_left_top, redX, redY);
 
 			// printf("%d\r   ", redX);

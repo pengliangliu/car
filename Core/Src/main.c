@@ -191,9 +191,9 @@ int scanKeyMatrix(void)
 	{
 		// 设置当前列为低电�???
 		HAL_GPIO_WritePin(col_ports[i], col_pins[i], GPIO_PIN_RESET);
-		for (c = 211; c > 0; c--)
-			for (b = 4; b > 0; b--)
-				for (a = 164; a > 0; a--)
+		for (c = 234; c > 0; c--)
+			for (b = 123; b > 0; b--)
+				for (a = 7; a > 0; a--)
 					;
 		// �???查每�???行的状�??
 		for (int j = 0; j < NUM_ROWS; j++)
@@ -345,7 +345,6 @@ int main(void)
 	BufferInit();
 	// setServoPwm(509, 500);
 	// [299, 1199]
-	setServoPwm(pwm_orign_x, pwm_orign_y);
 
 	// 使能串口三接收中�??????
 	HAL_UART_Receive_IT(&huart3, (void *)&rxBuffer, 1);
@@ -360,6 +359,8 @@ int main(void)
 
 	// HAL_ADC_Start_IT(&hadc1);
 	printf("start\r\n");
+	setServoPwm(651, 778);
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -604,7 +605,7 @@ void Problem2(void)
 	// 顺时针移�???
 	// 左上顶点
 	setServoPwm(pwm_x_left_top_p2, pwm_y_left_top_p2);
-	delay_ms(5000);
+	delay_ms(3000);
 	TrackX(pwm_x_left_top_p2, pwm_x_right_top_p2, pwm_y_left_top_p2, pwm_y_right_top_p2);
 	// 右上顶点
 	setServoPwm(pwm_x_right_top_p2, pwm_y_right_top_p2);
@@ -643,6 +644,7 @@ void Problem3(void)
 }
 void Problem4(void)
 {
+
 	int x_left_top_p4 = x_left_top - 1;
 	int y_left_top_p4 = y_left_top - 2;
 	int x_right_top_p4 = x_right_top - 2;
