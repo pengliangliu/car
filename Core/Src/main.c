@@ -61,8 +61,8 @@ int pwm_test_y;
 // 接收红色�?光坐�?
 int16_t redX = 86;
 int16_t redY = 54;
-int16_t origin_x = 89;
-int16_t origin_y = 51;
+int16_t origin_x = 87;
+int16_t origin_y = 54;
 // 接收黑框坐标
 int16_t x_left_top = 56;
 int16_t y_left_top = 40;
@@ -564,7 +564,7 @@ void Problem3(void)
 	pwm_y_left_bottom = pwm_y_center - (int)y_left_bottom_error / pwm_rate_y;
 
 	setServoPwm(pwm_x_center, pwm_y_center);
-	delay_ms(1000);
+	delay_ms(300);
 
 	setServoPwm(pwm_x_left_top, pwm_y_left_top);
 	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
@@ -573,19 +573,19 @@ void Problem3(void)
 	// TrackXY(pwm_x_left_top, pwm_x_right_top, pwm_y_left_top, pwm_y_right_top);
 	setServoPwm(pwm_x_right_top, pwm_y_right_top);
 	printf("pwm_x_right_top:%d, pwm_y_right_top:%d\r\n", pwm_x_right_top, pwm_y_right_top);
-	delay_ms(1000);
+	delay_ms(20);
 	TrackY(pwm_x_right_top, pwm_x_right_bottom, pwm_y_right_top, pwm_y_right_bottom);
 	setServoPwm(pwm_x_right_bottom, pwm_y_right_bottom);
 	printf("pwm_x_right_bottom:%d, pwm_y_right_bottom:%d\r\n", pwm_x_right_bottom, pwm_y_right_bottom);
-	delay_ms(1000);
+	delay_ms(20);
 	TrackX(pwm_x_right_bottom, pwm_x_left_bottom, pwm_y_right_bottom, pwm_y_left_bottom);
 	setServoPwm(pwm_x_left_bottom, pwm_y_left_bottom);
 	printf("pwm_x_left_bottom:%d, pwm_y_left_bottom:%d\r\n", pwm_x_left_bottom, pwm_y_left_bottom);
-	delay_ms(1000);
+	delay_ms(20);
 	TrackY(pwm_x_left_bottom, pwm_x_left_top, pwm_y_left_bottom, pwm_y_left_top);
 	setServoPwm(pwm_x_left_top, pwm_y_left_top);
 	printf("pwm_x_left_top:%d, pwm_y_left_top:%d\r\n", pwm_x_left_top, pwm_y_left_top);
-	delay_ms(1000);
+	delay_ms(20);
 }
 void Problem4(void)
 {

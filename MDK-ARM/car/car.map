@@ -3473,7 +3473,7 @@ Image component sizes
        340         30          0          0         72       1765   adc.o
        308         30          0          0          0       1123   gpio.o
        356         50          0          0        168       2290   i2c.o
-      3986        802        212         60          0     657431   main.o
+      3986        802        212         60          0     657427   main.o
        496         88          0          8         44       1170   openmv.o
          0          0          0         16          0       1017   pid.o
         64         26        392          0       1536        832   startup_stm32f407xx.o
@@ -3496,7 +3496,7 @@ Image component sizes
          0          0          0          0          0     718468   xunji.o
 
     ----------------------------------------------------------------------
-     17934       1694        660        104       2380    1509192   Object Totals
+     17934       1694        660        104       2380    1509188   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         32          0          0          0          0          0   (incl. Padding)
 
@@ -3585,8 +3585,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     25632       2094        856        104       2480    1497896   Grand Totals
-     25632       2094        856        104       2480    1497896   ELF Image Totals
+     25632       2094        856        104       2480    1497892   Grand Totals
+     25632       2094        856        104       2480    1497892   ELF Image Totals
      25632       2094        856        104          0          0   ROM Totals
 
 ==============================================================================
