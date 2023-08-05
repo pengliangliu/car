@@ -201,7 +201,6 @@ int scanKeyMatrix(void)
 			if (HAL_GPIO_ReadPin(row_ports[j], row_pins[j]) == GPIO_PIN_RESET)
 			{
 				pressedKey = keyNumbers[j][i]; // 获取按键编号
-
 			}
 		}
 
@@ -369,8 +368,45 @@ int main(void)
 	{
 
 		int pressedKey = scanKeyMatrix();
+		if (pressedKey == 6)
+		{
+			flag_problem = 1;
+		}
+		else if (pressedKey == 12)
+		{
+			flag_problem = 2;
+		}
+		else if (pressedKey == 14)
+		{
+			flag_problem = 3;
+		}
+		else if (pressedKey == 15)
+		{
+			flag_problem = 4;
+		}
 		ButtonDebug(pressedKey);
-		if (flag_problem == 2)
+		// if (flag_problem == 2)
+		// {
+		// 	Problem2();
+		// 	flag_problem = 0;
+		// }
+		// else if (flag_problem == 3)
+		// {
+		// 	Problem3();
+		// 	flag_problem = 0;
+		// }
+		// else if (flag_problem == 4)
+		// {
+		// 	Problem4();
+		// 	flag_problem = 0;
+		// }
+
+		if (flag_problem == 1)
+		{
+			Problem1();
+			flag_problem = 0;
+		}
+		else if (flag_problem == 2)
 		{
 			Problem2();
 			flag_problem = 0;
